@@ -802,3 +802,21 @@
   setInterval(daylight, 5 * 60 * 1000);
 })();
 
+
+/* ============================================================
+   The monitor stand, added under the panel for the screen theme.
+   ============================================================ */
+(function () {
+  "use strict";
+  var L = window.Library;
+  var previous = L.decoratePanel;
+  L.decoratePanel = function (section, panel, itemsEl) {
+    if (previous) previous(section, panel, itemsEl);
+    var stand = panel.querySelector(".monitor-stand");
+    if (section.theme === "screen") {
+      if (!stand) { stand = document.createElement("div"); stand.className = "monitor-stand"; stand.setAttribute("aria-hidden", "true"); panel.appendChild(stand); }
+    } else if (stand) {
+      stand.remove();
+    }
+  };
+})();
