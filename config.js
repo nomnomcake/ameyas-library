@@ -76,7 +76,7 @@ const SECTIONS = [
     id: "fine-art",
     label: "Fine art",
     object: "the portfolio book and jar of brushes standing on the second shelf",
-    hotspot: { x: 34.4, y: 37.8, w: 8.7, h: 16.2 },
+    hotspot: { x: 31.4, y: 37.8, w: 8.7, h: 16.2 },
     shape: "rect",
     labelPosition: "right",
     theme: "gallery",
