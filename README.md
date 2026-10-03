@@ -12,7 +12,7 @@ A single painted illustration as a portfolio. Every object on the shelf opens on
 | `app.js` | Hotspots, panel, routing, themes, lightbox, contact, mobile list. |
 | `dev.js` | Hotspot alignment tool. Only loads with `?dev` on the URL. |
 | `library.png` | The full-size painting, 3840×2160. Kept as the master. |
-| `library.webp`, `library-2400.webp`, `library-2400.png` | What the browser loads: full 3840px WebP on large or high-DPI screens, 2400px WebP otherwise, PNG fallback. |
+| `library.webp`, `library-2400.webp`, `library-2400.png` | What the browser loads: lossless full-size WebP on desktop, 2400px WebP on phones, PNG fallback. |
 | `og.jpg`, `favicon.png` | Social card image and tab icon, both cut from the painting. |
 | `assets/` | Your artwork, project images, and `resume.pdf`. |
 
@@ -60,7 +60,7 @@ Hotspots are percentages of the painting, so they stay correct at any window siz
 Export from Procreate as described in the build plan: flatten a copy, guides off, largest PNG. Then:
 
 1. Replace `library.png` with the new export. If the pixel size changed, update `PAINTING.width` / `PAINTING.height` in `config.js` **and** the `--painting-w` / `--painting-h` values on the `#stage` div in `index.html`. If the aspect ratio changed, also update the `padding-top` fallback in `styles.css` (height ÷ width × 100).
-2. Regenerate the derived images. Without any tooling, the quickest route is [squoosh.app](https://squoosh.app): make a full-size WebP (`library.webp`), a 2400px-wide WebP (`library-2400.webp`), a 2400px PNG (`library-2400.png`), a 1200px JPEG (`og.jpg`), and a 64px square PNG for `favicon.png`.
+2. Regenerate the derived images. Without any tooling, the quickest route is [squoosh.app](https://squoosh.app): make a full-size lossless WebP (`library.webp`), a 2400px-wide WebP (`library-2400.webp`), a 2400px PNG (`library-2400.png`), a 1200px JPEG (`og.jpg`), and a 64px square PNG for `favicon.png`.
 3. Make a new placeholder: a 32px-wide WebP of the painting, base64-encoded, pasted into the `background-image` on `#stage` in `index.html`. (Squoosh can export at 32px; any base64 tool turns the file into a data URI.)
 4. Open `index.html?dev` and re-drag the hotspots onto the new objects. Copy config, paste.
 5. Commit: `git add -A && git commit -m "New painting"`.
