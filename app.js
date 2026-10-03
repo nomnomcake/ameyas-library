@@ -817,13 +817,17 @@
   var DRAWING =
     '<svg viewBox="0 0 1000 800" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
       '<defs>' +
+        '<filter id="ink-wobble" x="-3%" y="-3%" width="106%" height="106%">' +
+          '<feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="2" seed="5" result="n"/>' +
+          '<feDisplacementMap in="SourceGraphic" in2="n" scale="7" xChannelSelector="R" yChannelSelector="G"/>' +
+        '</filter>' +
         '<linearGradient id="sheen" x1="0" y1="0" x2="1" y2="1">' +
           '<stop offset="0.35" stop-color="#f1e6d0" stop-opacity="0"/>' +
           '<stop offset="0.5"  stop-color="#f1e6d0" stop-opacity="0.08"/>' +
           '<stop offset="0.65" stop-color="#f1e6d0" stop-opacity="0"/>' +
         '</linearGradient>' +
       '</defs>' +
-      '<g stroke="#1c1612" stroke-width="10" stroke-linejoin="round" stroke-linecap="round" fill="none">' +
+      '<g filter="url(#ink-wobble)" stroke="#1c1612" stroke-width="9" stroke-linejoin="round" stroke-linecap="round" fill="none">' +
         /* foot and neck */
         '<path d="M340 650 C340 622 380 614 420 612 L580 612 C620 614 660 622 660 650 L660 662 L340 662 Z" fill="#2c231d"/>' +
         '<path d="M452 556 L548 556 L560 614 L440 614 Z" fill="#3b2f26"/>' +
@@ -832,6 +836,13 @@
         '<rect x="40" y="38" width="920" height="504" rx="12" stroke="#4a3d33" stroke-width="3"/>' +
         '<path d="M470 524 L500 508 L530 524 L500 540 Z" fill="#c9a66b" stroke="#1c1612" stroke-width="4"/>' +
         /* screen outline: the panel behind it is the screen */
+        '<rect x="50" y="48" width="900" height="440" rx="9"/>' +
+      '</g>' +
+      /* a second, lighter stroke a few units off, like a pen going round twice */
+      '<g transform="translate(5 4)" filter="url(#ink-wobble)" stroke="#1c1612" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" fill="none" opacity="0.55">' +
+        '<path d="M340 650 C340 622 380 614 420 612 L580 612 C620 614 660 622 660 650 L660 662 L340 662 Z"/>' +
+        '<path d="M452 556 L548 556 L560 614 L440 614 Z"/>' +
+        '<rect x="22" y="20" width="956" height="540" rx="22"/>' +
         '<rect x="50" y="48" width="900" height="440" rx="9"/>' +
       '</g>' +
       '<rect x="52" y="50" width="896" height="436" rx="9" fill="url(#sheen)"/>' +

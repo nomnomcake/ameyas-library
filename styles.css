@@ -65,7 +65,7 @@
   --theme-lab-bg:       rgba(236, 228, 210, 0.92);   /* research: a lab notebook */
   --theme-lab-ink:      #1f2433;
   --theme-lab-rule:     rgba(31, 36, 51, 0.18);
-  --theme-screen-bg:    rgba(38, 33, 36, 0.92);      /* websites: a lit monitor in a dark room */
+  --theme-screen-bg:    rgba(38, 33, 36, 0.92);      /* websites (overridden to light mode at the end of this file) */
   --theme-screen-ink:   #f1e6d0;
   --theme-screen-glow:  rgba(227, 196, 138, 0.35);
   --theme-shelf-bg:     rgba(230, 214, 184, 0.90);   /* interests: a row of spines */
@@ -1317,3 +1317,46 @@ body[data-daylight="night"]   .daylight { background: rgba(58, 64, 92, 0.9);    
   .screen-nav, .monitor-frame { display: none; }
 }
 @media (prefers-reduced-motion: reduce) { .panel.theme-screen { transition: none !important; } }
+
+/* ============================================================
+   The screen in light mode
+   The web part of the computer is a bright page: cream ground,
+   ink text, light browser chrome. Overrides the dark screen theme.
+   ============================================================ */
+:root {
+  --screen-page:   #f4ecdc;                      /* the page on the monitor */
+  --screen-ink:    #1f2433;
+  --screen-chrome: #e6dbc4;                      /* the little browser bar */
+  --monitor-screen: var(--screen-page);
+}
+.theme-screen { background: var(--screen-page); color: var(--screen-ink); }
+.theme-screen .panel-title, .theme-screen .card-title, .theme-screen .card-link, .theme-screen .panel-close { color: var(--screen-ink); }
+.theme-screen .panel-intro { color: var(--ink-soft); }
+.theme-screen .card-desc { color: var(--screen-ink); }
+.theme-screen .card-meta { color: #8a6a3a; }
+.theme-screen .panel-head { border-bottom-color: rgba(31, 36, 51, 0.15); }
+.theme-screen .card-figure {
+  background: var(--screen-chrome);
+  border-color: rgba(31, 36, 51, 0.35);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset, 0 12px 28px -18px rgba(42, 33, 27, 0.6);
+}
+.theme-screen .card-figure::before {
+  background:
+    radial-gradient(circle at 0.75rem 50%, rgba(31, 36, 51, 0.5) 0 3px, transparent 3.5px),
+    radial-gradient(circle at 1.55rem 50%, rgba(31, 36, 51, 0.35) 0 3px, transparent 3.5px),
+    radial-gradient(circle at 2.35rem 50%, rgba(31, 36, 51, 0.2) 0 3px, transparent 3.5px),
+    var(--screen-chrome);
+  border-bottom-color: rgba(31, 36, 51, 0.15);
+}
+.theme-screen .card-figure img { background: #fff; }
+.theme-screen .card-link { border-color: rgba(31, 36, 51, 0.5); }
+.theme-screen .card-link:hover, .theme-screen .card-link:focus-visible { background: rgba(201, 166, 107, 0.25); border-color: var(--screen-ink); }
+.theme-screen .screen-nav { color: #8a6a3a; }
+.theme-screen .screen-nav button { color: var(--screen-ink); border-color: rgba(31, 36, 51, 0.4); }
+.theme-screen .screen-nav button:hover, .theme-screen .screen-nav button:focus-visible { background: rgba(201, 166, 107, 0.25); border-color: var(--screen-ink); }
+.theme-screen .screen-nav .screen-dots i { background: rgba(31, 36, 51, 0.2); }
+.theme-screen .screen-nav .screen-dots i.is-on { background: #8a6a3a; }
+.theme-screen .panel-close:focus-visible svg { filter: none; }
+@media (min-width: 768px) {
+  .panel.theme-screen { background: var(--screen-page); }
+}
