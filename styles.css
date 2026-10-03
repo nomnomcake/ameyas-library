@@ -46,6 +46,29 @@
   --label-in:          300ms;
   --label-gap:         0.6rem;                      /* distance from the object */
 
+
+
+  /* ---------- Panel themes (step 6) ----------
+     One block per theme. To add a seventh theme, add its variables
+     here and one .theme-<name> block in the Step 6 section below. */
+  --theme-paper-bg:     rgba(241, 230, 208, 0.90);   /* about: a page from a book */
+  --theme-paper-ink:    #1f2433;
+  --theme-gallery-bg:   rgba(214, 196, 164, 0.90);   /* fine art: a deeper wall, work mounted on it */
+  --theme-gallery-ink:  #1f2433;
+  --theme-gallery-mat:  #f1e6d0;                     /* the mount/frame around each image */
+  --theme-spread-bg:    rgba(239, 230, 212, 0.92);   /* graphic design: a magazine spread */
+  --theme-spread-ink:   #1f2433;
+  --theme-reel-bg:      rgba(74, 60, 48, 0.90);      /* animation: a darker, lit screen */
+  --theme-reel-ink:     #f1e6d0;
+  --theme-reel-perf:    rgba(241, 230, 208, 0.55);   /* film perforations */
+  --theme-lab-bg:       rgba(236, 228, 210, 0.92);   /* research: a lab notebook */
+  --theme-lab-ink:      #1f2433;
+  --theme-lab-rule:     rgba(31, 36, 51, 0.18);
+  --theme-shelf-bg:     rgba(230, 214, 184, 0.90);   /* interests: a row of spines */
+  --theme-shelf-ink:    #1f2433;
+  --spine-1: #8c6a4a;  --spine-2: #a8845a;  --spine-3: #6e5a47;   /* warm spine tones, cycling */
+  --spine-4: #b89a6a;  --spine-5: #7d5f49;  --spine-6: #c4a776;
+
   /* Hotspot placeholder tint (step 1 only; removed from view in step 3) */
   --hotspot-debug: rgba(227, 196, 138, 0.28);
 }
@@ -511,4 +534,142 @@ body.scroll-locked { position: fixed; width: 100%; overflow: hidden; }
 
 @media (prefers-reduced-motion: reduce) {
   .panel, .layer-base, .layer-sharp, .card, .panel-close { transition: none !important; }
+}
+
+/* ============================================================
+   Step 6: per-object theming
+   Each panel echoes the object that opened it. The painting
+   stays the loudest thing on screen.
+   ============================================================ */
+
+/* ---- paper (about me): a page from a book ---- */
+.theme-paper { background: var(--theme-paper-bg); color: var(--theme-paper-ink); }
+.theme-paper .panel-items { gap: 1.5rem; max-width: 36rem; }
+.theme-paper .card-desc { font-size: 1.06rem; line-height: 1.85; }
+.theme-paper .card-title { font-size: 1.3rem; font-weight: 500; }
+.theme-paper .card-figure img { max-width: 18rem; }
+
+/* ---- gallery (fine art): work mounted on a wall ---- */
+.theme-gallery { background: var(--theme-gallery-bg); color: var(--theme-gallery-ink); }
+.theme-gallery .panel-scroll { padding-left: clamp(2rem, 6vw, 4.5rem); padding-right: clamp(2rem, 6vw, 4.5rem); }
+.theme-gallery .panel-items { gap: 3.5rem; }
+.theme-gallery .card { text-align: center; }
+.theme-gallery .card-figure {
+  display: inline-block;
+  margin: 0 0 1rem;
+  padding: clamp(0.6rem, 1.5vw, 1.1rem);
+  background: var(--theme-gallery-mat);
+  border: 1px solid rgba(107, 84, 64, 0.55);
+  box-shadow: 0 1px 0 rgba(255, 244, 220, 0.5) inset, 0 14px 30px -18px rgba(42, 33, 27, 0.7), 0 2px 6px rgba(42, 33, 27, 0.18);
+}
+.theme-gallery .card-figure img { width: auto; max-width: 100%; max-height: 70vh; object-fit: contain; margin: 0 auto; }
+.theme-gallery .card-title { font-size: 1.15rem; font-weight: 500; }
+.theme-gallery .card-desc { font-style: italic; font-size: 0.92rem; max-width: 30rem; margin-left: auto; margin-right: auto; }
+.theme-gallery .card-meta { font-size: 0.72rem; }
+
+/* ---- spread (graphic design): a magazine ---- */
+.theme-spread { background: var(--theme-spread-bg); color: var(--theme-spread-ink); font-family: var(--font-sans); }
+.theme-spread .panel-intro { font-family: var(--font-body); }
+.theme-spread .panel-items { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem 1.1rem; }
+.theme-spread .card-figure { margin-bottom: 0.6rem; aspect-ratio: 4 / 3; overflow: hidden; background: var(--parchment); }
+.theme-spread .card-figure img { width: 100%; height: 100%; object-fit: cover; }
+.theme-spread .card-title { font-family: var(--font-sans); font-weight: 500; font-size: 1.05rem; letter-spacing: 0.01em; }
+.theme-spread .card-desc { font-size: 0.9rem; line-height: 1.5; }
+.theme-spread .card-meta { font-family: var(--font-sans); font-variant: normal; text-transform: uppercase; font-size: 0.68rem; }
+.theme-spread .card-link { font-style: normal; font-size: 0.9rem; }
+
+/* ---- reel (animation): a lit screen with film edges ---- */
+.theme-reel { background: var(--theme-reel-bg); color: var(--theme-reel-ink); }
+.theme-reel .panel-title, .theme-reel .panel-intro, .theme-reel .card-title, .theme-reel .card-link { color: var(--theme-reel-ink); }
+.theme-reel .panel-intro, .theme-reel .card-meta { color: rgba(241, 230, 208, 0.65); }
+.theme-reel .panel-close { color: var(--theme-reel-ink); }
+.theme-reel::after { opacity: 0.1; mix-blend-mode: screen; }
+.theme-reel .panel-items { gap: 1.5rem; }
+.theme-reel .card {
+  display: grid;
+  grid-template-columns: minmax(0, 11rem) minmax(0, 1fr);
+  gap: 0 1.2rem;
+  align-items: start;
+  padding: 0.9rem 0;
+  /* film perforations: a dashed row top and bottom */
+  border-top: 0; border-bottom: 0;
+  background:
+    repeating-linear-gradient(90deg, var(--theme-reel-perf) 0 8px, transparent 8px 16px) top / 100% 4px no-repeat,
+    repeating-linear-gradient(90deg, var(--theme-reel-perf) 0 8px, transparent 8px 16px) bottom / 100% 4px no-repeat;
+}
+.theme-reel .card-figure, .theme-reel .card-video { grid-row: 1 / span 4; margin: 0.3rem 0 0; }
+.theme-reel .card-figure img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; background: #2a211b; }
+.theme-reel .card-title { font-size: 1.25rem; }
+.theme-reel .card-desc { font-size: 0.92rem; color: rgba(241, 230, 208, 0.88); }
+.theme-reel .card-link { border-color: rgba(227, 196, 138, 0.6); }
+.theme-reel .card-video { aspect-ratio: 16 / 9; background: #1a1411; }
+.theme-reel .card-video iframe { width: 100%; height: 100%; border: 0; display: block; }
+.theme-reel .card.has-video { grid-template-columns: minmax(0, 1fr); }
+.theme-reel .card.has-video .card-video { grid-row: auto; margin-bottom: 0.8rem; }
+
+/* ---- lab (research): a lab notebook ---- */
+.theme-lab { background: var(--theme-lab-bg); color: var(--theme-lab-ink); }
+.theme-lab .panel-items { gap: 0; }
+.theme-lab .card { padding: 1.4rem 0; border-top: 1px solid var(--theme-lab-rule); }
+.theme-lab .card:last-child { border-bottom: 1px solid var(--theme-lab-rule); }
+.theme-lab .card-meta {
+  font-family: var(--font-mono);
+  font-variant: small-caps;
+  text-transform: lowercase;
+  letter-spacing: 0.1em;
+  font-size: 0.74rem;
+  color: var(--ink-soft);
+  margin-bottom: 0.5rem;
+}
+.theme-lab .card-title { font-size: 1.3rem; font-weight: 500; }
+.theme-lab .card-desc { font-size: 0.95rem; }
+.theme-lab .card-figure { margin-top: 0.5rem; max-width: 26rem; }
+.theme-lab .card-link { font-family: var(--font-mono); font-style: normal; font-size: 0.8rem; letter-spacing: 0.06em; }
+
+/* ---- shelf (interests): a row of book spines, expanding on click ---- */
+.theme-shelf { background: var(--theme-shelf-bg); color: var(--theme-shelf-ink); }
+.theme-shelf .panel-items { gap: 0.45rem; }
+.theme-shelf .card { opacity: 1; transform: none; }   /* spines settle as a block */
+.theme-shelf .spine {
+  width: 100%;
+  margin: 0;
+  padding: 0.85rem 1.1rem;
+  border: 0;
+  text-align: left;
+  font: inherit;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 1.15rem;
+  letter-spacing: 0.04em;
+  color: var(--cream);
+  background: var(--spine-color, var(--spine-1));
+  box-shadow: inset 0 1px 0 rgba(255, 244, 220, 0.25), inset 0 -2px 0 rgba(42, 33, 27, 0.35), inset 4px 0 0 rgba(42, 33, 27, 0.25);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  transition: transform 300ms var(--panel-ease), filter 200ms ease-out;
+}
+.theme-shelf .spine:hover, .theme-shelf .spine:focus-visible { transform: translateX(6px); filter: brightness(1.08); outline: none; }
+.theme-shelf .spine[aria-expanded="true"] { transform: translateX(10px); }
+.theme-shelf .spine-meta { font-family: var(--font-body); font-variant: small-caps; letter-spacing: 0.12em; font-size: 0.72rem; opacity: 0.8; font-weight: 400; }
+.theme-shelf .spine-body {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  padding: 0 1.1rem;
+  transition: max-height 400ms var(--panel-ease), opacity 300ms ease-out, padding 300ms ease-out;
+}
+.theme-shelf .spine-body.is-open { max-height: 40rem; opacity: 1; padding: 0.9rem 1.1rem 1.1rem; }
+.theme-shelf .spine-body .card-desc { margin: 0 0 0.5rem; }
+.theme-shelf .spine-body .card-figure { max-width: 16rem; margin-bottom: 0.7rem; }
+.theme-shelf .card:nth-child(6n+1) .spine { --spine-color: var(--spine-1); }
+.theme-shelf .card:nth-child(6n+2) .spine { --spine-color: var(--spine-2); }
+.theme-shelf .card:nth-child(6n+3) .spine { --spine-color: var(--spine-3); }
+.theme-shelf .card:nth-child(6n+4) .spine { --spine-color: var(--spine-4); }
+.theme-shelf .card:nth-child(6n+5) .spine { --spine-color: var(--spine-5); }
+.theme-shelf .card:nth-child(6n+6) .spine { --spine-color: var(--spine-6); }
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-shelf .spine, .theme-shelf .spine-body { transition: none; }
 }

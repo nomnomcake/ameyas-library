@@ -396,3 +396,49 @@
     openFromUrl();
   }
 })();
+
+/* ============================================================
+   Step 6: theme behaviour
+   Most themes are CSS only. The "shelf" theme turns each card into
+   a book spine that expands on click.
+   ============================================================ */
+(function () {
+  "use strict";
+  var L = window.Library;
+  var previous = L.decoratePanel;
+
+  L.decoratePanel = function (section, panel, itemsEl) {
+    if (previous) previous(section, panel, itemsEl);
+    if (section.theme !== "shelf") return;
+
+    Array.prototype.forEach.call(itemsEl.querySelectorAll(".card"), function (card, i) {
+      var title = card.querySelector(".card-title");
+      var meta  = card.querySelector(".card-meta");
+      var rest  = Array.prototype.filter.call(card.children, function (n) { return n !== title && n !== meta; });
+
+      var spine = document.createElement("button");
+      spine.type = "button";
+      spine.className = "spine";
+      spine.setAttribute("aria-expanded", "false");
+      var bodyId = "spine-body-" + section.id + "-" + i;
+      spine.setAttribute("aria-controls", bodyId);
+      spine.appendChild(document.createTextNode(title ? title.textContent : "Untitled"));
+      if (meta) { var m = document.createElement("span"); m.className = "spine-meta"; m.textContent = meta.textContent; spine.appendChild(m); }
+
+      var body = document.createElement("div");
+      body.className = "spine-body";
+      body.id = bodyId;
+      rest.forEach(function (n) { body.appendChild(n); });
+
+      card.innerHTML = "";
+      card.appendChild(spine);
+      card.appendChild(body);
+
+      spine.addEventListener("click", function () {
+        var open = spine.getAttribute("aria-expanded") === "true";
+        spine.setAttribute("aria-expanded", open ? "false" : "true");
+        body.classList.toggle("is-open", !open);
+      });
+    });
+  };
+})();
