@@ -50,10 +50,10 @@ const SECTIONS = [
   {
     id: "about",
     label: "About me",
-    object: "none yet: no painted object on the desktop. Reachable from the phone list and #about. Set a hotspot here when the final painting has a home for it.",
-    hotspot: null,
+    object: "the photo frame standing in the top cubby of the shelf",
+    hotspot: { x: 33.9, y: 17.6, w: 10.9, h: 14.4 },
     shape: "rect",
-    labelPosition: "above",
+    labelPosition: "right",
     theme: "paper",
     intro: "A short note on who is doing the reading.",
     items: [
@@ -71,8 +71,8 @@ const SECTIONS = [
   {
     id: "fine-art",
     label: "Fine art",
-    object: "framed picture in the top cubby of the shelf",
-    hotspot: { x: 33.9, y: 17.6, w: 10.9, h: 14.4 },
+    object: "none yet: the top cubby now holds the About photo. Reachable from the phone list and #fine-art until the painting has a canvas or easel for it.",
+    hotspot: null,
     shape: "rect",
     labelPosition: "right",
     theme: "gallery",
