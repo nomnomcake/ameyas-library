@@ -834,23 +834,23 @@ body.scroll-locked { position: fixed; width: 100%; overflow: hidden; }
 .motes { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
 .motes i {
   position: absolute;
-  width: 3px; height: 3px;
+  width: 5px; height: 5px;
   border-radius: 50%;
-  background: rgba(241, 230, 208, 0.55);
-  box-shadow: 0 0 6px 1px rgba(227, 196, 138, 0.45);
+  background: rgba(248, 238, 214, 0.9);
+  box-shadow: 0 0 10px 3px rgba(232, 200, 140, 0.75);
   opacity: 0;
   animation: mote-drift var(--mote-dur, 28s) linear infinite;
   animation-delay: var(--mote-delay, 0s);
 }
 .motes i:nth-child(1) { left: 14%; top: 30%; --mote-dur: 34s; --mote-delay: -6s; }
-.motes i:nth-child(2) { left: 40%; top: 48%; --mote-dur: 41s; --mote-delay: -19s; width: 2px; height: 2px; }
+.motes i:nth-child(2) { left: 40%; top: 48%; --mote-dur: 41s; --mote-delay: -19s; width: 3px; height: 3px; }
 .motes i:nth-child(3) { left: 24%; top: 62%; --mote-dur: 37s; --mote-delay: -28s; }
 @keyframes mote-drift {
   0%   { transform: translate(0, 0); opacity: 0; }
-  10%  { opacity: 0.7; }
-  50%  { transform: translate(18px, -26px); opacity: 0.45; }
-  90%  { opacity: 0.6; }
-  100% { transform: translate(-10px, -58px); opacity: 0; }
+  10%  { opacity: 1; }
+  50%  { transform: translate(34px, -48px); opacity: 0.7; }
+  90%  { opacity: 0.9; }
+  100% { transform: translate(-18px, -110px); opacity: 0; }
 }
 body.panel-open .motes { opacity: 0; transition: opacity 400ms; }
 @media (prefers-reduced-motion: reduce) { .motes { display: none; } }
@@ -970,10 +970,10 @@ body.panel-open .motes { opacity: 0; transition: opacity 400ms; }
    directly, only missed if it were gone.
    ============================================================ */
 :root {
-  --breath-color:    rgba(227, 196, 138, 0.6);   /* the lamp's warmth */
-  --breath-max:      0.10;                       /* peak opacity of the breath */
-  --breath-period:   11s;                        /* one slow in-and-out */
-  --vignette-color:  rgba(42, 33, 27, 0.42);     /* shadow at the screen edges */
+  --breath-color:    rgba(232, 200, 140, 0.9);   /* the lamp's warmth */
+  --breath-max:      0.32;                       /* peak opacity of the breath */
+  --breath-period:   8s;                        /* one slow in-and-out */
+  --vignette-color:  rgba(30, 23, 18, 0.72);     /* shadow at the screen edges */
 }
 
 .atmosphere { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
@@ -985,7 +985,7 @@ body.panel-open .motes { opacity: 0; transition: opacity 400ms; }
   position: absolute;
   inset: -20%;
   background: radial-gradient(ellipse 55% 60% at 32% 68%, var(--breath-color), rgba(227, 196, 138, 0.18) 45%, transparent 75%);
-  mix-blend-mode: soft-light;
+  mix-blend-mode: overlay;
   opacity: 0;
   animation: lamp-breath var(--breath-period) ease-in-out infinite;
   will-change: opacity;
@@ -999,13 +999,13 @@ body.panel-open .motes { opacity: 0; transition: opacity 400ms; }
 .vignette {
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse 80% 78% at 50% 48%, transparent 55%, var(--vignette-color) 100%);
+  background: radial-gradient(ellipse 72% 70% at 50% 48%, transparent 40%, var(--vignette-color) 100%);
 }
 
 /* More motes, all inside the beam, each on its own slow path */
-.motes i:nth-child(4) { left: 9%;  top: 44%; --mote-dur: 46s; --mote-delay: -11s; width: 2px; height: 2px; }
+.motes i:nth-child(4) { left: 9%;  top: 44%; --mote-dur: 46s; --mote-delay: -11s; width: 3px; height: 3px; }
 .motes i:nth-child(5) { left: 33%; top: 72%; --mote-dur: 39s; --mote-delay: -33s; }
-.motes i:nth-child(6) { left: 19%; top: 80%; --mote-dur: 52s; --mote-delay: -2s;  width: 2px; height: 2px; }
+.motes i:nth-child(6) { left: 19%; top: 80%; --mote-dur: 52s; --mote-delay: -2s;  width: 4px; height: 4px; }
 .motes i:nth-child(7) { left: 46%; top: 60%; --mote-dur: 44s; --mote-delay: -24s; }
 
 /* Breath and motes pause while a panel is open; the vignette stays. */
@@ -1017,3 +1017,34 @@ body.panel-open .lamp-breath { animation-play-state: paused; opacity: 0; transit
 @media (max-width: 767.98px) {
   .lamp-breath { display: none; }
 }
+
+/* ---- Louder pass: extra motes and the cursor lamp ---- */
+.motes i:nth-child(8)  { left: 27%; top: 36%; --mote-dur: 36s; --mote-delay: -8s;  width: 3px; height: 3px; }
+.motes i:nth-child(9)  { left: 15%; top: 58%; --mote-dur: 48s; --mote-delay: -40s; }
+.motes i:nth-child(10) { left: 38%; top: 84%; --mote-dur: 42s; --mote-delay: -15s; width: 4px; height: 4px; }
+.motes i:nth-child(11) { left: 52%; top: 76%; --mote-dur: 55s; --mote-delay: -29s; width: 3px; height: 3px; }
+.motes i:nth-child(12) { left: 7%;  top: 70%; --mote-dur: 38s; --mote-delay: -21s; }
+
+/* A lamp carried across the shelf. Positioned from JS with --lx / --ly (%). */
+:root {
+  --lamp-size:    38vmin;                        /* diameter of the glow */
+  --lamp-color:   rgba(232, 200, 140, 0.55);     /* warm core */
+}
+.cursor-lamp {
+  position: absolute;
+  left: var(--lx, 50%);
+  top: var(--ly, 50%);
+  width: var(--lamp-size);
+  height: var(--lamp-size);
+  margin: calc(var(--lamp-size) / -2) 0 0 calc(var(--lamp-size) / -2);
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--lamp-color), rgba(232, 200, 140, 0.18) 40%, transparent 70%);
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 600ms ease-out;
+  will-change: left, top;
+}
+body.lamp-on .cursor-lamp { opacity: 1; }
+body.panel-open .cursor-lamp { opacity: 0; }
+@media (hover: none), (max-width: 767.98px), (prefers-reduced-motion: reduce) { .cursor-lamp { display: none; } }

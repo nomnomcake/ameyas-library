@@ -738,3 +738,31 @@
   var prevSet = L.setSections;
   L.setSections = function (list) { prevSet(list); renderSpines(); };
 })();
+
+/* ============================================================
+   Cursor lamp: the glow follows the pointer with a little lag,
+   like carrying a candle. Delete this block and the .cursor-lamp
+   div to remove it.
+   ============================================================ */
+(function () {
+  "use strict";
+  var lamp = document.querySelector(".cursor-lamp");
+  var stage = document.getElementById("stage");
+  if (!lamp || !stage || !window.matchMedia("(hover: hover)").matches) return;
+  var tx = 50, ty = 50, cx = 50, cy = 50, raf = null;
+  function tick() {
+    cx += (tx - cx) * 0.12;
+    cy += (ty - cy) * 0.12;
+    lamp.style.setProperty("--lx", cx + "%");
+    lamp.style.setProperty("--ly", cy + "%");
+    raf = (Math.abs(tx - cx) > 0.02 || Math.abs(ty - cy) > 0.02) ? requestAnimationFrame(tick) : null;
+  }
+  stage.addEventListener("pointermove", function (e) {
+    var r = stage.getBoundingClientRect();
+    tx = ((e.clientX - r.left) / r.width) * 100;
+    ty = ((e.clientY - r.top) / r.height) * 100;
+    document.body.classList.add("lamp-on");
+    if (!raf) raf = requestAnimationFrame(tick);
+  });
+  stage.addEventListener("pointerleave", function () { document.body.classList.remove("lamp-on"); });
+})();
