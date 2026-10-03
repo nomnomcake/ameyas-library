@@ -1757,7 +1757,7 @@ body[data-daylight="night"]   .daylight { background: rgba(58, 64, 92, 0.9);    
   .os-shot-link img { transition: transform 300ms var(--panel-ease); }
   .os-shot-link:hover img, .os-shot-link:focus-visible img { transform: scale(1.015); }
   .os-shot-link:focus-visible { outline: 3px solid var(--os-ink); outline-offset: 2px; }
-  .os-body > .card-title {
+  .os-text .card-title {
     font-family: var(--os-font);
     font-size: 1.05rem;
     letter-spacing: 0.03em;
