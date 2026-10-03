@@ -811,21 +811,27 @@
   if (!window.matchMedia("(hover: hover)").matches) return;
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   var root = document.documentElement;
-  var FRAMES = ["var(--cursor-flame-left)", "var(--cursor-flame-mid)", "var(--cursor-flame-right)"];
+  var F = { tall: "var(--cursor-flame-tall)", mid: "var(--cursor-flame-mid)", short: "var(--cursor-flame-short)",
+            left: "var(--cursor-flame-left)", right: "var(--cursor-flame-right)" };
   var steady = false;          // over an object: slower, mostly upright
   var lean = 0;                // -1 / 0 / 1 from fast pointer movement
   var lastX = null, lastT = 0, leanUntil = 0;
+  var current = "mid";
 
+  /* A candle mostly sits at mid, climbs to tall now and then, and only
+     occasionally dips short. Never the same frame twice in a row. */
   function pick() {
-    var now = performance.now();
-    if (now < leanUntil && lean) return lean < 0 ? 0 : 2;
-    var r = Math.random();
-    if (steady) return r < 0.78 ? 1 : (r < 0.89 ? 0 : 2);
-    return r < 0.45 ? 1 : (r < 0.72 ? 0 : 2);
+    if (performance.now() < leanUntil && lean) return lean < 0 ? "left" : "right";
+    var r = Math.random(), next;
+    if (steady) next = r < 0.7 ? "mid" : (r < 0.9 ? "tall" : "short");
+    else        next = r < 0.5 ? "mid" : (r < 0.82 ? "tall" : "short");
+    if (next === current) next = current === "mid" ? "tall" : "mid";
+    return next;
   }
   function tick() {
-    root.style.setProperty("--cursor-flame", FRAMES[pick()]);
-    var base = steady ? 240 : 110, jitter = steady ? 160 : 90;
+    current = pick();
+    root.style.setProperty("--cursor-flame", F[current]);
+    var base = steady ? 300 : 190, jitter = steady ? 220 : 160;
     setTimeout(tick, base + Math.random() * jitter);
   }
   tick();
@@ -834,7 +840,7 @@
     var now = performance.now();
     if (lastX !== null) {
       var v = (e.clientX - lastX) / Math.max(1, now - lastT);   // px per ms
-      if (Math.abs(v) > 1.4) { lean = v > 0 ? -1 : 1; leanUntil = now + 140; }   // flame trails behind the motion
+      if (Math.abs(v) > 2.2) { lean = v > 0 ? -1 : 1; leanUntil = now + 120; }   // flame trails behind the motion
     }
     lastX = e.clientX; lastT = now;
   }, { passive: true });
