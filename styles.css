@@ -2080,3 +2080,11 @@ body.panel-open .glint { animation-play-state: paused; opacity: 0; transition: o
   .theme-book .card { text-align: center; }
   .theme-book .card-title { font-size: 1.1rem; font-weight: 500; }
 }
+
+/* Book pages: the art area has a definite height so tall pieces fit above the caption */
+@media (min-width: 768px) {
+  .book-page { display: block; }
+  .book-art { position: absolute; left: 2.8%; right: 2.8%; top: 2.6%; bottom: 2.6rem; height: auto; min-height: 0; }
+  .book-art img { max-height: 100%; max-width: 100%; }
+  .book-caption { position: absolute; left: 2.8%; right: 2.8%; bottom: 0.55rem; }
+}
