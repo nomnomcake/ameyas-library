@@ -925,3 +925,36 @@
     if (e.key === "ArrowRight") { e.preventDefault(); show(index + 1); }
   });
 })();
+
+/* ============================================================
+   About me: the photo frame and the sticky note.
+   ============================================================ */
+(function () {
+  "use strict";
+  var L = window.Library;
+  var previous = L.decoratePanel;
+  L.decoratePanel = function (section, panel, itemsEl) {
+    if (previous) previous(section, panel, itemsEl);
+    panel.classList.toggle("is-about", section.id === "about");
+    if (section.id !== "about") return;
+    var card = itemsEl.querySelector(".card");
+    if (!card || card.querySelector(".about-scene")) return;
+
+    var fig = card.querySelector(".card-figure");
+    var title = card.querySelector(".card-title");
+    var desc = card.querySelector(".card-desc");
+
+    var scene = document.createElement("div");
+    scene.className = "about-scene";
+    if (fig) { fig.classList.add("about-frame"); scene.appendChild(fig); }
+    var note = document.createElement("div");
+    note.className = "about-note";
+    if (title) note.appendChild(title);
+    if (desc) note.appendChild(desc);
+    scene.appendChild(note);
+
+    card.innerHTML = "";
+    card.appendChild(scene);
+    card.style.setProperty("--i", 0);
+  };
+})();

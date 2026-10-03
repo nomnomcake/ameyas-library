@@ -1474,3 +1474,120 @@ body[data-daylight="night"]   .daylight { background: rgba(58, 64, 92, 0.9);    
   .screen-nav button { width: 1.7rem; height: 1.7rem; border: var(--os-line) solid var(--os-ink); border-radius: 3px; background: var(--os-paper); color: var(--os-ink); box-shadow: 2px 2px 0 var(--os-ink); }
   .screen-nav button:hover, .screen-nav button:focus-visible { background: var(--os-accent); box-shadow: 1px 1px 0 var(--os-ink); border-color: var(--os-ink); }
 }
+
+/* ============================================================
+   About me
+   A photo frame in the drawn style, with a sticky note beside it.
+   Applies to the section with id "about" (see app.js).
+   ============================================================ */
+:root {
+  --about-ink:    #1c1612;
+  --about-frame:  #3b2f26;                 /* the frame's wood, as in the painting */
+  --about-mat:    #e9dcc2;
+  --note-paper:   #f3dc8e;                 /* a warm yellow note */
+  --note-fold:    #e2c870;
+  --font-hand:    "Caveat", "Segoe Print", "Bradley Hand", cursive;
+}
+.panel.is-about .panel-head { display: none; }
+.panel.is-about .panel-items { display: block; }
+.about-scene {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: 2rem;
+  align-items: start;
+  padding-top: 1.2rem;
+}
+
+/* The frame: a dark drawn frame with a doubled ink line, a thin mat, the photo warmed */
+.about-frame {
+  position: relative;
+  margin: 0;
+  padding: 7%;
+  background: var(--about-frame);
+  border: 3px solid var(--about-ink);
+  border-radius: 3px;
+  box-shadow:
+    inset 0 0 0 2px rgba(241, 230, 208, 0.18),      /* the lighter second stroke */
+    6px 8px 0 rgba(28, 22, 18, 0.35),               /* a hard drawn shadow */
+    0 24px 40px -24px rgba(28, 22, 18, 0.8);
+  transform: rotate(-1.2deg);
+}
+.about-frame::before {                                /* the inner mat line */
+  content: "";
+  position: absolute;
+  inset: 5.5%;
+  border: 2px solid var(--about-ink);
+  background: var(--about-mat);
+  z-index: 0;
+}
+.about-frame img {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border: 2px solid var(--about-ink);
+  filter: sepia(0.35) saturate(0.85) contrast(1.02);   /* warmed to sit in the room */
+  cursor: zoom-in;
+}
+.about-frame img:hover { filter: sepia(0.1) saturate(1); }
+
+/* The sticky note */
+.about-note {
+  position: relative;
+  padding: 1.4rem 1.5rem 1.6rem;
+  background: var(--note-paper);
+  color: var(--about-ink);
+  border: 2px solid var(--about-ink);
+  border-radius: 2px;
+  box-shadow: 5px 6px 0 rgba(28, 22, 18, 0.3), 0 18px 30px -22px rgba(28, 22, 18, 0.7);
+  transform: rotate(1.6deg);
+  font-family: var(--font-hand);
+  margin-top: 1.2rem;
+}
+.about-note::before {                                 /* folded corner */
+  content: "";
+  position: absolute;
+  right: -2px; bottom: -2px;
+  width: 1.6rem; height: 1.6rem;
+  background: linear-gradient(135deg, transparent 50%, var(--note-fold) 50%);
+  border-left: 2px solid var(--about-ink);
+  border-top: 2px solid var(--about-ink);
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+.about-note::after {                                  /* a strip of tape at the top */
+  content: "";
+  position: absolute;
+  left: 50%; top: -0.75rem;
+  width: 5.5rem; height: 1.4rem;
+  margin-left: -2.75rem;
+  background: rgba(241, 230, 208, 0.75);
+  border: 2px solid rgba(28, 22, 18, 0.6);
+  transform: rotate(-3deg);
+}
+.about-note .card-title {
+  margin: 0 0 0.5rem;
+  font-family: var(--font-hand);
+  font-weight: 600;
+  font-size: 2.1rem;
+  line-height: 1;
+  color: var(--about-ink);
+}
+.about-note .card-desc {
+  margin: 0;
+  font-family: var(--font-hand);
+  font-weight: 500;
+  font-size: 1.35rem;
+  line-height: 1.3;
+  color: var(--about-ink);
+}
+@media (max-width: 767.98px) {
+  .about-scene { grid-template-columns: 1fr; gap: 1.6rem; }
+  .about-frame { transform: rotate(-0.8deg); }
+  .about-note { transform: rotate(0.8deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .about-frame img { transition: none; }
+}

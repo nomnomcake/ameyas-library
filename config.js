@@ -55,13 +55,13 @@ const SECTIONS = [
     shape: "rect",
     labelPosition: "right",
     theme: "paper",
-    intro: "A short note on who is doing the reading.",
+    intro: "",
     items: [
       {
-        title: "Hello",
-        description: "I'm Ameya. I paint, design, animate, and poke at research questions. This library is where I keep the things I've made. Replace this with a real paragraph or two.",
-        image: "",
-        alt: "",
+        title: "Ameya Kohli",
+        description: "I’m an artist with a foot in bioengineering, design, and studio practice. My work runs from fine art to the design of medical devices. It has been shown in more than forty exhibitions, most recently at the U.S. Capitol.",
+        image: "assets/ameya.jpg",
+        alt: "Ameya Kohli standing on the water with the lower Manhattan skyline behind her, long dark hair over a white top, smiling slightly.",
         link: "",
         linkLabel: "",
         meta: ""
