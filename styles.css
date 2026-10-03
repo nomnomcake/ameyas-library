@@ -1886,3 +1886,21 @@ body.panel-open .glint { animation-play-state: paused; opacity: 0; transition: o
   mix-blend-mode: screen;
 }
 .hotspot.is-rect.is-coming-soon .hotspot-surface { mix-blend-mode: normal; }
+
+/* ============================================================
+   Hover labels sit in the middle of the object
+   Every label, whatever labelPosition says, centres on its box.
+   (labelPosition stays in config for anything that wants it back.)
+   ============================================================ */
+.hotspot .hotspot-label {
+  left: 50% !important; top: 50% !important; right: auto !important; bottom: auto !important;
+  margin: 0 !important;
+  transform: translate(-50%, -50%) scale(0.96) !important;
+  font-size: clamp(0.8rem, 1.25vw, 1.15rem);
+  letter-spacing: 0.22em;
+  color: var(--cream);
+  text-shadow: 0 0 2px rgba(16, 11, 8, 0.9), 0 0 10px rgba(16, 11, 8, 0.85), 0 0 22px rgba(16, 11, 8, 0.6);
+}
+.hotspot:hover .hotspot-label, .hotspot:focus-visible .hotspot-label, .hotspot.is-active .hotspot-label {
+  transform: translate(-50%, -50%) scale(1) !important;
+}
