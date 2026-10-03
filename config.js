@@ -189,7 +189,7 @@ const SECTIONS = [
     items: [
       {
         title: "Biome Guessr",
-        description: "A geography guessing game played from orbit: you are dropped somewhere on a blocky, voxel Earth and have to work out where you are from the biome alone. Built in plain JavaScript with Three.js for the WebGL globe, bundled with Vite, and deployed on Vercel.",
+        description: "A game that fuses Minecraft and GeoGuessr together, built as a birthday present for my best friend. Plain JavaScript with Three.js for the WebGL globe, bundled with Vite.",
         image: "assets/site-1.jpg",
         alt: "The Biome Guessr title screen: pixel lettering over a voxel Earth seen from space, with a Begin Mission button and a satellite readout in the corner.",
         link: "https://biomeguessr.vercel.app/",
