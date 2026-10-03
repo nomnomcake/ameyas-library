@@ -1217,14 +1217,10 @@ body[data-daylight="night"]   .daylight { background: rgba(58, 64, 92, 0.9);    
     border-right-color: var(--monitor-bezel-2);
     border-bottom-color: var(--monitor-bezel-2);
     border-radius: 3px;
-    outline: 2.5px solid var(--monitor-line);
-    outline-offset: 0;
     background: var(--monitor-screen);
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
-    box-shadow:
-      inset 0 0 0 2px var(--monitor-line),            /* inner pencil line where screen meets frame */
-      0 30px 60px -28px rgba(0, 0, 0, 0.85);
+    box-shadow: 0 30px 60px -28px rgba(0, 0, 0, 0.85);
     overflow: visible;
     transform: translate(-50%, 60vh);
     transition: transform var(--panel-duration) var(--panel-ease), visibility 0s linear var(--panel-duration);
@@ -1248,6 +1244,7 @@ body[data-daylight="night"]   .daylight { background: rgba(58, 64, 92, 0.9);    
     background: linear-gradient(90deg, var(--monitor-bezel), var(--monitor-bezel-2));
     outline: 2.5px solid var(--monitor-line);
     pointer-events: none;
+    filter: url(#sketchy-soft);
   }
   .monitor-stand::after {
     content: "";
@@ -1327,3 +1324,41 @@ body[data-daylight="night"]   .daylight { background: rgba(58, 64, 92, 0.9);    
   .screen-nav { display: none; }
 }
 @media (prefers-reduced-motion: reduce) { .panel.theme-screen { transition: none !important; } }
+
+/* ---- Sketchy lines on the monitor ----
+   The frame's outline is drawn by a separate layer run through an SVG
+   displacement filter, so the pencil wobble never touches the text or
+   screenshots on the screen. Two strokes, one darker and one lighter,
+   like the doubled lines in the painting. */
+@media (min-width: 768px) {
+  .monitor-frame {
+    position: absolute;
+    inset: -13px;
+    pointer-events: none;
+    border: 2.5px solid var(--monitor-line);
+    border-radius: 5px 7px 4px 8px / 7px 4px 8px 5px;    /* uneven corners, as if drawn */
+    filter: url(#sketchy);
+    will-change: filter;
+  }
+  .monitor-frame::before {                 /* the second, lighter stroke, slightly off */
+    content: "";
+    position: absolute;
+    inset: 1px 2px 2px 1px;
+    border: 1.5px solid rgba(201, 166, 107, 0.35);
+    border-radius: inherit;
+  }
+  .monitor-frame::after {                  /* the inner line where screen meets frame */
+    content: "";
+    position: absolute;
+    inset: 11px 12px 12px 11px;
+    border: 2px solid var(--monitor-line);
+    border-radius: 2px 3px 2px 4px / 3px 2px 4px 2px;
+  }
+  /* The bezel fill itself gets a pencil-shaded unevenness */
+  .panel.theme-screen {
+    border-image: linear-gradient(160deg, var(--monitor-bezel) 0%, #43362d 35%, var(--monitor-bezel-2) 100%) 1;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  /* nothing animates here; the filter is static */
+}

@@ -833,9 +833,10 @@
     if (oldNav) oldNav.remove();
     cards = []; nav = null; dots = null;
 
-    if (section.theme !== "screen") { if (stand) stand.remove(); return; }
+    if (section.theme !== "screen") { if (stand) stand.remove(); var f = panel.querySelector(".monitor-frame"); if (f) f.remove(); return; }
 
     if (!stand) { stand = document.createElement("div"); stand.className = "monitor-stand"; stand.setAttribute("aria-hidden", "true"); panel.appendChild(stand); }
+    if (!panel.querySelector(".monitor-frame")) { var frame = document.createElement("div"); frame.className = "monitor-frame"; frame.setAttribute("aria-hidden", "true"); panel.appendChild(frame); }
 
     cards = Array.prototype.slice.call(itemsEl.querySelectorAll(".card"));
     cards.forEach(function (c) { c.style.setProperty("--i", 0); });
