@@ -12,7 +12,7 @@ A single painted illustration as a portfolio. Every object on the shelf opens on
 | `app.js` | Hotspots, panel, routing, themes, lightbox, contact, mobile list. |
 | `dev.js` | Hotspot alignment tool. Only loads with `?dev` on the URL. |
 | `library.png` | The full-size painting, 3840×2160. Kept as the master. |
-| `library.webp`, `library-2400.png` | What the browser actually loads: a 2400px WebP with a PNG fallback. |
+| `library.webp`, `library-2400.webp`, `library-2400.png` | What the browser loads: full 3840px WebP on large or high-DPI screens, 2400px WebP otherwise, PNG fallback. |
 | `og.jpg`, `favicon.png` | Social card image and tab icon, both cut from the painting. |
 | `assets/` | Your artwork, project images, and `resume.pdf`. |
 
