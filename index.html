@@ -32,6 +32,24 @@
     </div>
   </main>
 
+
+  <!-- Step 4: the section panel. Taking something off the shelf. -->
+  <div id="scrim" class="scrim" hidden></div>
+  <aside id="panel" class="panel" role="dialog" aria-modal="true" aria-labelledby="panel-title" aria-hidden="true" tabindex="-1">
+    <button type="button" id="panel-close" class="panel-close" aria-label="Close">
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
+        <path d="M4.5 4.5 L19.5 19.5 M19.5 4.5 L4.5 19.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <div class="panel-scroll">
+      <header class="panel-head">
+        <h2 id="panel-title" class="panel-title"></h2>
+        <p id="panel-intro" class="panel-intro"></p>
+      </header>
+      <div id="panel-items" class="panel-items"></div>
+    </div>
+  </aside>
+
   <noscript>
     <section class="noscript">
       <p>This site is an interactive painting and needs JavaScript to open the shelves. Here is what is on them:</p>
