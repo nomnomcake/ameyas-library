@@ -1053,3 +1053,43 @@ body.panel-open .lamp-breath { animation-play-state: paused; opacity: 0; transit
 body.lamp-on .cursor-lamp { opacity: 1; }
 body.panel-open .cursor-lamp { opacity: 0; }
 @media (hover: none), (max-width: 767.98px), (prefers-reduced-motion: reduce) { .cursor-lamp { display: none; } }
+
+/* ---- Motes on the right, near the monitor and desk ---- */
+.motes i:nth-child(6) { left: 79%; top: 50%; --mote-dur: 47s; --mote-delay: -17s; width: 3px; height: 3px; }
+.motes i:nth-child(7) { left: 71%; top: 74%; --mote-dur: 53s; --mote-delay: -36s; width: 4px; height: 4px; }
+
+/* ---- The lamp sways ----
+   The light source drifts a little on a slow cycle, so the vignette's
+   origin and the breathing glow move together, like a hanging lamp
+   stirring in still air. Registered properties let the position
+   animate; browsers without @property simply keep the light still. */
+@property --light-x { syntax: "<percentage>"; inherits: true; initial-value: 0%; }
+@property --light-y { syntax: "<percentage>"; inherits: true; initial-value: 12%; }
+:root {
+  --sway-period: 23s;        /* one full wander of the lamp */
+  --sway-x:      3%;         /* how far the source drifts sideways */
+  --sway-y:      4%;         /* and vertically */
+}
+.vignette {
+  animation: lamp-sway var(--sway-period) ease-in-out infinite;
+}
+@keyframes lamp-sway {
+  0%   { --light-x: 0%;              --light-y: 12%; }
+  33%  { --light-x: var(--sway-x);   --light-y: calc(12% - var(--sway-y)); }
+  66%  { --light-x: calc(var(--sway-x) * 0.4); --light-y: calc(12% + var(--sway-y) * 0.6); }
+  100% { --light-x: 0%;              --light-y: 12%; }
+}
+/* The glow follows the same wander, offset so it reads as the beam moving */
+.lamp-breath {
+  animation: lamp-breath var(--breath-period) ease-in-out infinite,
+             glow-sway var(--sway-period) ease-in-out infinite;
+}
+@keyframes glow-sway {
+  0%   { transform: translate(0, 0); }
+  33%  { transform: translate(1.2%, -1.4%); }
+  66%  { transform: translate(0.5%, 0.9%); }
+  100% { transform: translate(0, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vignette, .lamp-breath { animation: none; }
+}
