@@ -1591,3 +1591,7 @@ body[data-daylight="night"]   .daylight { background: rgba(58, 64, 92, 0.9);    
 @media (prefers-reduced-motion: reduce) {
   .about-frame img { transition: none; }
 }
+@media (min-width: 768px) {
+  .panel.is-about .panel-scroll { display: flex; flex-direction: column; justify-content: center; }
+  .panel.is-about .about-scene { padding-top: 0; }
+}
