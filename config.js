@@ -75,8 +75,8 @@ const SECTIONS = [
   {
     id: "fine-art",
     label: "Fine art",
-    object: "none yet: the top cubby now holds the About photo. Reachable from the phone list and #fine-art until the painting has a canvas or easel for it.",
-    hotspot: null,
+    object: "the portfolio book and jar of brushes standing on the second shelf",
+    hotspot: { x: 34.4, y: 37.8, w: 8.7, h: 16.2 },
     shape: "rect",
     labelPosition: "right",
     theme: "gallery",
@@ -96,8 +96,8 @@ const SECTIONS = [
   {
     id: "graphic-design",
     label: "Graphic design",
-    object: "second shelf, the long cubby under the frame",
-    hotspot: { x: 31.5, y: 33.4, w: 31.8, h: 20.6 },
+    object: "none yet: the second shelf now holds the fine-art portfolio. Reachable from the phone list and #graphic-design until it has an object.",
+    hotspot: null,
     shape: "rect",
     labelPosition: "right",
     theme: "spread",
