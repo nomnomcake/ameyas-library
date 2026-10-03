@@ -147,27 +147,6 @@ const SECTIONS = [
     ]
   },
   {
-    id: "research",
-    label: "Research",
-    object: "the desk and chairs, bottom right",
-    hotspot: { x: 82, y: 65, w: 18, h: 33 },
-    shape: "rect",
-    labelPosition: "above",
-    theme: "lab",
-    intro: "Questions I've chased, with the people I chased them with.",
-    items: [
-      {
-        title: "Placeholder project",
-        description: "What the question was, what you did, what came out of it.",
-        image: "",
-        alt: "",
-        link: "",
-        linkLabel: "Read more",
-        meta: "2026 · with collaborator names · in progress"
-      }
-    ]
-  },
-  {
     id: "interests",
     label: "Interests",
     object: "bottom shelf, the long low cubby",
