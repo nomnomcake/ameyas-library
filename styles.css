@@ -461,7 +461,8 @@ body.panel-open .hotspot:not(.is-active) .hotspot-label { opacity: 0 !important;
   opacity: 0.7;
   transition: opacity 200ms ease-out, transform 300ms var(--panel-ease);
 }
-.panel-close:hover, .panel-close:focus-visible { opacity: 1; transform: rotate(90deg); outline: none; }
+.panel-close:hover, .panel-close:focus-visible { opacity: 1; outline: none; }
+.panel-close:hover { transform: rotate(90deg); }
 .panel-close:focus-visible svg { filter: drop-shadow(0 0 4px var(--gold-bright)); }
 
 /* Heading and frontispiece note */

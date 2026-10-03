@@ -29,7 +29,7 @@
       var raw = localStorage.getItem(STORAGE_KEY);
       if (raw) return JSON.parse(raw);
     } catch (e) { /* fall through */ }
-    return clone(window.SECTIONS);
+    return clone(typeof SECTIONS !== "undefined" ? SECTIONS : []);
   }
 
   var draft = loadDraft();
@@ -203,7 +203,7 @@
     } else if (act === "reset") {
       if (!confirm("Discard local changes and reload from config.js?")) return;
       try { localStorage.removeItem(STORAGE_KEY); } catch (err) { /* ignore */ }
-      draft = clone(window.SECTIONS);
+      draft = clone(typeof SECTIONS !== "undefined" ? SECTIONS : []);
       selectedId = draft.length ? draft[0].id : null;
       refreshSelect();
     }

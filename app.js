@@ -16,7 +16,11 @@
 
   /* Which sections to render. Dev mode (step 2) may swap this for a
      localStorage draft; everything else reads through getSections(). */
-  var activeSections = Array.isArray(window.SECTIONS) ? window.SECTIONS : [];
+  /* config.js declares these with const, which does NOT create window properties,
+     so read them as bare globals guarded by typeof. */
+  var CFG_SECTIONS = typeof SECTIONS !== "undefined" ? SECTIONS : null;
+  var CFG_PAINTING = typeof PAINTING !== "undefined" ? PAINTING : null;
+  var activeSections = Array.isArray(CFG_SECTIONS) ? CFG_SECTIONS : [];
   function getSections() { return activeSections; }
   function setSections(list) { activeSections = list; renderHotspots(); }
 
@@ -65,12 +69,12 @@
       }
     }
 
-    if (window.PAINTING && painting) {
+    if (CFG_PAINTING && painting) {
       painting.addEventListener("error", function () { warn("Painting failed to load: " + painting.getAttribute("src")); });
       painting.addEventListener("load", function () {
-        var ratioCfg = PAINTING.width / PAINTING.height, ratioImg = painting.naturalWidth / painting.naturalHeight;
+        var ratioCfg = CFG_PAINTING.width / CFG_PAINTING.height, ratioImg = painting.naturalWidth / painting.naturalHeight;
         if (painting.naturalWidth && Math.abs(ratioCfg - ratioImg) > 0.002) {
-          warn("PAINTING.width/height in config.js (" + PAINTING.width + "x" + PAINTING.height + ") have a different aspect ratio from the served image (" +
+          warn("PAINTING.width/height in config.js (" + CFG_PAINTING.width + "x" + CFG_PAINTING.height + ") have a different aspect ratio from the served image (" +
                painting.naturalWidth + "x" + painting.naturalHeight + "). Hotspots will drift.");
         }
       });
@@ -389,13 +393,17 @@
     history.replaceState({ section: id }, "", location.href);
     L.openSection(id, null, { fromHistory: true });
   }
-  var img = L.els.painting;
-  if (img && !img.complete) {
-    img.addEventListener("load", openFromUrl, { once: true });
-    img.addEventListener("error", openFromUrl, { once: true });
-  } else {
-    openFromUrl();
-  }
+  /* Deferred a tick so every later script (themes, lightbox, contact) has
+     registered its hooks before the first panel renders. */
+  setTimeout(function () {
+    var img = L.els.painting;
+    if (img && !img.complete) {
+      img.addEventListener("load", openFromUrl, { once: true });
+      img.addEventListener("error", openFromUrl, { once: true });
+    } else {
+      openFromUrl();
+    }
+  }, 0);
 })();
 
 /* ============================================================
@@ -635,7 +643,7 @@
 (function () {
   "use strict";
   var L = window.Library;
-  var C = window.CONTACT || {};
+  var C = typeof CONTACT !== "undefined" ? CONTACT : {};
 
   function row(label, text, href, opts) {
     var li = document.createElement("li");
@@ -680,13 +688,11 @@
     itemsEl.appendChild(card);
   };
 
-  if (C.resume) {
-    var probe = new XMLHttpRequest();
-    try {
-      probe.open("HEAD", C.resume, true);
-      probe.onload = function () { if (probe.status >= 400) console.warn("[Ameya's Library config] CONTACT.resume not found: " + C.resume); };
-      probe.send();
-    } catch (e) { /* file:// blocks HEAD; ignore */ }
+  /* Check the resume exists. Only over http(s): file:// blocks the request. */
+  if (C.resume && /^https?:/.test(location.protocol) && window.fetch) {
+    fetch(C.resume, { method: "HEAD" }).then(function (r) {
+      if (!r.ok) console.warn("[Ameya's Library config] CONTACT.resume not found: " + C.resume);
+    }).catch(function () {});
   }
 })();
 
@@ -718,7 +724,7 @@
       b.setAttribute("aria-label", "Open " + (s.label || s.id).toLowerCase());
       b.appendChild(document.createTextNode(s.label || s.id));
       var n = (s.items || []).length;
-      if (n && s.theme !== "contact") {
+      if (n && ["gallery", "spread", "reel", "lab"].indexOf(s.theme) !== -1) {
         var m = document.createElement("span");
         m.className = "spine-meta";
         m.textContent = n + (n === 1 ? " piece" : " pieces");
