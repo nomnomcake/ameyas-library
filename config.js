@@ -71,8 +71,8 @@ const SECTIONS = [
   {
     id: "fine-art",
     label: "Fine art",
-    object: "framed picture, top cubby of the shelf",
-    hotspot: { x: 31.5, y: 10, w: 15.5, h: 23 },
+    object: "framed picture in the top cubby of the shelf",
+    hotspot: { x: 33.4, y: 12.8, w: 11.8, h: 15.7 },
     shape: "rect",
     labelPosition: "right",
     theme: "gallery",
