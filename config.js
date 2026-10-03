@@ -225,16 +225,6 @@ const SECTIONS = [
         link: "https://speak-exe.vercel.app/",
         linkLabel: "Try it",
         meta: "2026 · web app"
-      },
-      {
-        title: "Third site",
-        description: "In the works. A sentence about what it will be.",
-        image: "assets/site-3.jpg",
-        alt: "An early screenshot of the third site.",
-        link: "",
-        linkLabel: "",
-        meta: "2026",
-        status: "coming-soon"
       }
     ]
   },
