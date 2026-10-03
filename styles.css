@@ -673,3 +673,95 @@ body.scroll-locked { position: fixed; width: 100%; overflow: hidden; }
 @media (prefers-reduced-motion: reduce) {
   .theme-shelf .spine, .theme-shelf .spine-body { transition: none; }
 }
+
+/* ============================================================
+   Step 7: artwork viewing and media
+   ============================================================ */
+:root {
+  --lightbox-bg:       rgba(36, 28, 22, 0.9);   /* dimmed warm backdrop */
+  --lightbox-duration: 320ms;
+}
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  place-items: center;
+  padding: 2.5rem clamp(1rem, 6vw, 5rem) 1.5rem;
+  background: var(--lightbox-bg);
+  color: var(--cream);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--lightbox-duration) ease-out, visibility 0s linear var(--lightbox-duration);
+}
+.lightbox.is-open {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity var(--lightbox-duration) ease-out, visibility 0s;
+}
+.lightbox-stage {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  min-height: 0;
+}
+.lightbox-img {
+  max-width: 100%;
+  max-height: calc(100vh - 8rem);
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.7);
+  transform: scale(0.985);
+  transition: transform var(--lightbox-duration) var(--panel-ease), opacity 200ms ease-out;
+  touch-action: pan-y;
+}
+.lightbox.is-open .lightbox-img { transform: none; }
+.lightbox-img.is-swapping { opacity: 0; }
+
+.lightbox-caption {
+  margin: 0.9rem 0 0;
+  text-align: center;
+  max-width: 48rem;
+}
+.lightbox-title { font-family: var(--font-heading); font-size: 1.25rem; font-weight: 500; display: block; }
+.lightbox-desc { font-style: italic; font-weight: 300; font-size: 0.92rem; color: rgba(241, 230, 208, 0.8); display: block; margin-top: 0.15rem; }
+.lightbox-count { font-variant: small-caps; letter-spacing: 0.14em; font-size: 0.72rem; color: rgba(201, 166, 107, 0.8); display: block; margin-top: 0.4rem; }
+
+.lightbox-btn {
+  position: absolute;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: rgba(241, 230, 208, 0.75);
+  cursor: pointer;
+  width: 3rem;
+  height: 3rem;
+  display: grid;
+  place-items: center;
+  transition: color 200ms ease-out, transform 300ms var(--panel-ease);
+}
+.lightbox-btn:hover, .lightbox-btn:focus-visible { color: var(--gold-bright); outline: none; }
+.lightbox-btn:focus-visible svg { filter: drop-shadow(0 0 5px var(--gold-bright)); }
+.lightbox-close { top: 0.9rem; right: 1rem; }
+.lightbox-close:hover, .lightbox-close:focus-visible { transform: rotate(90deg); }
+.lightbox-prev { left: 0.6rem; top: 50%; transform: translateY(-50%); }
+.lightbox-next { right: 0.6rem; top: 50%; transform: translateY(-50%); }
+.lightbox-prev:hover, .lightbox-prev:focus-visible { transform: translateY(-50%) translateX(-3px); }
+.lightbox-next:hover, .lightbox-next:focus-visible { transform: translateY(-50%) translateX(3px); }
+.lightbox[data-count="1"] .lightbox-prev, .lightbox[data-count="1"] .lightbox-next { display: none; }
+
+/* Clickable artwork in panels */
+.card-figure img.is-viewable { cursor: zoom-in; }
+
+/* Video embeds (any theme) */
+.card-video { aspect-ratio: 16 / 9; background: #1a1411; margin-bottom: 0.9rem; }
+.card-video iframe { width: 100%; height: 100%; border: 0; display: block; }
+
+@media (prefers-reduced-motion: reduce) {
+  .lightbox, .lightbox-img, .lightbox-btn { transition: none !important; }
+  .lightbox-img { transform: none; }
+}

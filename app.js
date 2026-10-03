@@ -442,3 +442,187 @@
     });
   };
 })();
+
+/* ============================================================
+   Step 7: artwork viewing and media
+   Lightbox, lazy video embeds, and a light speed bump on saving art.
+   ============================================================ */
+(function () {
+  "use strict";
+  var L = window.Library;
+  var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- Video embeds ---------- */
+  function embedUrl(url) {
+    var m;
+    if ((m = url.match(/(?:youtube\.com\/(?:watch\?v=|shorts\/|embed\/)|youtu\.be\/)([\w-]{6,})/))) {
+      return "https://www.youtube-nocookie.com/embed/" + m[1] + "?rel=0";
+    }
+    if ((m = url.match(/vimeo\.com\/(?:video\/)?(\d+)/))) {
+      return "https://player.vimeo.com/video/" + m[1] + "?dnt=1";
+    }
+    return null;
+  }
+
+  function addVideo(card, item) {
+    var src = embedUrl(item.video);
+    if (!src) { console.warn("[Ameya's Library] unrecognised video URL for " + item.title + ": " + item.video); return; }
+    var box = document.createElement("div");
+    box.className = "card-video";
+    var iframe = document.createElement("iframe");
+    iframe.src = src;                       // only created when its panel opens: lazy by construction
+    iframe.loading = "lazy";
+    iframe.title = item.title ? item.title + " (video)" : "Video";
+    iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+    iframe.setAttribute("allowfullscreen", "");
+    iframe.referrerPolicy = "strict-origin-when-cross-origin";
+    box.appendChild(iframe);
+    var fig = card.querySelector(".card-figure");
+    card.insertBefore(box, fig ? fig : card.firstChild);
+    if (fig) fig.remove();                  // the embed replaces the still
+    card.classList.add("has-video");
+  }
+
+  /* ---------- Lightbox DOM ---------- */
+  var lb = document.createElement("div");
+  lb.id = "lightbox";
+  lb.className = "lightbox";
+  lb.setAttribute("role", "dialog");
+  lb.setAttribute("aria-modal", "true");
+  lb.setAttribute("aria-label", "Artwork viewer");
+  lb.setAttribute("aria-hidden", "true");
+  lb.innerHTML =
+    '<button type="button" class="lightbox-btn lightbox-close" aria-label="Close viewer">' +
+      '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4.5 4.5 19.5 19.5M19.5 4.5 4.5 19.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></button>' +
+    '<button type="button" class="lightbox-btn lightbox-prev" aria-label="Previous image">' +
+      '<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M15 4.5 7.5 12 15 19.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>' +
+    '<button type="button" class="lightbox-btn lightbox-next" aria-label="Next image">' +
+      '<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M9 4.5 16.5 12 9 19.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>' +
+    '<div class="lightbox-stage"><img class="lightbox-img artwork" alt=""></div>' +
+    '<figcaption class="lightbox-caption"><span class="lightbox-title"></span><span class="lightbox-desc"></span><span class="lightbox-count"></span></figcaption>';
+  document.body.appendChild(lb);
+
+  var imgEl   = lb.querySelector(".lightbox-img");
+  var titleEl = lb.querySelector(".lightbox-title");
+  var descEl  = lb.querySelector(".lightbox-desc");
+  var countEl = lb.querySelector(".lightbox-count");
+  var closeB  = lb.querySelector(".lightbox-close");
+  var prevB   = lb.querySelector(".lightbox-prev");
+  var nextB   = lb.querySelector(".lightbox-next");
+
+  var gallery = [];     // [{ src, alt, title, description, trigger }]
+  var index = 0;
+  var isOpen = false;
+  var returnTo = null;
+
+  function show(i, animate) {
+    index = (i + gallery.length) % gallery.length;
+    var g = gallery[index];
+    function swap() {
+      imgEl.src = g.src;
+      imgEl.alt = g.alt || "";
+      titleEl.textContent = g.title || "";
+      descEl.textContent = g.description || "";
+      countEl.textContent = gallery.length > 1 ? (index + 1) + " of " + gallery.length : "";
+      imgEl.classList.remove("is-swapping");
+    }
+    if (animate && !reduceMotion) { imgEl.classList.add("is-swapping"); setTimeout(swap, 180); }
+    else swap();
+  }
+
+  function openLightbox(list, i, trigger) {
+    gallery = list;
+    returnTo = trigger || document.activeElement;
+    lb.dataset.count = list.length;
+    show(i, false);
+    lb.setAttribute("aria-hidden", "false");
+    void lb.offsetWidth;
+    lb.classList.add("is-open");
+    isOpen = true;
+    closeB.focus({ preventScroll: true });
+  }
+
+  function closeLightbox() {
+    if (!isOpen) return;
+    isOpen = false;
+    lb.classList.remove("is-open");
+    lb.setAttribute("aria-hidden", "true");
+    if (returnTo && document.contains(returnTo)) returnTo.focus({ preventScroll: true });
+    returnTo = null;
+  }
+
+  closeB.addEventListener("click", closeLightbox);
+  prevB.addEventListener("click", function () { show(index - 1, true); });
+  nextB.addEventListener("click", function () { show(index + 1, true); });
+  lb.addEventListener("click", function (e) { if (e.target === lb || e.target.classList.contains("lightbox-stage")) closeLightbox(); });
+
+  /* Keys. Capture phase so the panel's own handler never sees Escape while we're open. */
+  document.addEventListener("keydown", function (e) {
+    if (!isOpen) return;
+    if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); closeLightbox(); }
+    else if (e.key === "ArrowLeft") { e.preventDefault(); show(index - 1, true); }
+    else if (e.key === "ArrowRight") { e.preventDefault(); show(index + 1, true); }
+    else if (e.key === "Tab") {
+      e.stopPropagation();
+      var f = [closeB, prevB, nextB].filter(function (b) { return b.offsetParent !== null; });
+      var first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  }, true);
+  L.escapeHandled = function () { return isOpen; };
+
+  /* Swipe */
+  var touchX = null, touchY = null;
+  lb.addEventListener("touchstart", function (e) { touchX = e.touches[0].clientX; touchY = e.touches[0].clientY; }, { passive: true });
+  lb.addEventListener("touchend", function (e) {
+    if (touchX == null) return;
+    var dx = e.changedTouches[0].clientX - touchX, dy = e.changedTouches[0].clientY - touchY;
+    touchX = touchY = null;
+    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.5) show(index + (dx < 0 ? 1 : -1), true);
+  }, { passive: true });
+
+  /* ---------- Wire each panel ---------- */
+  var previous = L.decoratePanel;
+  L.decoratePanel = function (section, panel, itemsEl) {
+    var cards = Array.prototype.slice.call(itemsEl.querySelectorAll(".card"));
+    var items = section.items || [];
+
+    cards.forEach(function (card, i) {
+      var item = items[i];
+      if (item && item.video) addVideo(card, item);
+    });
+
+    var list = [];
+    cards.forEach(function (card, i) {
+      var img = card.querySelector(".card-figure img");
+      var item = items[i] || {};
+      if (!img) return;
+      img.classList.add("is-viewable", "artwork");
+      img.tabIndex = 0;
+      img.setAttribute("role", "button");
+      img.setAttribute("aria-label", "View " + (item.title || "image") + " full size");
+      var pos = list.length;
+      list.push({ src: item.image, alt: item.alt || "", title: item.title || "", description: item.description || "", trigger: img });
+      function go() { openLightbox(list, pos, img); }
+      img.addEventListener("click", go);
+      img.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
+    });
+
+    if (previous) previous(section, panel, itemsEl);   // shelf accordion runs last so it can move the figures
+  };
+
+  L.onSectionCloseHooks = L.onSectionCloseHooks || [];
+  var prevClose = L.onSectionClose;
+  L.onSectionClose = function (section, opts) { closeLightbox(); if (prevClose) prevClose(section, opts); };
+
+  /* ---------- Speed bump on artwork ----------
+     This is NOT protection. Anyone can screenshot or read the source.
+     It only stops the casual right-click-save. Delete this block to remove it. */
+  document.addEventListener("contextmenu", function (e) {
+    if (e.target && e.target.classList && e.target.classList.contains("artwork")) e.preventDefault();
+  });
+  document.addEventListener("dragstart", function (e) {
+    if (e.target && e.target.classList && e.target.classList.contains("artwork")) e.preventDefault();
+  });
+})();
