@@ -34,7 +34,7 @@ const PAINTING = {
    shape         — "rect" or "ellipse". Ellipse uses the same box as a bounding box.
    labelPosition — Where the hover label sits relative to the object:
                    "left" | "right" | "above" | "below". Pick empty shelf space.
-   theme         — Panel styling: "paper" | "gallery" | "spread" | "reel" | "lab" | "shelf" | "contact"
+   theme         — Panel styling: "paper" | "gallery" | "spread" | "reel" | "lab" | "shelf" | "screen" | "contact"
    intro         — One or two sentences shown under the heading, in italic.
    items         — The entries in this section. Fields:
        title        — Name of the piece / project.
@@ -193,10 +193,49 @@ const SECTIONS = [
     ]
   },
   {
-    id: "contact",
-    label: "Contact",
+    id: "websites",
+    label: "Websites",
     object: "the monitor on the right",
     hotspot: { x: 84.5, y: 42, w: 15.5, h: 21 },
+    shape: "rect",
+    labelPosition: "below",
+    theme: "screen",
+    intro: "Three sites I built. Open any of them in a new tab.",
+    items: [
+      {
+        title: "First site",
+        description: "What it is, who it was for, and what you built it with.",
+        image: "assets/site-1.jpg",
+        alt: "Screenshot of the first site's home page.",
+        link: "https://example.com",
+        linkLabel: "Visit site",
+        meta: "2026 · HTML, CSS, JS"
+      },
+      {
+        title: "Second site",
+        description: "A sentence or two.",
+        image: "assets/site-2.jpg",
+        alt: "Screenshot of the second site.",
+        link: "https://example.com",
+        linkLabel: "Visit site",
+        meta: "2025"
+      },
+      {
+        title: "Third site",
+        description: "A sentence or two.",
+        image: "assets/site-3.jpg",
+        alt: "Screenshot of the third site.",
+        link: "https://example.com",
+        linkLabel: "Visit site",
+        meta: "2025"
+      }
+    ]
+  },
+  {
+    id: "contact",
+    label: "Contact",
+    object: "none yet: the monitor now holds Websites. Reachable from the phone list and #contact.",
+    hotspot: null,
     shape: "rect",
     labelPosition: "below",
     theme: "contact",

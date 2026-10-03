@@ -727,7 +727,7 @@
       b.setAttribute("aria-label", "Open " + (s.label || s.id).toLowerCase());
       b.appendChild(document.createTextNode(s.label || s.id));
       var n = (s.items || []).length;
-      if (n && ["gallery", "spread", "reel", "lab"].indexOf(s.theme) !== -1) {
+      if (n && ["gallery", "spread", "reel", "lab", "screen"].indexOf(s.theme) !== -1) {
         var m = document.createElement("span");
         m.className = "spine-meta";
         m.textContent = n + (n === 1 ? " piece" : " pieces");

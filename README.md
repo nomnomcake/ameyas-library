@@ -40,7 +40,7 @@ Every field is commented in `config.js`. `video` on an item (YouTube or Vimeo UR
 ## Adding a whole section
 
 1. Add an object to `SECTIONS` in `config.js` with a new `id`, `label`, `theme`, `hotspot`, and `items`.
-2. Pick a theme: `paper`, `gallery`, `spread`, `reel`, `lab`, `shelf`, or `contact`. To invent a new one, add its variables to the theme block at the top of `styles.css` and one `.theme-<name> { … }` block in the Step 6 section.
+2. Pick a theme: `paper`, `gallery`, `spread`, `reel`, `lab`, `shelf`, `screen`, or `contact`. To invent a new one, add its variables to the theme block at the top of `styles.css` and one `.theme-<name> { … }` block in the Step 6 section.
 3. Position the hotspot in dev mode (below).
 4. Add a matching `<h2>` and `<p>` to the `<noscript>` block in `index.html` so the no-JavaScript fallback stays complete.
 
