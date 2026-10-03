@@ -815,7 +815,7 @@
   /* The drawn computer: thick even ink line, flat fills. The screen rect
      is left unfilled: the panel behind it is the screen. */
   var DRAWING =
-    '<svg viewBox="0 0 1000 800" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
+    '<svg viewBox="0 0 1000 580" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
       '<defs>' +
         '<filter id="ink-wobble" x="-3%" y="-3%" width="106%" height="106%">' +
           '<feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="2" seed="5" result="n"/>' +
@@ -828,23 +828,17 @@
         '</linearGradient>' +
       '</defs>' +
       '<g filter="url(#ink-wobble)" stroke="#1c1612" stroke-width="9" stroke-linejoin="round" stroke-linecap="round" fill="none">' +
-        /* foot and neck */
-        '<path d="M340 650 C340 622 380 614 420 612 L580 612 C620 614 660 622 660 650 L660 662 L340 662 Z" fill="#2c231d"/>' +
-        '<path d="M452 556 L548 556 L560 614 L440 614 Z" fill="#3b2f26"/>' +
         /* body with chin */
         '<rect x="22" y="20" width="956" height="540" rx="22" fill="#2c231d"/>' +
-        '<rect x="40" y="38" width="920" height="504" rx="12" stroke="#4a3d33" stroke-width="3"/>' +
         /* the screen: a light page, with the site content laid over it */
-        '<rect x="50" y="48" width="900" height="484" rx="9" fill="#f4ecdc"/>' +
+        '<rect x="36" y="34" width="928" height="512" rx="10" fill="#f4ecdc"/>' +
       '</g>' +
       /* a second, lighter stroke a few units off, like a pen going round twice */
       '<g transform="translate(5 4)" filter="url(#ink-wobble)" stroke="#1c1612" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" fill="none" opacity="0.55">' +
-        '<path d="M340 650 C340 622 380 614 420 612 L580 612 C620 614 660 622 660 650 L660 662 L340 662 Z"/>' +
-        '<path d="M452 556 L548 556 L560 614 L440 614 Z"/>' +
         '<rect x="22" y="20" width="956" height="540" rx="22"/>' +
-        '<rect x="50" y="48" width="900" height="484" rx="9"/>' +
+        '<rect x="36" y="34" width="928" height="512" rx="10"/>' +
       '</g>' +
-      '<rect x="52" y="50" width="896" height="480" rx="9" fill="url(#sheen)"/>' +
+      '<rect x="38" y="36" width="924" height="508" rx="10" fill="url(#sheen)"/>' +
     '</svg>';
 
   function show(i) {
