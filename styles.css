@@ -1187,5 +1187,6 @@ body[data-daylight="night"]   .daylight { background: rgba(58, 64, 92, 0.9);    
 .hotspot.is-rect::before {
   inset: calc(-1 * var(--pool-spread-rect, 14%));
   border-radius: 22% / 30%;
-  background: radial-gradient(ellipse 70% 70% at 50% 50%, var(--pool-color), rgba(227, 196, 138, 0.14) 60%, transparent 100%);
+  /* Flat across the object, then a soft spill: the surface itself is lit. */
+  background: radial-gradient(ellipse 78% 78% at 50% 50%, var(--pool-color) 0%, var(--pool-color) 52%, rgba(227, 196, 138, 0.16) 78%, transparent 100%);
 }
