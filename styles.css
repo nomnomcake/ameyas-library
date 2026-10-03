@@ -973,7 +973,7 @@ body.panel-open .motes { opacity: 0; transition: opacity 400ms; }
   --breath-color:    rgba(232, 200, 140, 0.9);   /* the lamp's warmth */
   --breath-max:      0.32;                       /* peak opacity of the breath */
   --breath-period:   8s;                        /* one slow in-and-out */
-  --vignette-color:  rgba(12, 8, 6, 0.95);     /* applied with overlay: darkens shadows, spares light */
+  --vignette-color:  rgba(12, 8, 6, 0.38);     /* applied with overlay: darkens shadows, spares light */
   --light-x:         0%;                        /* where the lamp is, off the top-left edge */
   --light-y:         12%;     /* shadow at the screen edges */
 }
@@ -1003,7 +1003,7 @@ body.panel-open .motes { opacity: 0; transition: opacity 400ms; }
 .vignette {
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse 120% 110% at var(--light-x) var(--light-y), transparent 35%, var(--vignette-color) 100%);
+  background: radial-gradient(ellipse 120% 110% at var(--light-x) var(--light-y), transparent 50%, var(--vignette-color) 100%);
   mix-blend-mode: overlay;
 }
 
