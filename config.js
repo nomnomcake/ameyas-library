@@ -45,6 +45,8 @@ const PAINTING = {
        linkLabel    — Text for that link, e.g. "Read the paper".
        meta         — Optional: year, collaborators, status. Shown small.
        video        — Optional YouTube or Vimeo URL ("reel" theme). Embedded lazily.
+       status       — Optional. "coming-soon" stamps the item, hides its link, and
+                      stops the validator nagging about a missing image.
 */
 const SECTIONS = [
   {
@@ -222,12 +224,13 @@ const SECTIONS = [
       },
       {
         title: "Third site",
-        description: "A sentence or two.",
+        description: "In the works. A sentence about what it will be.",
         image: "assets/site-3.jpg",
-        alt: "Screenshot of the third site.",
-        link: "https://example.com",
-        linkLabel: "Visit site",
-        meta: "2025"
+        alt: "An early screenshot of the third site.",
+        link: "",
+        linkLabel: "",
+        meta: "2026",
+        status: "coming-soon"
       }
     ]
   },

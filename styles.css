@@ -1667,3 +1667,47 @@ body[data-daylight="night"]   .daylight { background: rgba(58, 64, 92, 0.9);    
 @media (min-width: 768px) {
   .panel.is-about .panel-items { max-width: none; }         /* the paper theme narrows the column; not here */
 }
+
+/* ============================================================
+   Coming soon
+   Any item with status: "coming-soon" gets a stamp, loses its link,
+   and its image sits behind a light wash. Works in every theme.
+   ============================================================ */
+:root {
+  --stamp-ink: #8a3b2e;                 /* a dried-ink red, warmed */
+}
+.card { position: relative; }
+.stamp {
+  position: absolute;
+  z-index: 3;
+  top: 0.6rem; left: 0.6rem;
+  padding: 0.25rem 0.6rem;
+  font-family: var(--font-body);
+  font-variant: small-caps;
+  letter-spacing: 0.16em;
+  font-size: 0.78rem;
+  line-height: 1;
+  color: var(--stamp-ink);
+  border: 2px solid var(--stamp-ink);
+  border-radius: 3px;
+  background: rgba(241, 230, 208, 0.85);
+  transform: rotate(-6deg);
+  box-shadow: 0 1px 0 rgba(255, 244, 220, 0.5) inset;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+}
+.is-coming-soon .card-figure img { filter: saturate(0.6) contrast(0.92) brightness(1.05); }
+.is-coming-soon .card-figure::after {                          /* a parchment wash over the picture */
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: rgba(241, 230, 208, 0.22);
+}
+.is-coming-soon .card-figure { position: relative; }
+/* theme nudges */
+.theme-shelf .is-coming-soon .stamp { top: 50%; left: auto; right: 1rem; transform: translateY(-50%) rotate(-4deg); font-size: 0.66rem; }
+.theme-lab .is-coming-soon .stamp { position: static; display: inline-block; margin-bottom: 0.4rem; }
+.theme-paper .is-coming-soon .stamp { position: static; display: inline-block; margin-bottom: 0.4rem; }
+@media (min-width: 768px) {
+  /* on the desktop window the stamp sits over the screenshot, inside the window body */
+  .panel.theme-screen .is-coming-soon .stamp { top: 3.4rem; left: 1.8rem; font-family: var(--os-font); font-variant: normal; font-size: 0.6rem; letter-spacing: 0.04em; border-width: 2px; }
+  .panel.theme-screen .is-coming-soon .card-figure { background: var(--os-paper); min-height: 10rem; }
+}

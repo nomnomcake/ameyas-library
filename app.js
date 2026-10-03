@@ -55,7 +55,7 @@
         warn(name + " labelPosition must be left, right, above or below.");
       }
       (s.items || []).forEach(function (item, j) {
-        if (item.image) checkImage(item.image, name + " item " + j);
+        if (item.image && item.status !== "coming-soon") checkImage(item.image, name + " item " + j);
         if (item.image && !item.alt) warn(name + " item " + j + " (" + (item.title || "untitled") + ") has an image but no alt text.");
       });
     });
@@ -211,10 +211,16 @@
       fig.appendChild(img);
       card.appendChild(fig);
     }
+    if (item.status === "coming-soon") {
+      card.classList.add("is-coming-soon");
+      var stamp = el("span", "stamp", "Coming soon");
+      stamp.setAttribute("aria-label", "Coming soon");
+      card.appendChild(stamp);
+    }
     if (item.title) card.appendChild(el("h3", "card-title", item.title));
     if (item.meta) card.appendChild(el("p", "card-meta", item.meta));
     if (item.description) card.appendChild(el("p", "card-desc", item.description));
-    if (item.link) {
+    if (item.link && item.status !== "coming-soon") {
       var a = el("a", "card-link", item.linkLabel || "See more");
       a.href = item.link;
       if (/^https?:/i.test(item.link)) { a.target = "_blank"; a.rel = "noopener"; }
