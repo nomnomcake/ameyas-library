@@ -963,3 +963,57 @@ body.panel-open .motes { opacity: 0; transition: opacity 400ms; }
   html, body { height: 100%; overflow: hidden; }
   .room { height: 100%; min-height: 0; }
 }
+
+/* ============================================================
+   Atmosphere
+   The room breathes a little. Nothing here should be noticed
+   directly, only missed if it were gone.
+   ============================================================ */
+:root {
+  --breath-color:    rgba(227, 196, 138, 0.6);   /* the lamp's warmth */
+  --breath-max:      0.10;                       /* peak opacity of the breath */
+  --breath-period:   11s;                        /* one slow in-and-out */
+  --vignette-color:  rgba(42, 33, 27, 0.42);     /* shadow at the screen edges */
+}
+
+.atmosphere { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+
+/* Lamplight breathing: a wide warm pool over the lit, lower-left side of
+   the room, swelling and fading on a slow cycle. Soft-light keeps the
+   painting's own colours; it only warms what is already lit. */
+.lamp-breath {
+  position: absolute;
+  inset: -20%;
+  background: radial-gradient(ellipse 55% 60% at 32% 68%, var(--breath-color), rgba(227, 196, 138, 0.18) 45%, transparent 75%);
+  mix-blend-mode: soft-light;
+  opacity: 0;
+  animation: lamp-breath var(--breath-period) ease-in-out infinite;
+  will-change: opacity;
+}
+@keyframes lamp-breath {
+  0%, 100% { opacity: 0; }
+  50%      { opacity: var(--breath-max); }
+}
+
+/* Vignette: the edges of the screen are the dim corners of the room. */
+.vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 78% at 50% 48%, transparent 55%, var(--vignette-color) 100%);
+}
+
+/* More motes, all inside the beam, each on its own slow path */
+.motes i:nth-child(4) { left: 9%;  top: 44%; --mote-dur: 46s; --mote-delay: -11s; width: 2px; height: 2px; }
+.motes i:nth-child(5) { left: 33%; top: 72%; --mote-dur: 39s; --mote-delay: -33s; }
+.motes i:nth-child(6) { left: 19%; top: 80%; --mote-dur: 52s; --mote-delay: -2s;  width: 2px; height: 2px; }
+.motes i:nth-child(7) { left: 46%; top: 60%; --mote-dur: 44s; --mote-delay: -24s; }
+
+/* Breath and motes pause while a panel is open; the vignette stays. */
+body.panel-open .lamp-breath { animation-play-state: paused; opacity: 0; transition: opacity 400ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .lamp-breath { animation: none; opacity: calc(var(--breath-max) / 2); }
+}
+@media (max-width: 767.98px) {
+  .lamp-breath { display: none; }
+}
