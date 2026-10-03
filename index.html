@@ -6,7 +6,27 @@
   <title>Ameya Kohli — Ameya's Library</title>
   <meta name="description" content="The portfolio of Ameya Kohli: fine art, graphic design, animation, research, and the things on the bottom shelf.">
   <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#2a211b">
 
+  <!-- Social cards. og:image must be an absolute URL once deployed; update the domain if it changes. -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Ameya's Library">
+  <meta property="og:description" content="The portfolio of Ameya Kohli: fine art, graphic design, animation, research, and the things on the bottom shelf.">
+  <meta property="og:image" content="https://ameyakohli.com/og.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="675">
+  <meta property="og:url" content="https://ameyakohli.com/">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Ameya's Library">
+  <meta name="twitter:description" content="The portfolio of Ameya Kohli.">
+  <meta name="twitter:image" content="https://ameyakohli.com/og.jpg">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="favicon.png">
+
+  <!-- The painting is the whole site: fetch it first. -->
+  <link rel="preload" as="image" href="library.webp" type="image/webp" fetchpriority="high">
+
+  <!-- Fonts: preconnect, swap, only the weights used. -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Spectral:ital,wght@0,300;0,400;1,300&family=Alegreya+Sans:wght@400;500&display=swap">
@@ -17,21 +37,34 @@
 
   <main id="room" class="room">
     <!-- The painting IS the interface. The wrapper below has the painting's
-         exact aspect ratio so percentage hotspots stay locked to the art. -->
-    <div id="stage" class="stage" style="--painting-w: 3840; --painting-h: 2160;">
+         exact aspect ratio so percentage hotspots stay locked to the art.
+         Its inline background is a 32px blurred placeholder that the full
+         image crossfades over (see styles.css, step 9). -->
+    <div id="stage" class="stage" style="--painting-w: 3840; --painting-h: 2160; background-image: url('data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAADwAwCdASogABIAPtFepE0oJaOosBgIARAaCWUAsOwVRJCbedS3x1UAAP7uV/G8K+eDpa+FLO46KBF62bI1T5+18r5gizk+V31E25gY8Vj61/PqotJ/hAAA');">
       <div class="stage-inner">
         <div id="layer-base" class="layer layer-base">
-          <img id="painting" class="painting" src="library.png" width="3840" height="2160" fetchpriority="high" decoding="async"
-               alt="A warm, lamplit room. A girl in a pale blouse stands at the left reading a book. Behind her a stepped wooden bookshelf climbs toward the ceiling, with a monitor and a desk at the right. The words Ameya's Library are painted across the wall above the shelves.">
+          <picture>
+            <source srcset="library.webp" type="image/webp">
+            <img id="painting" class="painting" src="library-2400.png" width="2400" height="1350" fetchpriority="high" decoding="async"
+                 alt="A warm, lamplit room. A girl in a pale blouse stands at the left reading a book, her long hair falling over one shoulder. Behind her a stepped wooden bookshelf climbs toward the ceiling, with a monitor and a desk at the right. The words Ameya's Library are painted across the wall above the shelves.">
+          </picture>
         </div>
         <div id="layer-sharp" class="layer layer-sharp" aria-hidden="true">
-          <img class="painting" src="library.png" width="3840" height="2160" alt="" decoding="async">
+          <picture>
+            <source srcset="library.webp" type="image/webp">
+            <img class="painting" src="library-2400.png" width="2400" height="1350" alt="" decoding="async">
+          </picture>
         </div>
+        <!-- Dust motes in the lamplight. CSS only. Delete this div to cut them. -->
+        <div class="motes" aria-hidden="true"><i></i><i></i><i></i></div>
         <nav id="hotspots" class="hotspots" aria-label="Sections of the library"></nav>
       </div>
     </div>
-  </main>
 
+    <!-- Under 768px the hotspots are too small to use. The painting stays
+         at the top and the sections become a list of book spines. -->
+    <nav id="spines" class="spines" aria-label="Sections of the library"></nav>
+  </main>
 
   <!-- Step 4: the section panel. Taking something off the shelf. -->
   <div id="scrim" class="scrim" hidden></div>

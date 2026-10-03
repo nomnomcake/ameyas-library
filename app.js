@@ -68,8 +68,9 @@
     if (window.PAINTING && painting) {
       painting.addEventListener("error", function () { warn("Painting failed to load: " + painting.getAttribute("src")); });
       painting.addEventListener("load", function () {
-        if (painting.naturalWidth && (painting.naturalWidth !== PAINTING.width || painting.naturalHeight !== PAINTING.height)) {
-          warn("PAINTING.width/height in config.js (" + PAINTING.width + "x" + PAINTING.height + ") don't match the actual image (" +
+        var ratioCfg = PAINTING.width / PAINTING.height, ratioImg = painting.naturalWidth / painting.naturalHeight;
+        if (painting.naturalWidth && Math.abs(ratioCfg - ratioImg) > 0.002) {
+          warn("PAINTING.width/height in config.js (" + PAINTING.width + "x" + PAINTING.height + ") have a different aspect ratio from the served image (" +
                painting.naturalWidth + "x" + painting.naturalHeight + "). Hotspots will drift.");
         }
       });
@@ -687,4 +688,47 @@
       probe.send();
     } catch (e) { /* file:// blocks HEAD; ignore */ }
   }
+})();
+
+/* ============================================================
+   Step 9: mobile spine list, placeholder crossfade
+   ============================================================ */
+(function () {
+  "use strict";
+  var L = window.Library;
+
+  /* ---------- Placeholder → painting crossfade ---------- */
+  Array.prototype.forEach.call(document.querySelectorAll(".layer .painting"), function (img) {
+    function reveal() { img.classList.add("is-loaded"); }
+    if (img.complete && img.naturalWidth) reveal();
+    else { img.addEventListener("load", reveal, { once: true }); img.addEventListener("error", reveal, { once: true }); }
+  });
+
+  /* ---------- Spine list for narrow screens ----------
+     Same sections, same panel. Rendered always; CSS shows it under 768px. */
+  var spinesEl = document.getElementById("spines");
+  function renderSpines() {
+    if (!spinesEl) return;
+    spinesEl.innerHTML = "";
+    L.getSections().forEach(function (s) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "spine-link theme-" + (s.theme || "paper");
+      b.dataset.id = s.id;
+      b.setAttribute("aria-label", "Open " + (s.label || s.id).toLowerCase());
+      b.appendChild(document.createTextNode(s.label || s.id));
+      var n = (s.items || []).length;
+      if (n && s.theme !== "contact") {
+        var m = document.createElement("span");
+        m.className = "spine-meta";
+        m.textContent = n + (n === 1 ? " piece" : " pieces");
+        b.appendChild(m);
+      }
+      b.addEventListener("click", function () { L.openSection(s.id, b); });
+      spinesEl.appendChild(b);
+    });
+  }
+  renderSpines();
+  var prevSet = L.setSections;
+  L.setSections = function (list) { prevSet(list); renderSpines(); };
 })();

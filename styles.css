@@ -793,3 +793,165 @@ body.scroll-locked { position: fixed; width: 100%; overflow: hidden; }
   transition: border-color 200ms ease-out;
 }
 .contact-link:hover, .contact-link:focus-visible { border-color: var(--ink); outline: none; }
+
+/* ============================================================
+   Step 9: mobile, loading, accessibility, dust
+   ============================================================ */
+:root {
+  --placeholder-fade: 600ms;                      /* crossfade from the blurred placeholder */
+  --focus-ring: 0 0 0 2px rgba(227, 196, 138, 0.9), 0 0 0 5px rgba(42, 33, 27, 0.6);   /* warm gold, readable on the art */
+  --mobile-break: 768px;
+}
+
+/* ---- Loading: blurred placeholder behind, painting fades over it ---- */
+.stage {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.layer .painting {
+  opacity: 0;
+  transition: opacity var(--placeholder-fade) ease-out;
+}
+.layer .painting.is-loaded { opacity: 1; }
+
+/* ---- Warm focus rings everywhere a ring is appropriate ---- */
+.panel-close:focus-visible, .lightbox-btn:focus-visible, .spine:focus-visible,
+.card-link:focus-visible, .contact-link:focus-visible, .card-figure img:focus-visible,
+.spine-link:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+  border-radius: 2px;
+}
+/* Hotspots: the pool and label are the indicator, plus a soft ring so
+   keyboard users never lose their place on a busy painting. */
+.hotspot:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+.hotspot.is-ellipse:focus-visible { border-radius: 50%; }
+
+/* ---- Dust motes: three, very slow, only in the lamplight ----
+   If these ever read as cute rather than atmospheric, delete .motes in index.html. */
+.motes { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.motes i {
+  position: absolute;
+  width: 3px; height: 3px;
+  border-radius: 50%;
+  background: rgba(241, 230, 208, 0.55);
+  box-shadow: 0 0 6px 1px rgba(227, 196, 138, 0.45);
+  opacity: 0;
+  animation: mote-drift var(--mote-dur, 28s) linear infinite;
+  animation-delay: var(--mote-delay, 0s);
+}
+.motes i:nth-child(1) { left: 14%; top: 30%; --mote-dur: 34s; --mote-delay: -6s; }
+.motes i:nth-child(2) { left: 40%; top: 48%; --mote-dur: 41s; --mote-delay: -19s; width: 2px; height: 2px; }
+.motes i:nth-child(3) { left: 24%; top: 62%; --mote-dur: 37s; --mote-delay: -28s; }
+@keyframes mote-drift {
+  0%   { transform: translate(0, 0); opacity: 0; }
+  10%  { opacity: 0.7; }
+  50%  { transform: translate(18px, -26px); opacity: 0.45; }
+  90%  { opacity: 0.6; }
+  100% { transform: translate(-10px, -58px); opacity: 0; }
+}
+body.panel-open .motes { opacity: 0; transition: opacity 400ms; }
+@media (prefers-reduced-motion: reduce) { .motes { display: none; } }
+
+/* ---- Spine list: hidden on desktop ---- */
+.spines { display: none; }
+
+/* ============================================================
+   Mobile, under 768px
+   The painting leads, static, at the top. Sections become spines.
+   The panel fills the screen and slides up from the bottom.
+   ============================================================ */
+@media (max-width: 767.98px) {
+  .room {
+    display: block;
+    min-height: 0;
+    padding-bottom: 3.5rem;
+  }
+  .stage {
+    width: 100vw;
+    max-height: none;
+    margin: 0;
+  }
+  .hotspots, .motes { display: none; }
+
+  .spines {
+    display: grid;
+    gap: 0.5rem;
+    padding: 1.25rem 1rem 0;
+    max-width: 30rem;
+    margin: 0 auto;
+  }
+  .spine-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 0.95rem 1.1rem;
+    border: 0;
+    width: 100%;
+    text-align: left;
+    font: inherit;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 1.2rem;
+    letter-spacing: 0.04em;
+    color: var(--cream);
+    background: var(--spine-color, var(--spine-1));
+    box-shadow: inset 0 1px 0 rgba(255, 244, 220, 0.25), inset 0 -2px 0 rgba(42, 33, 27, 0.35), inset 4px 0 0 rgba(42, 33, 27, 0.25);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .spine-link:active { filter: brightness(1.08); }
+  .spine-link .spine-meta { font-family: var(--font-body); font-variant: small-caps; letter-spacing: 0.12em; font-size: 0.72rem; opacity: 0.8; font-weight: 400; white-space: nowrap; }
+  /* Spine colour follows the section's theme */
+  .spine-link.theme-paper   { --spine-color: #8c6a4a; }
+  .spine-link.theme-gallery { --spine-color: #6e5a47; }
+  .spine-link.theme-spread  { --spine-color: #a8845a; }
+  .spine-link.theme-reel    { --spine-color: #4a3c30; }
+  .spine-link.theme-lab     { --spine-color: #7d5f49; }
+  .spine-link.theme-shelf   { --spine-color: #b89a6a; }
+  .spine-link.theme-contact { --spine-color: #5c4b3d; }
+
+  /* Panel: full screen, rising from the bottom */
+  .panel {
+    width: 100vw;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    transform: translateY(104%);
+    transition: transform var(--panel-duration) var(--panel-ease), visibility 0s linear var(--panel-duration);
+    background: var(--panel-bg);                 /* fully readable, no blur dependency */
+  }
+  .panel.is-open { transform: translateY(0); }
+  .panel::before { display: none; }
+  .panel-scroll {
+    padding: calc(1.5rem + env(safe-area-inset-top, 0px)) 1.25rem calc(3rem + env(safe-area-inset-bottom, 0px));
+  }
+  .panel-close { top: calc(0.75rem + env(safe-area-inset-top, 0px)); }
+  .panel-title { font-size: 2.1rem; }
+  .theme-spread .panel-items { grid-template-columns: 1fr; }
+  .theme-reel .card { grid-template-columns: 1fr; }
+  .theme-reel .card-figure { grid-row: auto; margin-bottom: 0.7rem; }
+  .theme-gallery .panel-scroll { padding-left: 1.25rem; padding-right: 1.25rem; }
+  .theme-gallery .card-figure img { max-height: 60vh; }
+
+  /* The painting behind the full-screen panel doesn't need the blur work */
+  body.panel-open .layer-base { filter: brightness(var(--room-dim)); }
+  body.panel-open .layer-sharp { opacity: 0; }
+
+  .footer {
+    position: static;
+    display: block;
+    text-align: center;
+    padding: 1.5rem 1rem 0;
+  }
+  .lightbox { padding: 3.5rem 0.5rem 1rem; }
+  .lightbox-img { max-height: calc(100vh - 9rem); }
+}
+
+/* Any pointer that can't hover (touch) gets the label on press instead */
+@media (hover: none) {
+  .hotspot:active .hotspot-label, .hotspot:active::before, .hotspot:active .hotspot-surface { opacity: 1; }
+}
