@@ -1117,3 +1117,63 @@ body.panel-open .cursor-lamp { opacity: 0; }
   transform: rotate(var(--beam-angle));
   mix-blend-mode: soft-light;     /* warms what's lit rather than painting a new light */
 }
+
+/* ============================================================
+   Three more quiet things
+   1. A shadow sweep when a panel opens
+   3. A time-of-day tint
+   6. The room wakes up after the painting lands
+   ============================================================ */
+
+/* 1. Shadow sweep: a soft dark band crosses the painting once, in the
+   direction the light travels, as if the object you lifted passed in
+   front of the lamp. Triggered by JS adding .is-sweeping. */
+:root {
+  --sweep-duration: 900ms;
+  --sweep-color:    rgba(30, 23, 18, 0.5);
+}
+.shadow-sweep {
+  position: absolute;
+  inset: -20%;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(118deg, transparent 0%, transparent 38%, var(--sweep-color) 50%, transparent 62%, transparent 100%);
+  background-size: 300% 100%;
+  background-position: 0% 0;
+  mix-blend-mode: multiply;
+}
+.shadow-sweep.is-sweeping {
+  animation: shadow-sweep var(--sweep-duration) cubic-bezier(0.3, 0, 0.2, 1) 1 forwards;
+}
+@keyframes shadow-sweep {
+  0%   { opacity: 0;   background-position: 0% 0; }
+  15%  { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { opacity: 0;   background-position: 100% 0; }
+}
+
+/* 3. Time of day. body[data-daylight] is set from the clock in app.js.
+   Each is a tint on the whole room; all stay inside the warm palette. */
+.daylight {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 2s ease-out;
+}
+body[data-daylight="morning"] .daylight { background: rgba(244, 232, 208, 0.9); mix-blend-mode: soft-light; opacity: 0.35; }  /* pale, clear */
+body[data-daylight="day"]     .daylight { opacity: 0; }                                                                        /* the painting as painted */
+body[data-daylight="evening"] .daylight { background: rgba(226, 164, 96, 0.9);  mix-blend-mode: soft-light; opacity: 0.45; }  /* deeper gold */
+body[data-daylight="night"]   .daylight { background: rgba(58, 64, 92, 0.9);    mix-blend-mode: multiply;   opacity: 0.22; }  /* cooler, dimmer */
+
+/* 6. Wake-up. The painting fades over its placeholder first; a beat later
+   the vignette, the dust and the cursor lamp come in, so the room settles
+   rather than switching on. body.is-awake is added by app.js. */
+.vignette, .motes, .lit-mask, .daylight-ready { opacity: 0; transition: opacity 1600ms ease-out; }
+body.is-awake .vignette, body.is-awake .motes, body.is-awake .lit-mask { opacity: 1; }
+body.is-awake .daylight { transition-delay: 400ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .shadow-sweep { display: none; }
+  .vignette, .motes, .lit-mask, .daylight { transition: none; }
+}

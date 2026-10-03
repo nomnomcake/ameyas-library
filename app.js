@@ -804,3 +804,43 @@
     burst(e.clientX, e.clientY);
   });
 })();
+
+/* ============================================================
+   Three quiet things: shadow sweep on open, time-of-day tint,
+   and the room waking up after the painting lands.
+   ============================================================ */
+(function () {
+  "use strict";
+  var L = window.Library;
+  var body = document.body;
+  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* 1. Shadow sweep, once per panel open */
+  var sweep = document.querySelector(".shadow-sweep");
+  if (sweep && !reduceMotion) {
+    var prevOpen = L.onSectionOpen;
+    L.onSectionOpen = function (section, opts) {
+      if (prevOpen) prevOpen(section, opts);
+      sweep.classList.remove("is-sweeping");
+      void sweep.offsetWidth;
+      sweep.classList.add("is-sweeping");
+    };
+    sweep.addEventListener("animationend", function () { sweep.classList.remove("is-sweeping"); });
+  }
+
+  /* 3. Time of day from the visitor's clock. Re-checked every few minutes. */
+  function daylight() {
+    var h = new Date().getHours();
+    var band = h < 5 ? "night" : h < 11 ? "morning" : h < 17 ? "day" : h < 21 ? "evening" : "night";
+    body.setAttribute("data-daylight", band);
+  }
+  daylight();
+  setInterval(daylight, 5 * 60 * 1000);
+
+  /* 6. Wake-up: a beat after the painting has faded in */
+  var img = L.els.painting;
+  function wake() { setTimeout(function () { body.classList.add("is-awake"); }, reduceMotion ? 0 : 900); }
+  if (img && img.complete && img.naturalWidth) wake();
+  else if (img) { img.addEventListener("load", wake, { once: true }); img.addEventListener("error", wake, { once: true }); }
+  else wake();
+})();
