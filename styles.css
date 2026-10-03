@@ -1860,3 +1860,19 @@ body.panel-open .glint { animation-play-state: paused; opacity: 0; transition: o
   margin: 0 !important;
   transform: translate(-50%, -50%) !important;
 }
+
+/* ============================================================
+   Light stays inside rectangular objects
+   For frames, shelves and the monitor the pool is drawn inside the
+   clipped surface, never outside it, so nothing bleeds onto the
+   wood or the wall. Round objects keep the spilling pool.
+   ============================================================ */
+.hotspot.is-rect::before { display: none; }
+.hotspot.is-rect .hotspot-surface {
+  background:
+    radial-gradient(ellipse 85% 85% at 50% 50%, rgba(227, 196, 138, 0.34) 0%, rgba(227, 196, 138, 0.26) 45%, rgba(227, 196, 138, 0.12) 80%, rgba(227, 196, 138, 0.06) 100%),
+    var(--lift-color);
+}
+.hotspot.is-rect.is-coming-soon .hotspot-surface { background: var(--soon-shade); }
+.hotspot.is-rect.is-coming-soon:hover .hotspot-surface,
+.hotspot.is-rect.is-coming-soon:focus-visible .hotspot-surface { background: rgba(16, 11, 8, 0.38); }
