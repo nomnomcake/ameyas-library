@@ -1195,7 +1195,7 @@ body[data-daylight="night"]   .daylight { background: rgba(58, 64, 92, 0.9);    
    The monitor
    The "screen" theme doesn't use the side panel. It raises a drawn
    computer: an inked cartoon monitor with a chin, a glass sheen, a
-   neck, a rounded foot and a keyboard, in cream and ink. The panel
+   neck and a rounded foot, in cream and ink. The panel
    itself is the screen; the drawing (an inline SVG, see app.js) is
    laid over and around it. One site shows at a time.
 
@@ -1208,14 +1208,14 @@ body[data-daylight="night"]   .daylight { background: rgba(58, 64, 92, 0.9);    
   --monitor-cream:  #e9dcc2;
   --monitor-cream2: #d9cbae;
   --monitor-screen: #1f1a16;
-  --monitor-width:  min(76vw, 980px, 46vh * 2.045);   /* the screen's width; keeps the whole drawing on screen */
+  --monitor-width:  min(76vw, 1000px, 52vh * 2.045);  /* the screen's width; keeps the whole drawing on screen */
   --monitor-h:      calc(var(--monitor-width) * 440 / 900);
 }
 @media (min-width: 768px) {
   .panel.theme-screen {
     inset: auto;
     left: 50%;
-    top: calc(50% - 0.78 * var(--monitor-h));         /* centres monitor + keyboard, not just the screen */
+    top: calc(50% - 0.66 * var(--monitor-h));         /* centres the monitor including its foot */
     width: var(--monitor-width);
     height: var(--monitor-h);
     border: 0;

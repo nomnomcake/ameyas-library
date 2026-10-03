@@ -826,19 +826,11 @@
       '</defs>' +
       /* sticker halo: the same silhouette in cream, fat stroke, underneath */
       '<g stroke="#f1e6d0" stroke-width="30" stroke-linejoin="round" fill="#f1e6d0">' +
-        '<path d="M190 700 L810 700 L850 782 L150 782 Z"/>' +
         '<path d="M340 650 C340 622 380 614 420 612 L580 612 C620 614 660 622 660 650 L660 662 L340 662 Z"/>' +
         '<path d="M452 556 L548 556 L560 614 L440 614 Z"/>' +
         '<rect x="22" y="20" width="956" height="540" rx="22"/>' +
       '</g>' +
       '<g stroke="#1c1612" stroke-width="10" stroke-linejoin="round" stroke-linecap="round" fill="none">' +
-        /* keyboard */
-        '<path d="M190 700 L810 700 L850 782 L150 782 Z" fill="#2c231d"/>' +
-        '<g stroke="none">' +
-          '<rect x="216" y="712" width="48" height="16" rx="4" fill="#c9a66b"/><rect x="272" y="712" width="36" height="16" rx="4" fill="#e3c48a"/><rect x="316" y="712" width="36" height="16" rx="4" fill="#f1e6d0"/><rect x="360" y="712" width="36" height="16" rx="4" fill="#c9a66b"/><rect x="404" y="712" width="36" height="16" rx="4" fill="#e3c48a"/><rect x="448" y="712" width="36" height="16" rx="4" fill="#f1e6d0"/><rect x="492" y="712" width="36" height="16" rx="4" fill="#c9a66b"/><rect x="536" y="712" width="36" height="16" rx="4" fill="#e3c48a"/><rect x="580" y="712" width="36" height="16" rx="4" fill="#f1e6d0"/><rect x="624" y="712" width="36" height="16" rx="4" fill="#c9a66b"/><rect x="668" y="712" width="36" height="16" rx="4" fill="#e3c48a"/><rect x="712" y="712" width="72" height="16" rx="4" fill="#6b5440"/>' +
-          '<rect x="208" y="736" width="60" height="16" rx="4" fill="#6b5440"/><rect x="276" y="736" width="36" height="16" rx="4" fill="#e3c48a"/><rect x="320" y="736" width="36" height="16" rx="4" fill="#c9a66b"/><rect x="364" y="736" width="36" height="16" rx="4" fill="#f1e6d0"/><rect x="408" y="736" width="36" height="16" rx="4" fill="#e3c48a"/><rect x="452" y="736" width="36" height="16" rx="4" fill="#c9a66b"/><rect x="496" y="736" width="36" height="16" rx="4" fill="#f1e6d0"/><rect x="540" y="736" width="36" height="16" rx="4" fill="#e3c48a"/><rect x="584" y="736" width="36" height="16" rx="4" fill="#c9a66b"/><rect x="628" y="736" width="36" height="16" rx="4" fill="#f1e6d0"/><rect x="672" y="736" width="36" height="16" rx="4" fill="#e3c48a"/><rect x="716" y="736" width="76" height="16" rx="4" fill="#6b5440"/>' +
-          '<rect x="200" y="760" width="70" height="14" rx="4" fill="#6b5440"/><rect x="278" y="760" width="60" height="14" rx="4" fill="#c9a66b"/><rect x="346" y="760" width="300" height="14" rx="4" fill="#e9dcc2"/><rect x="654" y="760" width="60" height="14" rx="4" fill="#c9a66b"/><rect x="722" y="760" width="78" height="14" rx="4" fill="#6b5440"/>' +
-        '</g>' +
         /* foot and neck */
         '<path d="M340 650 C340 622 380 614 420 612 L580 612 C620 614 660 622 660 650 L660 662 L340 662 Z" fill="#2c231d"/>' +
         '<path d="M452 556 L548 556 L560 614 L440 614 Z" fill="#3b2f26"/>' +
