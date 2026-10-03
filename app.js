@@ -339,3 +339,60 @@
   L.els.panel = panel;
   L.els.panelItems = itemsEl;
 })();
+
+/* ============================================================
+   Step 5: deep linking and history
+   #fine-art opens that section; back closes the panel; forward reopens.
+   ============================================================ */
+(function () {
+  "use strict";
+  var L = window.Library;
+  var SITE_TITLE = "Ameya Kohli";
+  var baseTitle = document.title;
+  var baseUrl = location.pathname + location.search;
+
+  function titleFor(section) { return section ? section.label + ", " + SITE_TITLE : baseTitle; }
+
+  /* Called by openSection / closeSection (step 4). opts.fromHistory means
+     the browser moved us, so don't push another entry. */
+  L.onSectionOpen = function (section, opts) {
+    document.title = titleFor(section);
+    if (opts.fromHistory) return;
+    var url = baseUrl + "#" + section.id;
+    if (location.hash === "#" + section.id) history.replaceState({ section: section.id }, "", url);
+    else history.pushState({ section: section.id }, "", url);
+  };
+
+  L.onSectionClose = function (section, opts) {
+    document.title = baseTitle;
+    if (opts.fromHistory) return;
+    history.pushState({ section: null }, "", baseUrl);
+  };
+
+  function sectionFromHash() {
+    var id = (location.hash || "").replace(/^#/, "");
+    return id && L.findSection(id) ? id : null;
+  }
+
+  window.addEventListener("popstate", function () {
+    var id = sectionFromHash();
+    var open = L.currentSection();
+    if (id && (!open || open.id !== id)) L.openSection(id, null, { fromHistory: true });
+    else if (!id && open) L.closeSection({ fromHistory: true });
+  });
+
+  /* On load: wait for the painting so the sharp clip has something to show. */
+  function openFromUrl() {
+    var id = sectionFromHash();
+    if (!id) { history.replaceState({ section: null }, "", location.href); return; }
+    history.replaceState({ section: id }, "", location.href);
+    L.openSection(id, null, { fromHistory: true });
+  }
+  var img = L.els.painting;
+  if (img && !img.complete) {
+    img.addEventListener("load", openFromUrl, { once: true });
+    img.addEventListener("error", openFromUrl, { once: true });
+  } else {
+    openFromUrl();
+  }
+})();
