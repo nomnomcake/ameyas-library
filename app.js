@@ -1050,9 +1050,38 @@
     cap.appendChild(t); if (item.meta) cap.appendChild(m); cap.appendChild(f);
   }
 
+  /* The flying leaf: outgoing page on its front, incoming page on its back */
+  function flip(dir, outgoing, incoming) {
+    var leaf = document.createElement("div");
+    leaf.className = "book-leaf " + (dir > 0 ? "forward" : "backward");
+    var front = document.createElement("div"); front.className = "face front";
+    var back  = document.createElement("div"); back.className  = "face back";
+    function copy(item, face) {
+      if (!item) return;
+      var src = item.card.querySelector(".card-figure img") || book.querySelector("img[src=\"" + item.src + "\"]");
+      var img = document.createElement("img"); img.alt = ""; img.src = item.src; face.appendChild(img);
+    }
+    copy(outgoing, front); copy(incoming, back);
+    leaf.appendChild(front); leaf.appendChild(back);
+    var shadow = document.createElement("div"); shadow.className = "book-leaf-shadow " + (dir > 0 ? "forward" : "backward");
+    book.appendChild(shadow); book.appendChild(leaf);
+    book.classList.add("is-flipping");
+    leaf.addEventListener("animationend", function () { leaf.remove(); shadow.remove(); book.classList.remove("is-flipping"); }, { once: true });
+  }
+
   function show(n, animate) {
     var total = Math.ceil(items.length / 2);
+    var from = spread;
     spread = Math.max(0, Math.min(total - 1, n));
+    if (animate && !reduceMotion && spread !== from) {
+      var dir = spread > from ? 1 : -1;
+      /* forward: the right page (from*2+1) turns to reveal the new left page (spread*2)
+         backward: the left page (from*2) turns to reveal the new right page (spread*2+1) */
+      var outgoing = dir > 0 ? items[from * 2 + 1] : items[from * 2];
+      var incoming = dir > 0 ? items[spread * 2]   : items[spread * 2 + 1];
+      flip(dir, outgoing, incoming);
+      animate = false;          // the spread beneath changes at once; the leaf does the motion
+    }
     function paint() {
       fill(pages[0], items[spread * 2], spread * 2);
       fill(pages[1], items[spread * 2 + 1], spread * 2 + 1);
@@ -1072,7 +1101,7 @@
     if (section.theme !== "book" || !window.matchMedia("(min-width: 768px)").matches) return;
 
     var cards = Array.prototype.slice.call(itemsEl.querySelectorAll(".card"));
-    items = cards.map(function (card, k) { return { card: card, title: (section.items[k] || {}).title, meta: (section.items[k] || {}).meta }; });
+    items = cards.map(function (card, k) { var it = section.items[k] || {}; return { card: card, title: it.title, meta: it.meta, src: it.image }; });
 
     var wrap = document.createElement("div"); wrap.className = "book-wrap";
     book = document.createElement("div"); book.className = "book";
