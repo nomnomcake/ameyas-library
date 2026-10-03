@@ -1776,3 +1776,42 @@ body[data-daylight="night"]   .daylight { background: rgba(58, 64, 92, 0.9);    
   .os-clock { font-family: var(--os-font); font-size: 0.62rem; letter-spacing: 0.04em; margin-left: 0.6rem; margin-right: 0.3rem; }
   .screen-nav .screen-count { margin-left: auto; }
 }
+
+/* ============================================================
+   Glints
+   Two tiny four-point sparkles beside each clickable object, each
+   on its own slow cycle. They fade when the lamp turns to the object.
+   ============================================================ */
+:root {
+  --glint-color:  rgba(247, 236, 210, 0.95);
+  --glint-glow:   rgba(227, 196, 138, 0.8);
+  --glint-size:   clamp(6px, 0.6vw, 10px);
+  --glint-period: 7s;
+}
+.glint {
+  position: absolute;
+  width: var(--glint-size);
+  height: var(--glint-size);
+  background: var(--glint-color);
+  clip-path: polygon(50% 0%, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0% 50%, 39% 39%);
+  filter: drop-shadow(0 0 3px var(--glint-glow));
+  opacity: 0;
+  transform: scale(0.4) rotate(0deg);
+  animation: glint-twinkle var(--glint-period) ease-in-out infinite;
+  animation-delay: var(--d, 0s);
+  pointer-events: none;
+}
+.glint-a { top: -4%; right: -3%; }
+.glint-b { bottom: 6%; left: -2.5%; width: calc(var(--glint-size) * 0.7); height: calc(var(--glint-size) * 0.7); }
+@keyframes glint-twinkle {
+  0%, 62%  { opacity: 0;   transform: scale(0.4) rotate(0deg); }
+  70%      { opacity: 0.9; transform: scale(1)   rotate(20deg); }
+  78%      { opacity: 0.5; transform: scale(0.7) rotate(40deg); }
+  86%      { opacity: 0.8; transform: scale(0.9) rotate(60deg); }
+  100%     { opacity: 0;   transform: scale(0.4) rotate(90deg); }
+}
+.hotspot:hover .glint, .hotspot:focus-visible .glint, .hotspot.is-active .glint,
+body.panel-open .glint { animation-play-state: paused; opacity: 0; transition: opacity 300ms; }
+@media (prefers-reduced-motion: reduce) {
+  .glint { animation: none; opacity: 0.45; transform: scale(0.8); }
+}

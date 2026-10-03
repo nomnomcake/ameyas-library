@@ -118,6 +118,13 @@
       label.setAttribute("aria-hidden", "true");
       label.textContent = soon ? "Coming soon" : (s.label || s.id);
       btn.appendChild(label);
+      if (!soon) {                         /* two tiny glints: the object catches the light */
+        var g1 = document.createElement("span"); g1.className = "glint glint-a"; g1.setAttribute("aria-hidden", "true");
+        var g2 = document.createElement("span"); g2.className = "glint glint-b"; g2.setAttribute("aria-hidden", "true");
+        g1.style.setProperty("--d", (Math.random() * 6).toFixed(2) + "s");
+        g2.style.setProperty("--d", (2 + Math.random() * 6).toFixed(2) + "s");
+        btn.appendChild(g1); btn.appendChild(g2);
+      }
       btn.addEventListener("click", function () { if (!soon) onHotspotClick(s, btn); });
       hotspotsEl.appendChild(btn);
     });
