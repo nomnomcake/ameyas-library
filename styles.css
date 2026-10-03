@@ -1067,30 +1067,9 @@ body.panel-open .cursor-lamp { opacity: 0; }
 @media (prefers-reduced-motion: reduce) { .spark { display: none; } }
 
 /* ============================================================
-   Light stays in the light
-   The breathing glow and the cursor lamp are clipped to the beam
-   painted into the picture, so the shadows keep their shadow.
-   --lit-area is a polygon in percentages of the painting: trace
-   the edges of the beam. Edit it when the painting changes.
-   ============================================================ */
-:root {
-  --lit-area: polygon(28% 0%, 100% 26%, 100% 100%, 36% 100%, 0% 27%);
-}
-.lit-mask {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  clip-path: var(--lit-area);
-  -webkit-clip-path: var(--lit-area);
-}
-/* Inside the mask, the lamp sits in the same coordinate space as before */
-.lit-mask .cursor-lamp { position: absolute; }
-
-/* ============================================================
    One light source
    The painted beam's two edges converge off the canvas, up and to
-   the left. The vignette and the cursor lamp both take their position
-   and direction from that single point. (Overrides the earlier blocks.)
+   the left. The vignette takes its origin from that point.
    ============================================================ */
 :root {
   --light-x:     -22%;        /* where the beam edges meet, as % of the painting */
@@ -1104,19 +1083,6 @@ body.panel-open .cursor-lamp { opacity: 0; }
 }
 
 
-/* Cursor lamp: not a round pool but a patch of the beam landing where
-   the pointer is. Elongated along the beam, brighter on the side facing
-   the source, trailing off away from it. */
-.cursor-lamp {
-  width: calc(var(--lamp-size) * 1.6);
-  height: calc(var(--lamp-size) * 0.7);
-  margin: calc(var(--lamp-size) * -0.35) 0 0 calc(var(--lamp-size) * -0.8);
-  border-radius: 50%;
-  background: radial-gradient(ellipse 50% 50% at 42% 50%,
-              var(--lamp-color) 0%, rgba(232, 200, 140, 0.22) 45%, transparent 75%);
-  transform: rotate(var(--beam-angle));
-  mix-blend-mode: soft-light;     /* warms what's lit rather than painting a new light */
-}
 
 /* ============================================================
    Three more quiet things
@@ -1169,11 +1135,11 @@ body[data-daylight="night"]   .daylight { background: rgba(58, 64, 92, 0.9);    
 /* 6. Wake-up. The painting fades over its placeholder first; a beat later
    the vignette, the dust and the cursor lamp come in, so the room settles
    rather than switching on. body.is-awake is added by app.js. */
-.vignette, .motes, .lit-mask, .daylight-ready { opacity: 0; transition: opacity 1600ms ease-out; }
-body.is-awake .vignette, body.is-awake .motes, body.is-awake .lit-mask { opacity: 1; }
+.vignette, .motes { opacity: 0; transition: opacity 1600ms ease-out; }
+body.is-awake .vignette, body.is-awake .motes { opacity: 1; }
 body.is-awake .daylight { transition-delay: 400ms; }
 
 @media (prefers-reduced-motion: reduce) {
   .shadow-sweep { display: none; }
-  .vignette, .motes, .lit-mask, .daylight { transition: none; }
+  .vignette, .motes, .daylight { transition: none; }
 }

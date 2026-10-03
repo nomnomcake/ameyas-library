@@ -59,9 +59,8 @@
         </div>
         <!-- Atmosphere: vignette and the cursor lamp. CSS only. Delete to cut. -->
         <div class="atmosphere" aria-hidden="true">
-          <!-- Everything inside lit-mask is clipped to the painted beam, so the
-               cursor light never spills into the shadows. Shape: --lit-area in styles.css. -->
-          <div class="lit-mask"><div class="cursor-lamp"></div></div>
+          <!-- Cursor lamp: a warm pool that follows the pointer anywhere on the painting. JS in app.js. -->
+          <div class="cursor-lamp"></div>
           <div class="vignette"></div>
           <!-- Time of day: a faint tint set from the visitor's clock (see app.js). -->
           <div class="daylight"></div>
