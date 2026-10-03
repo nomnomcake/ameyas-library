@@ -1786,7 +1786,7 @@ body[data-daylight="night"]   .daylight { background: rgba(58, 64, 92, 0.9);    
   --glint-color:  rgba(247, 236, 210, 0.95);
   --glint-glow:   rgba(227, 196, 138, 0.8);
   --glint-size:   clamp(6px, 0.6vw, 10px);
-  --glint-period: 7s;
+  --glint-period: 9s;
 }
 .glint {
   position: absolute;
@@ -1804,14 +1804,47 @@ body[data-daylight="night"]   .daylight { background: rgba(58, 64, 92, 0.9);    
 .glint-a { top: -4%; right: -3%; }
 .glint-b { bottom: 6%; left: -2.5%; width: calc(var(--glint-size) * 0.7); height: calc(var(--glint-size) * 0.7); }
 @keyframes glint-twinkle {
-  0%, 62%  { opacity: 0;   transform: scale(0.4) rotate(0deg); }
-  70%      { opacity: 0.9; transform: scale(1)   rotate(20deg); }
-  78%      { opacity: 0.5; transform: scale(0.7) rotate(40deg); }
-  86%      { opacity: 0.8; transform: scale(0.9) rotate(60deg); }
-  100%     { opacity: 0;   transform: scale(0.4) rotate(90deg); }
+  0%, 40%  { opacity: 0;    transform: scale(0.4) rotate(0deg); }
+  50%      { opacity: 0.85; transform: scale(1)   rotate(15deg); }
+  62%      { opacity: 0.55; transform: scale(0.8) rotate(30deg); }
+  74%      { opacity: 0.9;  transform: scale(1)   rotate(45deg); }
+  88%      { opacity: 0.4;  transform: scale(0.75) rotate(65deg); }
+  100%     { opacity: 0;    transform: scale(0.4) rotate(90deg); }
 }
 .hotspot:hover .glint, .hotspot:focus-visible .glint, .hotspot.is-active .glint,
 body.panel-open .glint { animation-play-state: paused; opacity: 0; transition: opacity 300ms; }
 @media (prefers-reduced-motion: reduce) {
   .glint { animation: none; opacity: 0.45; transform: scale(0.8); }
+}
+
+/* ---- Monitor window: alignment pass ----
+   One rhythm: an 8px grid, 1.25rem margins, 2rem title bar, 2.75rem taskbar.
+   The close button joins the other window controls in the title bar.
+   The taskbar groups the arrows around the counter; the clock sits alone at the right. */
+@media (min-width: 768px) {
+  .panel.theme-screen .panel-items { left: 1.25rem; right: 1.25rem; top: 1.25rem; bottom: 4rem; }
+  .os-titlebar { height: 2rem; padding: 0 0.75rem; grid-template-columns: 3.5rem 1fr 3.5rem; }
+  .os-titlebar .os-dots i { width: 0.7rem; height: 0.7rem; }
+  .os-controls { gap: 0.3rem; padding-right: 1.25rem; }
+  .os-controls i { width: 0.95rem; height: 0.95rem; }
+  .panel.theme-screen .panel-close {
+    top: calc(1.25rem + 0.5rem + 2px); right: calc(1.25rem + 0.75rem + 2px);
+    width: 0.95rem; height: 0.95rem; border-width: var(--os-line); border-radius: 2px;
+    box-shadow: none; background: var(--os-paper);
+  }
+  .panel.theme-screen .panel-close svg { width: 0.6rem; height: 0.6rem; }
+  .panel.theme-screen .panel-close:hover { background: var(--os-accent); box-shadow: none; }
+
+  .os-body { gap: 2rem; padding: 1.5rem 1.75rem; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); }
+  .panel.theme-screen .card-figure { box-shadow: 3px 3px 0 var(--os-ink); }
+  .os-body .os-text { max-width: 34ch; gap: 0.75rem; }
+  .os-text .card-title { margin: 0; font-size: 1rem; }
+  .panel.theme-screen .card-desc { font-size: 1.3rem; line-height: 1.25; }
+
+  .panel.theme-screen .screen-nav { height: 2.75rem; padding: 0 1.25rem; gap: 0.75rem; }
+  .os-tray { gap: 0.5rem; }
+  .os-tray i { box-shadow: 2px 2px 0 var(--os-ink); }
+  .os-pager { display: inline-flex; align-items: center; gap: 0.5rem; margin-left: auto; }
+  .screen-nav .screen-count { margin: 0; min-width: 3.2em; text-align: center; }
+  .os-clock { margin: 0 0 0 0.75rem; padding-left: 0.75rem; border-left: var(--os-line) solid rgba(28, 22, 18, 0.35); }
 }

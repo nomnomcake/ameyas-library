@@ -971,8 +971,7 @@
     var count = document.createElement("span"); count.className = "screen-count";
     var prev = document.createElement("button"); prev.type = "button"; prev.innerHTML = chevron(-1); prev.setAttribute("aria-label", "Previous site");
     var next = document.createElement("button"); next.type = "button"; next.innerHTML = chevron(1);  next.setAttribute("aria-label", "Next site");
-    nav.appendChild(tray); nav.appendChild(count); nav.appendChild(clock); nav.appendChild(prev); nav.appendChild(next);
-    scroll.appendChild(nav);
+     scroll.appendChild(nav);
     prev.addEventListener("click", function () { show(index - 1); });
     next.addEventListener("click", function () { show(index + 1); });
     show(0);
