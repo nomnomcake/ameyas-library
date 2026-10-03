@@ -1848,3 +1848,8 @@ body.panel-open .glint { animation-play-state: paused; opacity: 0; transition: o
   .screen-nav .screen-count { margin: 0; min-width: 3.2em; text-align: center; }
   .os-clock { margin: 0 0 0 0.75rem; padding-left: 0.75rem; border-left: var(--os-line) solid rgba(28, 22, 18, 0.35); }
 }
+
+@media (min-width: 768px) {
+  .os-text .card-title { font-size: 1.7rem; line-height: 1.1; letter-spacing: 0.04em; margin-bottom: 0.25rem; }
+  .os-body .os-text { gap: 0.9rem; }
+}

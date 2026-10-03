@@ -199,18 +199,18 @@ const SECTIONS = [
     ]
   },
   {
-    id: "websites",
-    label: "Websites",
+    id: "projects",
+    label: "Projects",
     object: "the monitor screen on the right (not the stand)",
     hotspot: { x: 84.6, y: 41.9, w: 15.4, h: 19.1 },
     shape: "rect",
     labelPosition: "below",
     theme: "screen",
-    intro: "Three sites I built. Open any of them in a new tab.",
+    intro: "Things I have built. Click a screenshot to open it.",
     items: [
       {
         title: "Biome Guessr",
-        description: "A geography guessing game played from orbit: you are dropped somewhere on a blocky, voxel Earth and have to work out where you are from the biome alone. Built around a 3D globe rendered in the browser, with a retro Geographical Data Recovery Division framing.",
+        description: "A geography guessing game played from orbit: you are dropped somewhere on a blocky, voxel Earth and have to work out where you are from the biome alone. Built in plain JavaScript with Three.js for the WebGL globe, bundled with Vite, and deployed on Vercel.",
         image: "assets/site-1.jpg",
         alt: "The Biome Guessr title screen: pixel lettering over a voxel Earth seen from space, with a Begin Mission button and a satellite readout in the corner.",
         link: "https://biomeguessr.vercel.app/",
@@ -241,7 +241,7 @@ const SECTIONS = [
   {
     id: "contact",
     label: "Contact",
-    object: "none yet: the monitor now holds Websites. Reachable from the phone list and #contact.",
+    object: "none yet: the monitor holds Projects. Reachable from the phone list and #contact.",
     hotspot: null,
     shape: "rect",
     labelPosition: "below",

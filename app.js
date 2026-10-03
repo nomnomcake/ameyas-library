@@ -954,7 +954,7 @@
     }
 
     cards = Array.prototype.slice.call(itemsEl.querySelectorAll(".card"));
-    cards.forEach(function (c, k) { c.style.setProperty("--i", 0); dress(c, (section.items || [])[k], section.label || "Websites"); });
+    cards.forEach(function (c, k) { c.style.setProperty("--i", 0); dress(c, (section.items || [])[k], section.label || "Projects"); });
 
     /* Taskbar */
     nav = document.createElement("div");
