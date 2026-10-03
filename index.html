@@ -24,7 +24,7 @@
   <link rel="apple-touch-icon" href="favicon.png">
 
   <!-- The painting is the whole site: fetch it first. -->
-  <link rel="preload" as="image" imagesrcset="library-2400.webp 2400w, library.webp 3840w" imagesizes="100vw" type="image/webp" fetchpriority="high">
+  <link rel="preload" as="image" href="library.webp" type="image/webp" media="(min-width: 768px)" fetchpriority="high">
 
   <!-- Fonts: preconnect, swap, only the weights used. -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -44,14 +44,16 @@
       <div class="stage-inner">
         <div id="layer-base" class="layer layer-base">
           <picture>
-            <source srcset="library-2400.webp 2400w, library.webp 3840w" sizes="100vw" type="image/webp">
+            <source srcset="library-2400.webp" media="(max-width: 767px)" type="image/webp">
+            <source srcset="library.webp" type="image/webp">
             <img id="painting" class="painting" src="library-2400.png" width="3840" height="2160" fetchpriority="high" decoding="async"
                  alt="A warm, lamplit room. A girl in a pale blouse stands at the left reading a book, her long hair falling over one shoulder. Behind her a stepped wooden bookshelf climbs toward the ceiling, with a monitor and a desk at the right. The words Ameya's Library are painted across the wall above the shelves.">
           </picture>
         </div>
         <div id="layer-sharp" class="layer layer-sharp" aria-hidden="true">
           <picture>
-            <source srcset="library-2400.webp 2400w, library.webp 3840w" sizes="100vw" type="image/webp">
+            <source srcset="library-2400.webp" media="(max-width: 767px)" type="image/webp">
+            <source srcset="library.webp" type="image/webp">
             <img class="painting" src="library-2400.png" width="3840" height="2160" alt="" decoding="async">
           </picture>
         </div>
