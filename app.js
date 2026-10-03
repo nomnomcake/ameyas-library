@@ -841,26 +841,57 @@
       '<rect x="38" y="36" width="924" height="508" rx="10" fill="url(#sheen)"/>' +
     '</svg>';
 
+  var icons = null;
+
   function show(i) {
     if (!cards.length) return;
     index = (i + cards.length) % cards.length;
     cards.forEach(function (c, k) { c.classList.toggle("is-current", k === index); });
-    if (dots) Array.prototype.forEach.call(dots.children, function (d, k) { d.classList.toggle("is-on", k === index); });
+    if (icons) Array.prototype.forEach.call(icons.children, function (b, k) { b.classList.toggle("is-on", k === index); });
     if (nav) nav.querySelector(".screen-count").textContent = (index + 1) + " / " + cards.length;
   }
 
   function chevron(dir) {
-    return '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="' +
+    return '<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="' +
       (dir < 0 ? "M15 4.5 7.5 12 15 19.5" : "M9 4.5 16.5 12 9 19.5") +
-      '" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      '" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  }
+
+  /* A little folder icon with a window on it, in the desktop's ink and cream */
+  function folderIcon() {
+    return '<svg viewBox="0 0 48 40" aria-hidden="true">' +
+      '<path d="M4 9 h14 l4 4 h22 v22 a3 3 0 0 1 -3 3 h-37 a3 3 0 0 1 -3 -3 z" fill="#f6efe0" stroke="#1c1612" stroke-width="2.5" stroke-linejoin="round"/>' +
+      '<path d="M4 17 h40" stroke="#1c1612" stroke-width="2.5"/>' +
+      '<rect x="14" y="21" width="20" height="12" rx="1.5" fill="#e8c9a0" stroke="#1c1612" stroke-width="2"/>' +
+      '<path d="M14 25 h20" stroke="#1c1612" stroke-width="2"/>' +
+      '</svg>';
+  }
+
+  /* Give a card the dialog-window chrome: title bar with dots, body below */
+  function dress(card) {
+    if (card.querySelector(".os-titlebar")) return;
+    var title = card.querySelector(".card-title");
+    var bar = document.createElement("div");
+    bar.className = "os-titlebar";
+    var dots = document.createElement("span"); dots.className = "os-dots"; dots.innerHTML = "<i></i><i></i>";
+    bar.appendChild(dots);
+    if (title) bar.appendChild(title); else bar.appendChild(document.createElement("span"));
+    bar.appendChild(document.createElement("span"));
+    var body = document.createElement("div");
+    body.className = "os-body";
+    while (card.firstChild) body.appendChild(card.firstChild);
+    card.appendChild(bar);
+    card.appendChild(body);
   }
 
   L.decoratePanel = function (section, panel, itemsEl) {
     if (previous) previous(section, panel, itemsEl);
     var frame = panel.querySelector(".monitor-frame");
-    var oldNav = panel.querySelector(".screen-nav");
-    if (oldNav) oldNav.remove();
-    cards = []; nav = null; dots = null;
+    var scroll = panel.querySelector(".panel-scroll");
+    var old;
+    if ((old = panel.querySelector(".screen-nav"))) old.remove();
+    if ((old = panel.querySelector(".os-icons"))) old.remove();
+    cards = []; nav = null; dots = null; icons = null;
 
     if (section.theme !== "screen") { if (frame) frame.remove(); return; }
 
@@ -873,18 +904,36 @@
     }
 
     cards = Array.prototype.slice.call(itemsEl.querySelectorAll(".card"));
-    cards.forEach(function (c) { c.style.setProperty("--i", 0); });
-    if (cards.length < 2) { show(0); return; }
+    cards.forEach(function (c) { c.style.setProperty("--i", 0); dress(c); });
 
+    /* Desktop icons */
+    icons = document.createElement("nav");
+    icons.className = "os-icons";
+    icons.setAttribute("aria-label", "Sites");
+    cards.forEach(function (c, k) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "os-icon";
+      var name = (section.items[k] && section.items[k].title) || "Site " + (k + 1);
+      b.innerHTML = folderIcon() + "<span></span>";
+      b.querySelector("span").textContent = name;
+      b.setAttribute("aria-label", "Open " + name);
+      b.addEventListener("click", function () { show(k); });
+      icons.appendChild(b);
+    });
+    scroll.appendChild(icons);
+
+    /* Taskbar */
     nav = document.createElement("div");
     nav.className = "screen-nav";
+    var start = document.createElement("span"); start.className = "os-start"; start.innerHTML = "<i></i>";
+    start.appendChild(document.createTextNode(section.label || "Websites"));
+    var status = document.createElement("span"); status.className = "os-status"; status.textContent = section.intro || "";
+    var count = document.createElement("span"); count.className = "screen-count";
     var prev = document.createElement("button"); prev.type = "button"; prev.innerHTML = chevron(-1); prev.setAttribute("aria-label", "Previous site");
     var next = document.createElement("button"); next.type = "button"; next.innerHTML = chevron(1);  next.setAttribute("aria-label", "Next site");
-    dots = document.createElement("span"); dots.className = "screen-dots"; dots.setAttribute("aria-hidden", "true");
-    cards.forEach(function () { dots.appendChild(document.createElement("i")); });
-    var count = document.createElement("span"); count.className = "screen-count";
-    nav.appendChild(prev); nav.appendChild(dots); nav.appendChild(count); nav.appendChild(next);
-    panel.querySelector(".panel-scroll").appendChild(nav);
+    nav.appendChild(start); nav.appendChild(status); nav.appendChild(count); nav.appendChild(prev); nav.appendChild(next);
+    scroll.appendChild(nav);
     prev.addEventListener("click", function () { show(index - 1); });
     next.addEventListener("click", function () { show(index + 1); });
     show(0);
