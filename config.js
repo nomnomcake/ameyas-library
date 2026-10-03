@@ -63,7 +63,7 @@ const SECTIONS = [
     items: [
       {
         title: "Ameya Kohli",
-        description: "I’m an artist with a foot in bioengineering, design, and studio practice. My work runs from fine art to the design of medical devices. It has been shown in more than forty exhibitions, most recently at the U.S. Capitol.",
+        description: "I’m an artist interested in bioengineering, design, and art practice (premed!!). My work runs from fine art to the design of medical devices. It has been shown in more than forty exhibitions, most recently at the U.S. Capitol.",
         image: "assets/ameya.jpg",
         alt: "Ameya Kohli standing on the water with the lower Manhattan skyline behind her, long dark hair over a white top, smiling slightly.",
         link: "",
