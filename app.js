@@ -835,8 +835,8 @@
         '<rect x="22" y="20" width="956" height="540" rx="22" fill="#2c231d"/>' +
         '<rect x="40" y="38" width="920" height="504" rx="12" stroke="#4a3d33" stroke-width="3"/>' +
         '<path d="M470 524 L500 508 L530 524 L500 540 Z" fill="#c9a66b" stroke="#1c1612" stroke-width="4"/>' +
-        /* screen outline: the panel behind it is the screen */
-        '<rect x="50" y="48" width="900" height="440" rx="9"/>' +
+        /* the screen: a light page, with the site content laid over it */
+        '<rect x="50" y="48" width="900" height="440" rx="9" fill="#f4ecdc"/>' +
       '</g>' +
       /* a second, lighter stroke a few units off, like a pen going round twice */
       '<g transform="translate(5 4)" filter="url(#ink-wobble)" stroke="#1c1612" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" fill="none" opacity="0.55">' +
