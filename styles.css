@@ -26,6 +26,26 @@
   --font-sans:    "Alegreya Sans", "Gill Sans", "Segoe UI", system-ui, sans-serif;
   --font-mono:    ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 
+
+  /* ---------- Lamplight hover (step 3) ----------
+     Every timing and colour the hover uses lives here. */
+  --pool-color:        rgba(227, 196, 138, 0.42);  /* the lamp pool, gold from the painting */
+  --pool-blur:         25px;                        /* softness of the pool edge */
+  --pool-spread:       28%;                         /* how far the pool spills past the object */
+  --pool-in:           350ms;                       /* bloom duration */
+  --pool-ease:         ease-out;
+  --sheen-color:       rgba(255, 247, 228, 0.30);   /* warm white band, ~30% */
+  --sheen-angle:       20deg;                       /* tilt of the band */
+  --sheen-width:       28%;                         /* band width relative to the object */
+  --sheen-duration:    700ms;                       /* one sweep, lower-left to upper-right */
+  --sheen-ease:        cubic-bezier(0.33, 0.8, 0.4, 1);
+  --lift-color:        rgba(255, 236, 200, 0.07);   /* ~4% brightness lift on the object */
+  --lift-in:           300ms;
+  --label-color:       var(--ink);                  /* ink navy small caps */
+  --label-halo:        0 0 2px rgba(241, 230, 208, 0.95), 0 0 10px rgba(241, 230, 208, 0.85), 0 0 22px rgba(227, 196, 138, 0.7);
+  --label-in:          300ms;
+  --label-gap:         0.6rem;                      /* distance from the object */
+
   /* Hotspot placeholder tint (step 1 only; removed from view in step 3) */
   --hotspot-debug: rgba(227, 196, 138, 0.28);
 }
@@ -135,7 +155,7 @@ img { max-width: 100%; display: block; }
   margin: 0;
   padding: 0;
   border: 0;
-  background: var(--hotspot-debug);
+  background: transparent;
   cursor: pointer;
   font: inherit;
   color: inherit;
@@ -173,3 +193,124 @@ img { max-width: 100%; display: block; }
   font-family: var(--font-body);
 }
 .noscript h2 { font-family: var(--font-heading); font-weight: 500; margin: 1.5rem 0 0.25rem; }
+
+/* ============================================================
+   Step 3: lamplight hover and sheen
+   A lamp turning toward the object. Nothing here is a box.
+   ============================================================ */
+
+/* Structure of each hotspot button (built in app.js):
+   button.hotspot
+     ::before               the pool of light behind the object
+     span.hotspot-surface   clipped to the object; holds the lift and the sheen
+       ::after              the sheen band
+     span.hotspot-label     the small caps label beside the object            */
+
+.hotspot {
+  overflow: visible;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* 1. Pool of light. Slightly larger than the object, blurred, blooming in. */
+.hotspot::before {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * var(--pool-spread));
+  border-radius: 50%;
+  background: radial-gradient(closest-side, var(--pool-color), rgba(227, 196, 138, 0.12) 55%, transparent 100%);
+  filter: blur(var(--pool-blur));
+  opacity: 0;
+  transition: opacity var(--pool-in) var(--pool-ease);
+  pointer-events: none;
+  will-change: opacity;
+}
+
+/* 5. The surface: brightness lift, and the container that clips the sheen. */
+.hotspot-surface {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  background: var(--lift-color);
+  opacity: 0;
+  transition: opacity var(--lift-in) var(--pool-ease);
+  pointer-events: none;
+}
+
+/* 2. The sheen band. Soft-edged, tilted, sweeps once. */
+.hotspot-surface::after {
+  content: "";
+  position: absolute;
+  top: -60%;
+  bottom: -60%;
+  left: 0;
+  width: var(--sheen-width);
+  background: linear-gradient(90deg, transparent 0%, var(--sheen-color) 50%, transparent 100%);
+  transform: translateX(-200%) rotate(var(--sheen-angle));
+  opacity: 0;
+  pointer-events: none;
+}
+
+@keyframes sheen-sweep {
+  0%   { transform: translateX(-200%) rotate(var(--sheen-angle)); opacity: 0; }
+  12%  { opacity: 1; }
+  88%  { opacity: 1; }
+  100% { transform: translateX(520%) rotate(var(--sheen-angle)); opacity: 0; }
+}
+
+/* 3. Label beside the object, never on it. */
+.hotspot-label {
+  position: absolute;
+  font-family: var(--font-body);
+  font-variant: small-caps;
+  font-size: clamp(0.72rem, 1.1vw, 1rem);
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: lowercase;
+  color: var(--label-color);
+  text-shadow: var(--label-halo);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity var(--label-in) var(--pool-ease), transform var(--label-in) var(--pool-ease);
+  pointer-events: none;
+}
+.label-right .hotspot-label { left: 100%; top: 50%; transform: translate(calc(var(--label-gap) - 4px), -50%); margin-left: var(--label-gap); }
+.label-left  .hotspot-label { right: 100%; top: 50%; transform: translate(calc(4px - var(--label-gap)), -50%); margin-right: var(--label-gap); }
+.label-above .hotspot-label { bottom: 100%; left: 50%; transform: translate(-50%, 4px); margin-bottom: var(--label-gap); }
+.label-below .hotspot-label { top: 100%; left: 50%; transform: translate(-50%, -4px); margin-top: var(--label-gap); }
+
+/* The lit state: hover, keyboard focus, and the open section (step 4). */
+.hotspot:hover::before,
+.hotspot:focus-visible::before,
+.hotspot.is-active::before { opacity: 1; }
+
+.hotspot:hover .hotspot-surface,
+.hotspot:focus-visible .hotspot-surface,
+.hotspot.is-active .hotspot-surface { opacity: 1; }
+
+.hotspot:hover .hotspot-surface::after,
+.hotspot:focus-visible .hotspot-surface::after {
+  animation: sheen-sweep var(--sheen-duration) var(--sheen-ease) 1 forwards;
+}
+
+.hotspot:hover .hotspot-label,
+.hotspot:focus-visible .hotspot-label,
+.hotspot.is-active .hotspot-label { opacity: 1; }
+.label-right:hover .hotspot-label, .label-right:focus-visible .hotspot-label, .label-right.is-active .hotspot-label { transform: translate(0, -50%); }
+.label-left:hover  .hotspot-label, .label-left:focus-visible  .hotspot-label, .label-left.is-active  .hotspot-label { transform: translate(0, -50%); }
+.label-above:hover .hotspot-label, .label-above:focus-visible .hotspot-label, .label-above.is-active .hotspot-label { transform: translate(-50%, 0); }
+.label-below:hover .hotspot-label, .label-below:focus-visible .hotspot-label, .label-below.is-active .hotspot-label { transform: translate(-50%, 0); }
+
+/* Keyboard users still need to see where they are, but a ring would read
+   as a box. The pool plus label is the focus indicator; add a faint warm
+   ring only for forced-colors / high contrast users. */
+@media (forced-colors: active) {
+  .hotspot:focus-visible { outline: 2px solid Highlight; }
+}
+
+/* Reduced motion: keep the pool and the label, drop the sheen and movement. */
+@media (prefers-reduced-motion: reduce) {
+  .hotspot::before, .hotspot-surface, .hotspot-label { transition: none; }
+  .hotspot-surface::after { display: none; }
+  .hotspot-label { transform: none !important; }
+}

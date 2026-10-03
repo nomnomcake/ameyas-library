@@ -100,6 +100,16 @@
       btn.dataset.id = s.id;
       btn.setAttribute("aria-label", "Open " + (s.label || s.id).toLowerCase());
       btn.setAttribute("style", hotspotStyle(s.hotspot));
+      /* Step 3: the lit surface (sheen + lift) and the label beside the object. */
+      var surface = document.createElement("span");
+      surface.className = "hotspot-surface";
+      surface.setAttribute("aria-hidden", "true");
+      btn.appendChild(surface);
+      var label = document.createElement("span");
+      label.className = "hotspot-label";
+      label.setAttribute("aria-hidden", "true");
+      label.textContent = s.label || s.id;
+      btn.appendChild(label);
       btn.addEventListener("click", function () { onHotspotClick(s, btn); });
       hotspotsEl.appendChild(btn);
     });
