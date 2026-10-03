@@ -203,13 +203,13 @@ const SECTIONS = [
     intro: "Three sites I built. Open any of them in a new tab.",
     items: [
       {
-        title: "First site",
-        description: "What it is, who it was for, and what you built it with.",
+        title: "Biome Guessr",
+        description: "A geography guessing game played from orbit: you are dropped somewhere on a blocky, voxel Earth and have to work out where you are from the biome alone. Built around a 3D globe rendered in the browser, with a retro Geographical Data Recovery Division framing.",
         image: "assets/site-1.jpg",
-        alt: "Screenshot of the first site's home page.",
-        link: "https://example.com",
-        linkLabel: "Visit site",
-        meta: "2026 · HTML, CSS, JS"
+        alt: "The Biome Guessr title screen: pixel lettering over a voxel Earth seen from space, with a Begin Mission button and a satellite readout in the corner.",
+        link: "https://biomeguessr.vercel.app/",
+        linkLabel: "Play it",
+        meta: "2026 · browser game · 3D globe"
       },
       {
         title: "Second site",
