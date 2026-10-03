@@ -44,7 +44,8 @@
       if (!s.label) warn(name + " has no label.");
       if (!s.theme) warn(name + " has no theme.");
       var h = s.hotspot;
-      if (!h || typeof h.x !== "number" || typeof h.y !== "number" || typeof h.w !== "number" || typeof h.h !== "number") {
+      if (h === null) { /* deliberate: this section has no painted object yet */ }
+      else if (!h || typeof h.x !== "number" || typeof h.y !== "number" || typeof h.w !== "number" || typeof h.h !== "number") {
         warn(name + " has no usable hotspot {x, y, w, h}.");
       } else if (h.x < 0 || h.y < 0 || h.x + h.w > 100.01 || h.y + h.h > 100.01) {
         warn(name + " hotspot runs off the painting: " + JSON.stringify(h));

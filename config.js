@@ -29,6 +29,8 @@ const PAINTING = {
    object        — Which painted object this maps to. For YOUR reference only.
    hotspot       — { x, y, w, h } as percentages of the painting (0–100).
                    x,y = top-left corner. w,h = size.
+                   null = no object on the painting; the section still appears
+                   in the phone list and opens from its #hash.
    shape         — "rect" or "ellipse". Ellipse uses the same box as a bounding box.
    labelPosition — Where the hover label sits relative to the object:
                    "left" | "right" | "above" | "below". Pick empty shelf space.
@@ -48,8 +50,8 @@ const SECTIONS = [
   {
     id: "about",
     label: "About me",
-    object: "the painted word LIBRARY on the wall (the girl reading stays inert)",
-    hotspot: { x: 67, y: 27, w: 30, h: 13 },
+    object: "none yet: no painted object on the desktop. Reachable from the phone list and #about. Set a hotspot here when the final painting has a home for it.",
+    hotspot: null,
     shape: "rect",
     labelPosition: "above",
     theme: "paper",

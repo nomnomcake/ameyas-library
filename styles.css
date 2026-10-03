@@ -973,7 +973,9 @@ body.panel-open .motes { opacity: 0; transition: opacity 400ms; }
   --breath-color:    rgba(232, 200, 140, 0.9);   /* the lamp's warmth */
   --breath-max:      0.32;                       /* peak opacity of the breath */
   --breath-period:   8s;                        /* one slow in-and-out */
-  --vignette-color:  rgba(30, 23, 18, 0.55);     /* shadow at the screen edges */
+  --vignette-color:  rgba(12, 8, 6, 0.95);     /* applied with overlay: darkens shadows, spares light */
+  --light-x:         0%;                        /* where the lamp is, off the top-left edge */
+  --light-y:         12%;     /* shadow at the screen edges */
 }
 
 .atmosphere { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
@@ -995,11 +997,14 @@ body.panel-open .motes { opacity: 0; transition: opacity 400ms; }
   50%      { opacity: var(--breath-max); }
 }
 
-/* Vignette: the edges of the screen are the dim corners of the room. */
+/* Vignette: light comes from the upper left, so nothing is darkened there.
+   The shadow grows with distance from the source and, through overlay
+   blending, deepens what is already dark while leaving lit surfaces alone. */
 .vignette {
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse 88% 84% at 44% 44%, transparent 48%, var(--vignette-color) 100%);
+  background: radial-gradient(ellipse 120% 110% at var(--light-x) var(--light-y), transparent 35%, var(--vignette-color) 100%);
+  mix-blend-mode: overlay;
 }
 
 /* More motes, all inside the beam, each on its own slow path */
