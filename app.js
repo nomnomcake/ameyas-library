@@ -812,9 +812,8 @@
   var previous = L.decoratePanel;
   var cards = [], index = 0, nav = null, dots = null;
 
-  /* The drawn computer: thick even ink line, flat fills, a cream sticker
-     halo around the silhouette. The screen rect is left unfilled: the
-     panel behind it is the screen. */
+  /* The drawn computer: thick even ink line, flat fills. The screen rect
+     is left unfilled: the panel behind it is the screen. */
   var DRAWING =
     '<svg viewBox="0 0 1000 800" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
       '<defs>' +
@@ -824,12 +823,6 @@
           '<stop offset="0.65" stop-color="#f1e6d0" stop-opacity="0"/>' +
         '</linearGradient>' +
       '</defs>' +
-      /* sticker halo: the same silhouette in cream, fat stroke, underneath */
-      '<g stroke="#f1e6d0" stroke-width="30" stroke-linejoin="round" fill="#f1e6d0">' +
-        '<path d="M340 650 C340 622 380 614 420 612 L580 612 C620 614 660 622 660 650 L660 662 L340 662 Z"/>' +
-        '<path d="M452 556 L548 556 L560 614 L440 614 Z"/>' +
-        '<rect x="22" y="20" width="956" height="540" rx="22"/>' +
-      '</g>' +
       '<g stroke="#1c1612" stroke-width="10" stroke-linejoin="round" stroke-linecap="round" fill="none">' +
         /* foot and neck */
         '<path d="M340 650 C340 622 380 614 420 612 L580 612 C620 614 660 622 660 650 L660 662 L340 662 Z" fill="#2c231d"/>' +
