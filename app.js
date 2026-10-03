@@ -841,13 +841,10 @@
       '<rect x="38" y="36" width="924" height="508" rx="10" fill="url(#sheen)"/>' +
     '</svg>';
 
-  var icons = null;
-
   function show(i) {
     if (!cards.length) return;
     index = (i + cards.length) % cards.length;
     cards.forEach(function (c, k) { c.classList.toggle("is-current", k === index); });
-    if (icons) Array.prototype.forEach.call(icons.children, function (b, k) { b.classList.toggle("is-on", k === index); });
     if (nav) nav.querySelector(".screen-count").textContent = (index + 1) + " / " + cards.length;
   }
 
@@ -890,8 +887,7 @@
     var scroll = panel.querySelector(".panel-scroll");
     var old;
     if ((old = panel.querySelector(".screen-nav"))) old.remove();
-    if ((old = panel.querySelector(".os-icons"))) old.remove();
-    cards = []; nav = null; dots = null; icons = null;
+    cards = []; nav = null; dots = null;
 
     if (section.theme !== "screen") { if (frame) frame.remove(); return; }
 
