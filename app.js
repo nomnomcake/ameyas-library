@@ -767,3 +767,40 @@
   });
   stage.addEventListener("pointerleave", function () { document.body.classList.remove("lamp-on"); });
 })();
+
+/* ============================================================
+   Sparks: a click on the painting throws a few embers.
+   ============================================================ */
+(function () {
+  "use strict";
+  var stage = document.getElementById("stage");
+  if (!stage || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  var layer = document.createElement("div");
+  layer.className = "sparks";
+  layer.setAttribute("aria-hidden", "true");
+  document.body.appendChild(layer);
+
+  function burst(x, y) {
+    var n = 14 + Math.floor(Math.random() * 6);
+    for (var i = 0; i < n; i++) {
+      var s = document.createElement("span");
+      s.className = "spark";
+      var angle = Math.random() * Math.PI * 2;
+      var dist = 28 + Math.random() * 70;
+      s.style.setProperty("--x", x + "px");
+      s.style.setProperty("--y", y + "px");
+      s.style.setProperty("--dx", Math.cos(angle) * dist + "px");
+      s.style.setProperty("--dy", Math.sin(angle) * dist - 24 + "px");   // a little lift, then the +18px in CSS lets them fall
+      s.style.setProperty("--s", (2 + Math.random() * 3) + "px");
+      s.style.setProperty("--c", Math.random() < 0.5 ? "var(--spark-color-a)" : "var(--spark-color-b)");
+      s.style.animationDelay = (Math.random() * 60) + "ms";
+      layer.appendChild(s);
+      s.addEventListener("animationend", function (e) { e.target.remove(); });
+    }
+  }
+
+  stage.addEventListener("pointerdown", function (e) {
+    if (e.pointerType === "touch" || e.button !== 0) return;
+    burst(e.clientX, e.clientY);
+  });
+})();
