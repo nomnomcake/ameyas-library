@@ -1193,87 +1193,81 @@ body[data-daylight="night"]   .daylight { background: rgba(58, 64, 92, 0.9);    
 
 /* ============================================================
    The monitor
-   The "screen" theme doesn't use the side panel. It raises the
-   monitor from the painting: a flat panel with a pencil outline,
-   a short neck and a flat foot, in the same browns as the drawing.
-   One site shows at a time; arrows flip between them.
+   The "screen" theme doesn't use the side panel. It raises a drawn
+   computer: an inked cartoon monitor with a chin, a glass sheen, a
+   neck, a rounded foot and a keyboard, in cream and ink. The panel
+   itself is the screen; the drawing (an inline SVG, see app.js) is
+   laid over and around it. One site shows at a time.
+
+   Geometry: in the SVG's 1000 x 800 box the screen is the rect
+   x 50..950, y 48..488. The panel IS that rect, so the SVG is sized
+   and offset from it by those ratios.
    ============================================================ */
 :root {
-  --monitor-line:    #1c1612;                  /* the pencil outline */
-  --monitor-bezel:   #3b2f26;                  /* the panel's frame, lit wood brown */
-  --monitor-bezel-2: #2c231d;                  /* its shadowed side */
-  --monitor-screen:  #1f1a16;                  /* the dark screen in the painting */
-  --monitor-width:   min(78vw, 1080px);
-  --monitor-height:  min(70vh, 660px);
+  --monitor-ink:    #1c1612;
+  --monitor-cream:  #e9dcc2;
+  --monitor-cream2: #d9cbae;
+  --monitor-screen: #1f1a16;
+  --monitor-width:  min(76vw, 980px, 46vh * 2.045);   /* the screen's width; keeps the whole drawing on screen */
+  --monitor-h:      calc(var(--monitor-width) * 440 / 900);
 }
 @media (min-width: 768px) {
   .panel.theme-screen {
     inset: auto;
     left: 50%;
-    top: 46%;
+    top: calc(50% - 0.78 * var(--monitor-h));         /* centres monitor + keyboard, not just the screen */
     width: var(--monitor-width);
-    height: var(--monitor-height);
-    border: 12px solid transparent;         /* the bezel is drawn by .monitor-frame, through the sketch filter */
-    border-radius: 3px;
+    height: var(--monitor-h);
+    border: 0;
+    border-radius: 6px;
     background: var(--monitor-screen);
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
-    box-shadow: 0 30px 60px -28px rgba(0, 0, 0, 0.85);
+    box-shadow: none;
     overflow: visible;
-    transform: translate(-50%, 60vh);
+    transform: translate(-50%, 70vh);
     transition: transform var(--panel-duration) var(--panel-ease), visibility 0s linear var(--panel-duration);
   }
   .panel.theme-screen.is-open {
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, 0);
     transition: transform var(--panel-duration) var(--panel-ease), visibility 0s;
   }
   .panel.theme-screen::before { display: none; }
-  .panel.theme-screen::after  { opacity: 0.12; mix-blend-mode: multiply; }   /* keep the paper grain: it is a drawing */
+  .panel.theme-screen::after  { display: none; }
 
-  /* Neck and foot, drawn the same way */
-  .monitor-stand {
+  /* The drawing, scaled so its screen rect lands exactly on the panel */
+  .monitor-frame {
     position: absolute;
-    left: 50%;
-    top: 100%;
-    width: 7%;
-    height: 42px;
-    margin-left: -3.5%;
-    margin-top: 12px;
-    background: linear-gradient(90deg, var(--monitor-bezel), var(--monitor-bezel-2));
-    outline: 3.5px solid var(--monitor-line);
+    left: -5.556%;              /* 50 / 900 */
+    top: -10.909%;              /* 48 / 440 */
+    width: 111.111%;            /* 1000 / 900 */
+    height: 181.818%;           /* 800 / 440 */
     pointer-events: none;
-    filter: url(#sketchy-soft);
+    z-index: 0;
   }
-  .monitor-stand::after {
-    content: "";
-    position: absolute;
-    left: -160%;
-    right: -160%;
-    top: 100%;
-    height: 12px;
-    margin-top: 2.5px;
-    background: linear-gradient(180deg, var(--monitor-bezel), var(--monitor-bezel-2));
-    outline: 3.5px solid var(--monitor-line);
-    border-radius: 2px;
-  }
+  .monitor-frame svg { width: 100%; height: 100%; display: block; overflow: visible; }
+  .panel.theme-screen .panel-scroll { position: relative; z-index: 1; }
+  .panel.theme-screen .panel-close { z-index: 2; }
 
   .panel.theme-screen .panel-scroll {
-    padding: 1.4rem 1.8rem 1.6rem;
-    background: var(--monitor-screen);
+    padding: 1.1rem 1.5rem 1rem;
+    background: transparent;
     display: flex;
     flex-direction: column;
+    border-radius: 6px;
   }
   .panel.theme-screen .panel-head {
     display: flex;
     align-items: baseline;
     gap: 1.2rem;
-    margin-bottom: 1.1rem;
-    padding-bottom: 0.7rem;
+    margin-bottom: 0.9rem;
+    padding-bottom: 0.6rem;
+    padding-right: 2.2rem;
     border-bottom: 1px solid rgba(241, 230, 208, 0.12);
   }
-  .panel.theme-screen .panel-title { font-size: 1.5rem; margin: 0; }
-  .panel.theme-screen .panel-intro { font-size: 0.86rem; }
-  .panel.theme-screen .panel-close { top: 0.3rem; right: 0.4rem; width: 2rem; height: 2rem; }
+  .panel.theme-screen .panel-title { font-size: 1.4rem; margin: 0; }
+  .panel.theme-screen .panel-intro { font-size: 0.84rem; }
+  .panel.theme-screen .panel-close { top: 0.35rem; right: 0.45rem; width: 2rem; height: 2rem; }
 
   /* One site at a time: screenshot on the left, words on the right */
   .panel.theme-screen .panel-items { display: block; flex: 1; min-height: 0; }
@@ -1281,14 +1275,14 @@ body[data-daylight="night"]   .daylight { background: rgba(58, 64, 92, 0.9);    
   .panel.theme-screen .card.is-current {
     display: grid;
     grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
-    gap: 1.6rem;
+    gap: 1.4rem;
     align-items: start;
     opacity: 1; transform: none;
   }
   .panel.theme-screen .card-figure { grid-row: 1 / span 4; margin: 0; }
   .panel.theme-screen .card-figure img { aspect-ratio: 16 / 10; }
-  .panel.theme-screen .card-title { font-size: 1.5rem; margin-top: 0.2rem; }
-  .panel.theme-screen .card-desc { font-size: 0.92rem; line-height: 1.6; }
+  .panel.theme-screen .card-title { font-size: 1.35rem; margin-top: 0.1rem; }
+  .panel.theme-screen .card-desc { font-size: 0.88rem; line-height: 1.55; }
   .panel.theme-screen .card-link { justify-self: start; }
 
   /* Arrows and counter along the bottom of the screen */
@@ -1298,14 +1292,14 @@ body[data-daylight="night"]   .daylight { background: rgba(58, 64, 92, 0.9);    
     justify-content: center;
     gap: 1rem;
     margin-top: auto;
-    padding-top: 0.9rem;
+    padding-top: 0.6rem;
     font-family: var(--font-mono);
-    font-size: 0.74rem;
+    font-size: 0.72rem;
     letter-spacing: 0.12em;
     color: rgba(227, 196, 138, 0.8);
   }
   .screen-nav button {
-    width: 2.2rem; height: 2.2rem;
+    width: 2rem; height: 2rem;
     padding: 0; border: 1px solid rgba(227, 196, 138, 0.45); border-radius: 2px;
     background: transparent; color: var(--cream); cursor: pointer;
     display: grid; place-items: center;
@@ -1317,45 +1311,8 @@ body[data-daylight="night"]   .daylight { background: rgba(58, 64, 92, 0.9);    
   .screen-nav .screen-dots i.is-on { background: var(--gold-bright); }
 }
 @media (max-width: 767.98px) {
-  /* Phones: the normal full-screen panel, all three stacked */
+  /* Phones: the normal full-screen panel, all three stacked, no drawing */
   .panel.theme-screen .card { display: block; }
-  .screen-nav { display: none; }
+  .screen-nav, .monitor-frame { display: none; }
 }
 @media (prefers-reduced-motion: reduce) { .panel.theme-screen { transition: none !important; } }
-
-/* ---- Sketchy lines on the monitor ----
-   The frame's outline is drawn by a separate layer run through an SVG
-   displacement filter, so the pencil wobble never touches the text or
-   screenshots on the screen. Two strokes, one darker and one lighter,
-   like the doubled lines in the painting. */
-@media (min-width: 768px) {
-  .monitor-frame {
-    position: absolute;
-    inset: -13px;
-    pointer-events: none;
-    border: 13px solid var(--monitor-bezel);                       /* the bezel fill itself */
-    border-color: #45382e var(--monitor-bezel-2) var(--monitor-bezel-2) var(--monitor-bezel);
-    outline: 3.5px solid var(--monitor-line);                      /* the heavy outer pencil line */
-    outline-offset: -1px;
-    border-radius: 5px 7px 4px 8px / 7px 4px 8px 5px;              /* uneven corners, as if drawn */
-    filter: url(#sketchy);
-    will-change: filter;
-  }
-  .monitor-frame::before {                 /* the second, lighter stroke, slightly off */
-    content: "";
-    position: absolute;
-    inset: -12px -11px -11px -12px;
-    border: 1.5px solid rgba(201, 166, 107, 0.4);
-    border-radius: inherit;
-  }
-  .monitor-frame::after {                  /* the inner line where screen meets frame */
-    content: "";
-    position: absolute;
-    inset: -2px -1px -1px -2px;
-    border: 3px solid var(--monitor-line);
-    border-radius: 2px 3px 2px 4px / 3px 2px 4px 2px;
-  }
-}
-@media (prefers-reduced-motion: no-preference) {
-  /* nothing animates here; the filter is static */
-}
