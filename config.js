@@ -218,13 +218,13 @@ const SECTIONS = [
         meta: "2026 · browser game · 3D globe"
       },
       {
-        title: "Second site",
-        description: "A sentence or two.",
+        title: "Speak.exe",
+        description: "A speaking simulator. You get one unfamiliar idea, fifteen minutes to research it, and one minute to explain it from your notes, with streaks and an archive of topics you have done. Everything stays on your device. Built with Next.js and React, deployed on Vercel.",
         image: "assets/site-2.jpg",
-        alt: "Screenshot of the second site.",
-        link: "https://example.com",
-        linkLabel: "Visit site",
-        meta: "2025"
+        alt: "The Speak.exe home page: a retro window titled Learn it fast, say it clearly, with a Start Challenge button and a sealed card for today’s topic.",
+        link: "https://speak-exe.vercel.app/",
+        linkLabel: "Try it",
+        meta: "2026 · web app"
       },
       {
         title: "Third site",
