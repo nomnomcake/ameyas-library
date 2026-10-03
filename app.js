@@ -801,3 +801,47 @@
   daylight();
   setInterval(daylight, 5 * 60 * 1000);
 })();
+
+/* ============================================================
+   The flame flickers. Native cursor, swapped between three
+   sprites, so there is no lag. Delete to keep a still flame.
+   ============================================================ */
+(function () {
+  "use strict";
+  if (!window.matchMedia("(hover: hover)").matches) return;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  var root = document.documentElement;
+  var FRAMES = ["var(--cursor-flame-left)", "var(--cursor-flame-mid)", "var(--cursor-flame-right)"];
+  var steady = false;          // over an object: slower, mostly upright
+  var lean = 0;                // -1 / 0 / 1 from fast pointer movement
+  var lastX = null, lastT = 0, leanUntil = 0;
+
+  function pick() {
+    var now = performance.now();
+    if (now < leanUntil && lean) return lean < 0 ? 0 : 2;
+    var r = Math.random();
+    if (steady) return r < 0.78 ? 1 : (r < 0.89 ? 0 : 2);
+    return r < 0.45 ? 1 : (r < 0.72 ? 0 : 2);
+  }
+  function tick() {
+    root.style.setProperty("--cursor-flame", FRAMES[pick()]);
+    var base = steady ? 240 : 110, jitter = steady ? 160 : 90;
+    setTimeout(tick, base + Math.random() * jitter);
+  }
+  tick();
+
+  document.addEventListener("pointermove", function (e) {
+    var now = performance.now();
+    if (lastX !== null) {
+      var v = (e.clientX - lastX) / Math.max(1, now - lastT);   // px per ms
+      if (Math.abs(v) > 1.4) { lean = v > 0 ? -1 : 1; leanUntil = now + 140; }   // flame trails behind the motion
+    }
+    lastX = e.clientX; lastT = now;
+  }, { passive: true });
+
+  var hotspots = document.getElementById("hotspots");
+  if (hotspots) {
+    hotspots.addEventListener("pointerover", function (e) { if (e.target.closest(".hotspot")) steady = true; });
+    hotspots.addEventListener("pointerout",  function (e) { if (e.target.closest(".hotspot") && !(e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest(".hotspot"))) steady = false; });
+  }
+})();
