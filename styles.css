@@ -1,0 +1,175 @@
+/* ============================================================
+   Ameya's Library — styles
+   ============================================================ */
+
+/* ---------- Tokens: palette, type, timing ----------
+   Everything here is pulled from the painting. Never pure white,
+   never pure black, never a saturated accent. */
+:root {
+  color-scheme: light;
+
+  /* Palette */
+  --room-shadow:   #2a211b;   /* page background, the dim corners of the room */
+  --room-brown:    #3b2f26;   /* deep shelf shadow */
+  --shelf-brown:   #6b5440;   /* lit wood */
+  --gold:          #c9a66b;   /* lamplight on wood */
+  --gold-bright:   #e3c48a;   /* the brightest edge of the light pool */
+  --cream:         #f1e6d0;   /* paper */
+  --parchment:     #e9dcc2;   /* slightly deeper paper */
+  --ink:           #1f2433;   /* deep ink navy for text */
+  --ink-soft:      #3d4256;   /* secondary text */
+  --ink-faint:     rgba(31, 36, 51, 0.55);
+
+  /* Type */
+  --font-heading: "Cormorant Garamond", "EB Garamond", Garamond, "Times New Roman", serif;
+  --font-body:    "Spectral", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --font-sans:    "Alegreya Sans", "Gill Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono:    ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  /* Hotspot placeholder tint (step 1 only; removed from view in step 3) */
+  --hotspot-debug: rgba(227, 196, 138, 0.28);
+}
+
+/* ---------- Reset-ish ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
+
+body {
+  background: var(--room-shadow);
+  color: var(--cream);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+img { max-width: 100%; display: block; }
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- The room ---------- */
+.room {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+}
+
+/* The stage IS the image box. Its aspect ratio equals the painting's true
+   pixel size, so every percentage hotspot is measured against the art
+   itself, never against letterboxed space. Width is the larger of what
+   fits in the viewport by width or by height. */
+.stage {
+  position: relative;
+  width: min(100vw, calc(100vh * (var(--painting-w) / var(--painting-h))));
+  width: min(100vw, calc(100dvh * (var(--painting-w) / var(--painting-h))));
+  max-width: 100vw;
+  max-height: 100vh;
+  margin: auto;
+  aspect-ratio: var(--painting-w) / var(--painting-h);
+  background: var(--room-shadow);
+}
+
+/* Fallback for browsers without aspect-ratio: padding-top trick. */
+@supports not (aspect-ratio: 1 / 1) {
+  .stage { height: 0; padding-top: 56.25%; /* 2160 / 3840 */ }
+  .stage-inner { position: absolute; inset: 0; }
+}
+
+.stage-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.layer {
+  position: absolute;
+  inset: 0;
+}
+
+.layer .painting {
+  width: 100%;
+  height: 100%;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Base copy: this is the one that blurs and dims when a panel opens.
+   Blur goes on the containing div, never on the img. */
+.layer-base {
+  will-change: filter;
+}
+
+/* Sharp copy: identical, stacked on top, clipped to the active hotspot.
+   Hidden until something is open. */
+.layer-sharp {
+  pointer-events: none;
+  opacity: 0;
+}
+
+/* ---------- Hotspots ---------- */
+.hotspots {
+  position: absolute;
+  inset: 0;
+}
+
+.hotspot {
+  position: absolute;
+  /* left/top/width/height are set inline from config, as percentages */
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: var(--hotspot-debug);
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.hotspot.is-ellipse {
+  border-radius: 50%;
+}
+
+.hotspot:focus { outline: none; }
+
+/* ---------- Footer ---------- */
+.footer {
+  position: fixed;
+  right: 1.25rem;
+  bottom: 0.9rem;
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  color: rgba(201, 166, 107, 0.45);
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* ---------- No-JS fallback ---------- */
+.noscript {
+  max-width: 44rem;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--font-body);
+}
+.noscript h2 { font-family: var(--font-heading); font-weight: 500; margin: 1.5rem 0 0.25rem; }

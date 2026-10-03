@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Ameya Kohli — Ameya's Library</title>
+  <meta name="description" content="The portfolio of Ameya Kohli: fine art, graphic design, animation, research, and the things on the bottom shelf.">
+  <meta name="color-scheme" content="light">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Spectral:ital,wght@0,300;0,400;1,300&display=swap">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <h1 class="visually-hidden">Ameya Kohli, portfolio</h1>
+
+  <main id="room" class="room">
+    <!-- The painting IS the interface. The wrapper below has the painting's
+         exact aspect ratio so percentage hotspots stay locked to the art. -->
+    <div id="stage" class="stage" style="--painting-w: 3840; --painting-h: 2160;">
+      <div class="stage-inner">
+        <div id="layer-base" class="layer layer-base">
+          <img id="painting" class="painting" src="library.png" width="3840" height="2160" fetchpriority="high" decoding="async"
+               alt="A warm, lamplit room. A girl in a pale blouse stands at the left reading a book. Behind her a stepped wooden bookshelf climbs toward the ceiling, with a monitor and a desk at the right. The words Ameya's Library are painted across the wall above the shelves.">
+        </div>
+        <div id="layer-sharp" class="layer layer-sharp" aria-hidden="true">
+          <img class="painting" src="library.png" width="3840" height="2160" alt="" decoding="async">
+        </div>
+        <nav id="hotspots" class="hotspots" aria-label="Sections of the library"></nav>
+      </div>
+    </div>
+  </main>
+
+  <noscript>
+    <section class="noscript">
+      <p>This site is an interactive painting and needs JavaScript to open the shelves. Here is what is on them:</p>
+      <h2>About me</h2>
+      <p>I'm Ameya. I paint, design, animate, and poke at research questions. This library is where I keep the things I've made.</p>
+      <h2>Fine art</h2>
+      <p>Paintings and drawings, mostly digital, some not.</p>
+      <h2>Graphic design</h2>
+      <p>Posters, layouts, identities. Things meant to be printed.</p>
+      <h2>Animation</h2>
+      <p>Moving pictures. Short loops and longer pieces.</p>
+      <h2>Research</h2>
+      <p>Questions I've chased, with the people I chased them with.</p>
+      <h2>Interests</h2>
+      <p>The books on the bottom shelf. Things I like that aren't work.</p>
+    </section>
+  </noscript>
+
+  <footer class="footer">© 2026 Ameya Kohli. All artwork my own.</footer>
+
+  <!-- Plain scripts, in order. config.js declares SECTIONS; app.js reads it. -->
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
