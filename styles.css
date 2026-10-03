@@ -1074,7 +1074,6 @@ body.panel-open .cursor-lamp { opacity: 0; }
 :root {
   --light-x:     -22%;        /* where the beam edges meet, as % of the painting */
   --light-y:     -18%;
-  --beam-angle:  28deg;       /* direction the light travels, top-left to lower-right, in screen terms */
 }
 
 /* Vignette: same source. Nothing darkens near it; shadows deepen with distance. */
