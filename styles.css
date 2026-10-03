@@ -1270,7 +1270,7 @@ body[data-daylight="night"]   .daylight { background: rgba(58, 64, 92, 0.9);    
   .panel.theme-screen .panel-close { top: 0.35rem; right: 0.45rem; width: 2rem; height: 2rem; }
 
   /* One site at a time: screenshot on the left, words on the right */
-  .panel.theme-screen .panel-items { display: block; flex: 1; min-height: 0; }
+  .panel.theme-screen .panel-items { display: block; flex: 1; min-height: 0; overflow: auto; }
   .panel.theme-screen .card { display: none; }
   .panel.theme-screen .card.is-current {
     display: grid;
@@ -1280,7 +1280,8 @@ body[data-daylight="night"]   .daylight { background: rgba(58, 64, 92, 0.9);    
     opacity: 1; transform: none;
   }
   .panel.theme-screen .card-figure { grid-row: 1 / span 4; margin: 0; }
-  .panel.theme-screen .card-figure img { aspect-ratio: 16 / 10; }
+  /* The screenshot is sized to the room left under the header and above the arrows */
+  .panel.theme-screen .card-figure img { aspect-ratio: auto; height: calc(var(--monitor-h) - 9.4rem); object-fit: cover; object-position: top; }
   .panel.theme-screen .card-title { font-size: 1.35rem; margin-top: 0.1rem; }
   .panel.theme-screen .card-desc { font-size: 0.88rem; line-height: 1.55; }
   .panel.theme-screen .card-link { justify-self: start; }
