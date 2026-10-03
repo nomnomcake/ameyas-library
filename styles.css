@@ -31,7 +31,8 @@
      Every timing and colour the hover uses lives here. */
   --pool-color:        rgba(227, 196, 138, 0.42);  /* the lamp pool, gold from the painting */
   --pool-blur:         25px;                        /* softness of the pool edge */
-  --pool-spread:       28%;                         /* how far the pool spills past the object */
+  --pool-spread:       28%;                         /* how far the pool spills past a round object */
+  --pool-spread-rect:  14%;                         /* and past a rectangular one (frames, shelves, the monitor) */
   --pool-in:           350ms;                       /* bloom duration */
   --pool-ease:         ease-out;
   --sheen-color:       rgba(255, 247, 228, 0.30);   /* warm white band, ~30% */
@@ -1179,3 +1180,12 @@ body[data-daylight="night"]   .daylight { background: rgba(58, 64, 92, 0.9);    
   transition: background 200ms ease-out, border-color 200ms ease-out;
 }
 .theme-screen .card-link:hover, .theme-screen .card-link:focus-visible { background: rgba(227, 196, 138, 0.14); border-color: var(--gold-bright); }
+
+/* ---- The pool of light takes the object's shape ----
+   A circle suits a vase; a frame or a screen wants a rounded rectangle
+   that hugs its edges. Ellipse hotspots keep the round pool. */
+.hotspot.is-rect::before {
+  inset: calc(-1 * var(--pool-spread-rect, 14%));
+  border-radius: 22% / 30%;
+  background: radial-gradient(ellipse 70% 70% at 50% 50%, var(--pool-color), rgba(227, 196, 138, 0.14) 60%, transparent 100%);
+}
