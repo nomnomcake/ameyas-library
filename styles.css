@@ -1149,3 +1149,59 @@ body.panel-open .cursor-lamp { opacity: 0; }
 }
 /* Inside the mask, the lamp sits in the same coordinate space as before */
 .lit-mask .cursor-lamp { position: absolute; }
+
+/* ============================================================
+   One light source
+   The painted beam's two edges converge off the canvas, up and to
+   the left. Every light effect now takes its position and direction
+   from that single point, so the glow, the vignette and the cursor
+   lamp all agree with the painting. (Overrides the earlier blocks.)
+   ============================================================ */
+@property --light-x { syntax: "<percentage>"; inherits: true; initial-value: -22%; }
+@property --light-y { syntax: "<percentage>"; inherits: true; initial-value: -18%; }
+:root {
+  --light-x:     -22%;        /* where the beam edges meet, as % of the painting */
+  --light-y:     -18%;
+  --beam-angle:  28deg;       /* direction the light travels, top-left to lower-right, in screen terms */
+  --sway-x:      1.5%;        /* the lamp drifts only slightly now, and only along the beam */
+  --sway-y:      1.2%;
+}
+
+/* Breathing glow: strongest nearest the source, fading down the beam.
+   Clipped to the beam by .lit-mask, so it reads as the beam itself warming. */
+.lamp-breath {
+  inset: 0;
+  background: radial-gradient(ellipse 140% 130% at var(--light-x) var(--light-y),
+              var(--breath-color) 0%, rgba(227, 196, 138, 0.35) 38%, transparent 72%);
+  animation: lamp-breath var(--breath-period) ease-in-out infinite;   /* no separate drift: it follows --light-x/y */
+}
+
+/* Vignette: same source. Nothing darkens near it; shadows deepen with distance. */
+.vignette {
+  background: radial-gradient(ellipse 130% 125% at var(--light-x) var(--light-y), transparent 42%, var(--vignette-color) 100%);
+}
+
+/* The lamp drifts a little, and both layers follow because they read the same property. */
+.atmosphere { animation: lamp-sway var(--sway-period) ease-in-out infinite; }
+.vignette   { animation: none; }
+@keyframes lamp-sway {
+  0%   { --light-x: -22%;                       --light-y: -18%; }
+  40%  { --light-x: calc(-22% + var(--sway-x)); --light-y: calc(-18% - var(--sway-y)); }
+  70%  { --light-x: calc(-22% - var(--sway-x) * 0.5); --light-y: calc(-18% + var(--sway-y) * 0.6); }
+  100% { --light-x: -22%;                       --light-y: -18%; }
+}
+
+/* Cursor lamp: not a round pool but a patch of the beam landing where
+   the pointer is. Elongated along the beam, brighter on the side facing
+   the source, trailing off away from it. */
+.cursor-lamp {
+  width: calc(var(--lamp-size) * 1.6);
+  height: calc(var(--lamp-size) * 0.7);
+  margin: calc(var(--lamp-size) * -0.35) 0 0 calc(var(--lamp-size) * -0.8);
+  border-radius: 50%;
+  background: radial-gradient(ellipse 50% 50% at 42% 50%,
+              var(--lamp-color) 0%, rgba(232, 200, 140, 0.22) 45%, transparent 75%);
+  transform: rotate(var(--beam-angle));
+  mix-blend-mode: soft-light;     /* warms what's lit rather than painting a new light */
+}
+@media (prefers-reduced-motion: reduce) { .atmosphere { animation: none; } }
