@@ -966,36 +966,16 @@ body.panel-open .motes { opacity: 0; transition: opacity 400ms; }
 
 /* ============================================================
    Atmosphere
-   The room breathes a little. Nothing here should be noticed
+   A vignette and dust in the beam. Nothing here should be noticed
    directly, only missed if it were gone.
    ============================================================ */
 :root {
-  --breath-color:    rgba(232, 200, 140, 0.9);   /* the lamp's warmth */
-  --breath-max:      0.32;                       /* peak opacity of the breath */
-  --breath-period:   8s;                        /* one slow in-and-out */
   --vignette-color:  rgba(12, 8, 6, 0.38);     /* applied with overlay: darkens shadows, spares light */
   --light-x:         0%;                        /* where the lamp is, off the top-left edge */
   --light-y:         12%;     /* shadow at the screen edges */
 }
 
 .atmosphere { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
-
-/* Lamplight breathing: a wide warm pool over the lit, lower-left side of
-   the room, swelling and fading on a slow cycle. Soft-light keeps the
-   painting's own colours; it only warms what is already lit. */
-.lamp-breath {
-  position: absolute;
-  inset: -20%;
-  background: radial-gradient(ellipse 55% 60% at 32% 68%, var(--breath-color), rgba(227, 196, 138, 0.18) 45%, transparent 75%);
-  mix-blend-mode: overlay;
-  opacity: 0;
-  animation: lamp-breath var(--breath-period) ease-in-out infinite;
-  will-change: opacity;
-}
-@keyframes lamp-breath {
-  0%, 100% { opacity: 0; }
-  50%      { opacity: var(--breath-max); }
-}
 
 /* Vignette: light comes from the upper left, so nothing is darkened there.
    The shadow grows with distance from the source and, through overlay
@@ -1013,15 +993,6 @@ body.panel-open .motes { opacity: 0; transition: opacity 400ms; }
 .motes i:nth-child(6) { left: 19%; top: 80%; --mote-dur: 52s; --mote-delay: -2s;  width: 4px; height: 4px; }
 .motes i:nth-child(7) { left: 46%; top: 60%; --mote-dur: 44s; --mote-delay: -24s; }
 
-/* Breath and motes pause while a panel is open; the vignette stays. */
-body.panel-open .lamp-breath { animation-play-state: paused; opacity: 0; transition: opacity 400ms; }
-
-@media (prefers-reduced-motion: reduce) {
-  .lamp-breath { animation: none; opacity: calc(var(--breath-max) / 2); }
-}
-@media (max-width: 767.98px) {
-  .lamp-breath { display: none; }
-}
 
 /* ---- Louder pass: extra motes and the cursor lamp ---- */
 .motes i:nth-child(8)  { left: 27%; top: 36%; --mote-dur: 36s; --mote-delay: -8s;  width: 3px; height: 3px; }
@@ -1058,41 +1029,6 @@ body.panel-open .cursor-lamp { opacity: 0; }
 .motes i:nth-child(6) { left: 79%; top: 50%; --mote-dur: 47s; --mote-delay: -17s; width: 3px; height: 3px; }
 .motes i:nth-child(7) { left: 71%; top: 74%; --mote-dur: 53s; --mote-delay: -36s; width: 4px; height: 4px; }
 
-/* ---- The lamp sways ----
-   The light source drifts a little on a slow cycle, so the vignette's
-   origin and the breathing glow move together, like a hanging lamp
-   stirring in still air. Registered properties let the position
-   animate; browsers without @property simply keep the light still. */
-@property --light-x { syntax: "<percentage>"; inherits: true; initial-value: 0%; }
-@property --light-y { syntax: "<percentage>"; inherits: true; initial-value: 12%; }
-:root {
-  --sway-period: 23s;        /* one full wander of the lamp */
-  --sway-x:      3%;         /* how far the source drifts sideways */
-  --sway-y:      4%;         /* and vertically */
-}
-.vignette {
-  animation: lamp-sway var(--sway-period) ease-in-out infinite;
-}
-@keyframes lamp-sway {
-  0%   { --light-x: 0%;              --light-y: 12%; }
-  33%  { --light-x: var(--sway-x);   --light-y: calc(12% - var(--sway-y)); }
-  66%  { --light-x: calc(var(--sway-x) * 0.4); --light-y: calc(12% + var(--sway-y) * 0.6); }
-  100% { --light-x: 0%;              --light-y: 12%; }
-}
-/* The glow follows the same wander, offset so it reads as the beam moving */
-.lamp-breath {
-  animation: lamp-breath var(--breath-period) ease-in-out infinite,
-             glow-sway var(--sway-period) ease-in-out infinite;
-}
-@keyframes glow-sway {
-  0%   { transform: translate(0, 0); }
-  33%  { transform: translate(1.2%, -1.4%); }
-  66%  { transform: translate(0.5%, 0.9%); }
-  100% { transform: translate(0, 0); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .vignette, .lamp-breath { animation: none; }
-}
 
 /* ============================================================
    The cursor is the light
@@ -1153,27 +1089,13 @@ body.panel-open .cursor-lamp { opacity: 0; }
 /* ============================================================
    One light source
    The painted beam's two edges converge off the canvas, up and to
-   the left. Every light effect now takes its position and direction
-   from that single point, so the glow, the vignette and the cursor
-   lamp all agree with the painting. (Overrides the earlier blocks.)
+   the left. The vignette and the cursor lamp both take their position
+   and direction from that single point. (Overrides the earlier blocks.)
    ============================================================ */
-@property --light-x { syntax: "<percentage>"; inherits: true; initial-value: -22%; }
-@property --light-y { syntax: "<percentage>"; inherits: true; initial-value: -18%; }
 :root {
   --light-x:     -22%;        /* where the beam edges meet, as % of the painting */
   --light-y:     -18%;
   --beam-angle:  28deg;       /* direction the light travels, top-left to lower-right, in screen terms */
-  --sway-x:      1.5%;        /* the lamp drifts only slightly now, and only along the beam */
-  --sway-y:      1.2%;
-}
-
-/* Breathing glow: strongest nearest the source, fading down the beam.
-   Clipped to the beam by .lit-mask, so it reads as the beam itself warming. */
-.lamp-breath {
-  inset: 0;
-  background: radial-gradient(ellipse 140% 130% at var(--light-x) var(--light-y),
-              var(--breath-color) 0%, rgba(227, 196, 138, 0.35) 38%, transparent 72%);
-  animation: lamp-breath var(--breath-period) ease-in-out infinite;   /* no separate drift: it follows --light-x/y */
 }
 
 /* Vignette: same source. Nothing darkens near it; shadows deepen with distance. */
@@ -1181,15 +1103,6 @@ body.panel-open .cursor-lamp { opacity: 0; }
   background: radial-gradient(ellipse 130% 125% at var(--light-x) var(--light-y), transparent 42%, var(--vignette-color) 100%);
 }
 
-/* The lamp drifts a little, and both layers follow because they read the same property. */
-.atmosphere { animation: lamp-sway var(--sway-period) ease-in-out infinite; }
-.vignette   { animation: none; }
-@keyframes lamp-sway {
-  0%   { --light-x: -22%;                       --light-y: -18%; }
-  40%  { --light-x: calc(-22% + var(--sway-x)); --light-y: calc(-18% - var(--sway-y)); }
-  70%  { --light-x: calc(-22% - var(--sway-x) * 0.5); --light-y: calc(-18% + var(--sway-y) * 0.6); }
-  100% { --light-x: -22%;                       --light-y: -18%; }
-}
 
 /* Cursor lamp: not a round pool but a patch of the beam landing where
    the pointer is. Elongated along the beam, brighter on the side facing
@@ -1204,4 +1117,3 @@ body.panel-open .cursor-lamp { opacity: 0; }
   transform: rotate(var(--beam-angle));
   mix-blend-mode: soft-light;     /* warms what's lit rather than painting a new light */
 }
-@media (prefers-reduced-motion: reduce) { .atmosphere { animation: none; } }
