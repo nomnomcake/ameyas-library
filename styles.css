@@ -1213,9 +1213,7 @@ body[data-daylight="night"]   .daylight { background: rgba(58, 64, 92, 0.9);    
     top: 46%;
     width: var(--monitor-width);
     height: var(--monitor-height);
-    border: 12px solid var(--monitor-bezel);
-    border-right-color: var(--monitor-bezel-2);
-    border-bottom-color: var(--monitor-bezel-2);
+    border: 12px solid transparent;         /* the bezel is drawn by .monitor-frame, through the sketch filter */
     border-radius: 3px;
     background: var(--monitor-screen);
     -webkit-backdrop-filter: none;
@@ -1242,7 +1240,7 @@ body[data-daylight="night"]   .daylight { background: rgba(58, 64, 92, 0.9);    
     margin-left: -3.5%;
     margin-top: 12px;
     background: linear-gradient(90deg, var(--monitor-bezel), var(--monitor-bezel-2));
-    outline: 2.5px solid var(--monitor-line);
+    outline: 3.5px solid var(--monitor-line);
     pointer-events: none;
     filter: url(#sketchy-soft);
   }
@@ -1255,7 +1253,7 @@ body[data-daylight="night"]   .daylight { background: rgba(58, 64, 92, 0.9);    
     height: 12px;
     margin-top: 2.5px;
     background: linear-gradient(180deg, var(--monitor-bezel), var(--monitor-bezel-2));
-    outline: 2.5px solid var(--monitor-line);
+    outline: 3.5px solid var(--monitor-line);
     border-radius: 2px;
   }
 
@@ -1335,28 +1333,27 @@ body[data-daylight="night"]   .daylight { background: rgba(58, 64, 92, 0.9);    
     position: absolute;
     inset: -13px;
     pointer-events: none;
-    border: 2.5px solid var(--monitor-line);
-    border-radius: 5px 7px 4px 8px / 7px 4px 8px 5px;    /* uneven corners, as if drawn */
+    border: 13px solid var(--monitor-bezel);                       /* the bezel fill itself */
+    border-color: #45382e var(--monitor-bezel-2) var(--monitor-bezel-2) var(--monitor-bezel);
+    outline: 3.5px solid var(--monitor-line);                      /* the heavy outer pencil line */
+    outline-offset: -1px;
+    border-radius: 5px 7px 4px 8px / 7px 4px 8px 5px;              /* uneven corners, as if drawn */
     filter: url(#sketchy);
     will-change: filter;
   }
   .monitor-frame::before {                 /* the second, lighter stroke, slightly off */
     content: "";
     position: absolute;
-    inset: 1px 2px 2px 1px;
-    border: 1.5px solid rgba(201, 166, 107, 0.35);
+    inset: -12px -11px -11px -12px;
+    border: 1.5px solid rgba(201, 166, 107, 0.4);
     border-radius: inherit;
   }
   .monitor-frame::after {                  /* the inner line where screen meets frame */
     content: "";
     position: absolute;
-    inset: 11px 12px 12px 11px;
-    border: 2px solid var(--monitor-line);
+    inset: -2px -1px -1px -2px;
+    border: 3px solid var(--monitor-line);
     border-radius: 2px 3px 2px 4px / 3px 2px 4px 2px;
-  }
-  /* The bezel fill itself gets a pencil-shaded unevenness */
-  .panel.theme-screen {
-    border-image: linear-gradient(160deg, var(--monitor-bezel) 0%, #43362d 35%, var(--monitor-bezel-2) 100%) 1;
   }
 }
 @media (prefers-reduced-motion: no-preference) {
