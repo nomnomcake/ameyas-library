@@ -115,6 +115,7 @@ The repo is already on GitHub at github.com/nomnomcake/ameyas-library. The site 
    git commit -m "Add Night market to fine art"
    ```
 5. Publish:
+   - **Vercel** (linked to the GitHub repo): `git push`. Live in about a minute.
    - **Netlify by drag**: drag the folder onto the site's Deploys page again. Live in seconds.
    - **Netlify linked to GitHub** (set up once via "Import from Git"): `git push`. Live in about a minute.
    - **GitHub Pages**: `git push`. Live in about a minute.
