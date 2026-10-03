@@ -32,6 +32,8 @@ const PAINTING = {
                    null = no object on the painting; the section still appears
                    in the phone list and opens from its #hash.
    shape         — "rect" or "ellipse". Ellipse uses the same box as a bounding box.
+   mask          — Optional PNG whose alpha is the object's silhouette, sized to the
+                   hotspot box. The glow then follows the shape instead of the box.
    labelPosition — Where the hover label sits relative to the object:
                    "left" | "right" | "above" | "below". Pick empty shelf space.
    status        — Optional. "coming-soon" darkens the object in the room, shows
@@ -73,10 +75,11 @@ const SECTIONS = [
     ]
   },
   {
-    id: "fine-art",
-    label: "Fine art",
+    id: "portfolio",
+    label: "Portfolio",
     object: "the portfolio book and jar of brushes standing on the second shelf",
-    hotspot: { x: 31.4, y: 37.8, w: 8.7, h: 16.2 },
+    hotspot: { x: 30.94, y: 36.76, w: 9.66, h: 18.29 },
+    mask: "assets/mask-portfolio.png",   /* the glow follows this silhouette instead of the box */
     shape: "rect",
     labelPosition: "right",
     theme: "gallery",

@@ -1904,3 +1904,20 @@ body.panel-open .glint { animation-play-state: paused; opacity: 0; transition: o
 .hotspot:hover .hotspot-label, .hotspot:focus-visible .hotspot-label, .hotspot.is-active .hotspot-label {
   transform: translate(-50%, -50%) scale(1) !important;
 }
+
+/* ============================================================
+   Masked objects
+   A section with a mask image lights up as its own silhouette:
+   the surface, lift and sheen are clipped to the drawing's alpha
+   (with a soft halo baked into the mask), not to the box.
+   ============================================================ */
+.hotspot.has-mask .hotspot-surface {
+  -webkit-mask: var(--mask) center / 100% 100% no-repeat;
+  mask: var(--mask) center / 100% 100% no-repeat;
+  background:
+    radial-gradient(ellipse 70% 70% at 50% 55%, rgba(255, 228, 176, 0.85) 0%, rgba(240, 206, 150, 0.6) 50%, rgba(227, 196, 138, 0.4) 100%);
+  mix-blend-mode: screen;
+}
+.hotspot.has-mask:focus-visible { box-shadow: none; }
+.hotspot.has-mask .glint-a { top: 4%; right: 6%; }
+.hotspot.has-mask .glint-b { bottom: 10%; left: 4%; }
