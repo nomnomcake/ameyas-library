@@ -1032,39 +1032,15 @@ body.panel-open .cursor-lamp { opacity: 0; }
 
 /* ============================================================
    The cursor is the light
-   A small flame replaces the arrow over the painting, and a
-   click throws a handful of sparks. Delete this block and the
-   sparks IIFE in app.js to remove.
+   A small pixel flame replaces the arrow over the painting.
    ============================================================ */
 :root {
   /* A pixel-art flame, 10x12 pixels drawn at 3x. Hotspot at the base of the wick. */
   --cursor-flame: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='36' viewBox='0 0 10 12' shape-rendering='crispEdges'><rect x='4' y='0' width='1' height='1' fill='%233b2f26'/><rect x='3' y='1' width='1' height='1' fill='%233b2f26'/><rect x='4' y='1' width='1' height='1' fill='%23c9a66b'/><rect x='5' y='1' width='1' height='1' fill='%233b2f26'/><rect x='3' y='2' width='1' height='1' fill='%233b2f26'/><rect x='4' y='2' width='1' height='1' fill='%23c9a66b'/><rect x='5' y='2' width='1' height='1' fill='%233b2f26'/><rect x='2' y='3' width='1' height='1' fill='%233b2f26'/><rect x='3' y='3' width='1' height='1' fill='%23c9a66b'/><rect x='4' y='3' width='1' height='1' fill='%23e3c48a'/><rect x='5' y='3' width='1' height='1' fill='%23c9a66b'/><rect x='6' y='3' width='1' height='1' fill='%233b2f26'/><rect x='2' y='4' width='1' height='1' fill='%233b2f26'/><rect x='3' y='4' width='1' height='1' fill='%23c9a66b'/><rect x='4' y='4' width='1' height='1' fill='%23e3c48a'/><rect x='5' y='4' width='1' height='1' fill='%23c9a66b'/><rect x='6' y='4' width='1' height='1' fill='%233b2f26'/><rect x='1' y='5' width='1' height='1' fill='%233b2f26'/><rect x='2' y='5' width='1' height='1' fill='%23c9a66b'/><rect x='3' y='5' width='1' height='1' fill='%23e3c48a'/><rect x='4' y='5' width='1' height='1' fill='%23f1e6d0'/><rect x='5' y='5' width='1' height='1' fill='%23e3c48a'/><rect x='6' y='5' width='1' height='1' fill='%23c9a66b'/><rect x='7' y='5' width='1' height='1' fill='%233b2f26'/><rect x='1' y='6' width='1' height='1' fill='%233b2f26'/><rect x='2' y='6' width='1' height='1' fill='%23c9a66b'/><rect x='3' y='6' width='1' height='1' fill='%23e3c48a'/><rect x='4' y='6' width='1' height='1' fill='%23f1e6d0'/><rect x='5' y='6' width='1' height='1' fill='%23e3c48a'/><rect x='6' y='6' width='1' height='1' fill='%23c9a66b'/><rect x='7' y='6' width='1' height='1' fill='%233b2f26'/><rect x='1' y='7' width='1' height='1' fill='%233b2f26'/><rect x='2' y='7' width='1' height='1' fill='%23c9a66b'/><rect x='3' y='7' width='1' height='1' fill='%23e3c48a'/><rect x='4' y='7' width='1' height='1' fill='%23f1e6d0'/><rect x='5' y='7' width='1' height='1' fill='%23e3c48a'/><rect x='6' y='7' width='1' height='1' fill='%23c9a66b'/><rect x='7' y='7' width='1' height='1' fill='%233b2f26'/><rect x='1' y='8' width='1' height='1' fill='%233b2f26'/><rect x='2' y='8' width='1' height='1' fill='%23c9a66b'/><rect x='3' y='8' width='1' height='1' fill='%23e3c48a'/><rect x='4' y='8' width='1' height='1' fill='%23e3c48a'/><rect x='5' y='8' width='1' height='1' fill='%23e3c48a'/><rect x='6' y='8' width='1' height='1' fill='%23c9a66b'/><rect x='7' y='8' width='1' height='1' fill='%233b2f26'/><rect x='2' y='9' width='1' height='1' fill='%233b2f26'/><rect x='3' y='9' width='1' height='1' fill='%23c9a66b'/><rect x='4' y='9' width='1' height='1' fill='%23c9a66b'/><rect x='5' y='9' width='1' height='1' fill='%23c9a66b'/><rect x='6' y='9' width='1' height='1' fill='%233b2f26'/><rect x='3' y='10' width='1' height='1' fill='%233b2f26'/><rect x='4' y='10' width='1' height='1' fill='%233b2f26'/><rect x='5' y='10' width='1' height='1' fill='%233b2f26'/></svg>") 15 32, auto;
-  --spark-duration: 760ms;
-  --spark-color-a: #f1e6d0;   /* cream, from the palette */
-  --spark-color-b: #c9a66b;   /* gold */
 }
 .stage, .stage .hotspot, .scrim { cursor: var(--cursor-flame); }
 @media (hover: none), (max-width: 767.98px) { .stage, .stage .hotspot, .scrim { cursor: auto; } }
 
-.sparks { position: fixed; inset: 0; pointer-events: none; z-index: 25; overflow: hidden; }
-.spark {
-  position: absolute;
-  left: 0; top: 0;
-  width: var(--s, 4px);
-  height: var(--s, 4px);
-  border-radius: 0;                       /* square pixels, no glow: matches the pixel flame */
-  background: var(--c, var(--spark-color-a));
-  box-shadow: 0 0 0 1px rgba(59, 47, 38, 0.55);   /* one-pixel dark outline like the cursor */
-  transform: translate(var(--x), var(--y));
-  animation: spark-fly var(--spark-duration) steps(9, end) forwards;   /* stepped, so it moves in pixel hops */
-  will-change: transform, opacity;
-}
-@keyframes spark-fly {
-  0%   { transform: translate(var(--x), var(--y)) scale(1); opacity: 1; }
-  70%  { opacity: 0.9; }
-  100% { transform: translate(calc(var(--x) + var(--dx)), calc(var(--y) + var(--dy) + 18px)) scale(1); opacity: 0; }
-}
-@media (prefers-reduced-motion: reduce) { .spark { display: none; } }
 
 /* ============================================================
    One light source
@@ -1087,7 +1063,6 @@ body.panel-open .cursor-lamp { opacity: 0; }
    Three more quiet things
    1. A shadow sweep when a panel opens
    3. A time-of-day tint
-   6. The room wakes up after the painting lands
    ============================================================ */
 
 /* 1. Shadow sweep: a soft dark band crosses the painting once, in the
@@ -1131,14 +1106,22 @@ body[data-daylight="day"]     .daylight { opacity: 0; }                         
 body[data-daylight="evening"] .daylight { background: rgba(226, 164, 96, 0.9);  mix-blend-mode: soft-light; opacity: 0.45; }  /* deeper gold */
 body[data-daylight="night"]   .daylight { background: rgba(58, 64, 92, 0.9);    mix-blend-mode: multiply;   opacity: 0.22; }  /* cooler, dimmer */
 
-/* 6. Wake-up. The painting fades over its placeholder first; a beat later
-   the vignette, the dust and the cursor lamp come in, so the room settles
-   rather than switching on. body.is-awake is added by app.js. */
-.vignette, .motes { opacity: 0; transition: opacity 1600ms ease-out; }
-body.is-awake .vignette, body.is-awake .motes { opacity: 1; }
-body.is-awake .daylight { transition-delay: 400ms; }
 
 @media (prefers-reduced-motion: reduce) {
   .shadow-sweep { display: none; }
-  .vignette, .motes, .daylight { transition: none; }
+  .daylight { transition: none; }
 }
+
+/* ---- Click: the lamp flares ----
+   Clicking an object briefly turns its light pool up, then it settles
+   as the panel opens. Same light as the hover, just more of it. */
+:root { --flare-duration: 420ms; }
+.hotspot.is-flaring::before {
+  animation: lamp-flare var(--flare-duration) ease-out 1;
+}
+@keyframes lamp-flare {
+  0%   { opacity: 1;   transform: scale(1); }
+  30%  { opacity: 1;   transform: scale(1.18); filter: blur(var(--pool-blur)) brightness(1.5); }
+  100% { opacity: 1;   transform: scale(1); }
+}
+@media (prefers-reduced-motion: reduce) { .hotspot.is-flaring::before { animation: none; } }

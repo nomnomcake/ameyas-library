@@ -122,6 +122,8 @@
   }
 
   function onHotspotClick(section, btn) {
+    btn.classList.remove("is-flaring"); void btn.offsetWidth; btn.classList.add("is-flaring");
+    btn.addEventListener("animationend", function () { btn.classList.remove("is-flaring"); }, { once: true });
     if (window.Library && window.Library.openSection) window.Library.openSection(section.id, btn);
     else console.log("[Ameya's Library] clicked:", section.id);
   }
@@ -769,45 +771,7 @@
 })();
 
 /* ============================================================
-   Sparks: a click on the painting throws a few embers.
-   ============================================================ */
-(function () {
-  "use strict";
-  var stage = document.getElementById("stage");
-  if (!stage || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  var layer = document.createElement("div");
-  layer.className = "sparks";
-  layer.setAttribute("aria-hidden", "true");
-  document.body.appendChild(layer);
-
-  function burst(x, y) {
-    var n = 14 + Math.floor(Math.random() * 6);
-    for (var i = 0; i < n; i++) {
-      var s = document.createElement("span");
-      s.className = "spark";
-      var angle = Math.random() * Math.PI * 2;
-      var dist = 28 + Math.random() * 70;
-      s.style.setProperty("--x", x + "px");
-      s.style.setProperty("--y", y + "px");
-      s.style.setProperty("--dx", Math.cos(angle) * dist + "px");
-      s.style.setProperty("--dy", Math.sin(angle) * dist - 24 + "px");   // a little lift, then the +18px in CSS lets them fall
-      s.style.setProperty("--s", (Math.random() < 0.6 ? 3 : 5) + "px");   // two pixel sizes only
-      s.style.setProperty("--c", Math.random() < 0.5 ? "var(--spark-color-a)" : "var(--spark-color-b)");
-      s.style.animationDelay = (Math.random() * 60) + "ms";
-      layer.appendChild(s);
-      s.addEventListener("animationend", function (e) { e.target.remove(); });
-    }
-  }
-
-  stage.addEventListener("pointerdown", function (e) {
-    if (e.pointerType === "touch" || e.button !== 0) return;
-    burst(e.clientX, e.clientY);
-  });
-})();
-
-/* ============================================================
-   Three quiet things: shadow sweep on open, time-of-day tint,
-   and the room waking up after the painting lands.
+   Two quiet things: shadow sweep on open, time-of-day tint.
    ============================================================ */
 (function () {
   "use strict";
@@ -836,11 +800,4 @@
   }
   daylight();
   setInterval(daylight, 5 * 60 * 1000);
-
-  /* 6. Wake-up: a beat after the painting has faded in */
-  var img = L.els.painting;
-  function wake() { setTimeout(function () { body.classList.add("is-awake"); }, reduceMotion ? 0 : 900); }
-  if (img && img.complete && img.naturalWidth) wake();
-  else if (img) { img.addEventListener("load", wake, { once: true }); img.addEventListener("error", wake, { once: true }); }
-  else wake();
 })();
