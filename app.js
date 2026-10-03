@@ -748,7 +748,7 @@
       var n = (s.items || []).length;
       if (soon) {
         var sm = document.createElement("span"); sm.className = "spine-meta"; sm.textContent = "coming soon"; b.appendChild(sm);
-      } else if (n && ["gallery", "spread", "reel", "lab", "screen"].indexOf(s.theme) !== -1) {
+      } else if (n && ["gallery", "spread", "reel", "lab", "screen", "book"].indexOf(s.theme) !== -1) {
         var m = document.createElement("span");
         m.className = "spine-meta";
         m.textContent = n + (n === 1 ? " piece" : " pieces");
@@ -1021,4 +1021,83 @@
     card.appendChild(scene);
     card.style.setProperty("--i", 0);
   };
+})();
+
+/* ============================================================
+   The book: two pages per spread, one piece per page.
+   Uses the cards the gallery rendered (so the lightbox still works)
+   and shows them inside the pages.
+   ============================================================ */
+(function () {
+  "use strict";
+  var L = window.Library;
+  var previous = L.decoratePanel;
+  var items = [], spread = 0, book = null, pages = [], prevB, nextB, countEl;
+  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function fill(pageEl, item, index) {
+    var art = pageEl.querySelector(".book-art");
+    var cap = pageEl.querySelector(".book-caption");
+    art.innerHTML = ""; cap.innerHTML = "";
+    if (!item) { art.classList.add("is-empty"); return; }
+    art.classList.remove("is-empty");
+    var img = item.card.querySelector(".card-figure img");
+    if (img) art.appendChild(img);                 // moved, listeners intact (lightbox)
+    var t = document.createElement("span"); t.className = "book-title"; t.textContent = item.title || "";
+    var m = document.createElement("span"); m.className = "book-meta"; m.textContent = item.meta || "";
+    var f = document.createElement("span"); f.className = "book-folio"; f.textContent = String(index + 1);
+    cap.appendChild(t); if (item.meta) cap.appendChild(m); cap.appendChild(f);
+  }
+
+  function show(n, animate) {
+    var total = Math.ceil(items.length / 2);
+    spread = Math.max(0, Math.min(total - 1, n));
+    function paint() {
+      fill(pages[0], items[spread * 2], spread * 2);
+      fill(pages[1], items[spread * 2 + 1], spread * 2 + 1);
+      prevB.disabled = spread === 0;
+      nextB.disabled = spread >= total - 1;
+      countEl.textContent = "pages " + (spread * 2 + 1) + (items[spread * 2 + 1] ? "\u2013" + (spread * 2 + 2) : "") + " of " + items.length;
+      book.classList.remove("is-turning");
+    }
+    if (animate && !reduceMotion) { book.classList.add("is-turning"); setTimeout(paint, 230); }
+    else paint();
+  }
+
+  L.decoratePanel = function (section, panel, itemsEl) {
+    if (previous) previous(section, panel, itemsEl);
+    var old = panel.querySelector(".book-wrap"); if (old) old.remove();
+    items = []; book = null;
+    if (section.theme !== "book" || !window.matchMedia("(min-width: 768px)").matches) return;
+
+    var cards = Array.prototype.slice.call(itemsEl.querySelectorAll(".card"));
+    items = cards.map(function (card, k) { return { card: card, title: (section.items[k] || {}).title, meta: (section.items[k] || {}).meta }; });
+
+    var wrap = document.createElement("div"); wrap.className = "book-wrap";
+    book = document.createElement("div"); book.className = "book";
+    pages = ["left", "right"].map(function (side) {
+      var p = document.createElement("div"); p.className = "book-page " + side;
+      p.innerHTML = '<div class="book-art"></div><div class="book-caption"></div>';
+      book.appendChild(p); return p;
+    });
+    prevB = document.createElement("button"); prevB.type = "button"; prevB.className = "book-nav prev"; prevB.setAttribute("aria-label", "Previous pages");
+    prevB.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M15 4.5 7.5 12 15 19.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    nextB = prevB.cloneNode(true); nextB.className = "book-nav next"; nextB.setAttribute("aria-label", "Next pages");
+    nextB.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M9 4.5 16.5 12 9 19.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    countEl = document.createElement("div"); countEl.className = "book-count";
+    wrap.appendChild(book); wrap.appendChild(prevB); wrap.appendChild(nextB); wrap.appendChild(countEl);
+    wrap.style.position = "relative";
+    panel.querySelector(".panel-scroll").appendChild(wrap);
+    prevB.addEventListener("click", function () { show(spread - 1, true); });
+    nextB.addEventListener("click", function () { show(spread + 1, true); });
+    show(0, false);
+  };
+
+  document.addEventListener("keydown", function (e) {
+    var open = L.currentSection && L.currentSection();
+    if (!open || open.theme !== "book" || !book) return;
+    if (L.escapeHandled && L.escapeHandled()) return;
+    if (e.key === "ArrowLeft")  { e.preventDefault(); show(spread - 1, true); }
+    if (e.key === "ArrowRight") { e.preventDefault(); show(spread + 1, true); }
+  });
 })();

@@ -1921,3 +1921,162 @@ body.panel-open .glint { animation-play-state: paused; opacity: 0; transition: o
 .hotspot.has-mask:focus-visible { box-shadow: none; }
 .hotspot.has-mask .glint-a { top: 4%; right: 6%; }
 .hotspot.has-mask .glint-b { bottom: 10%; left: 4%; }
+
+/* ============================================================
+   The book
+   The "book" theme raises an open sketchbook in the middle of the
+   room: two cream pages, a dark cover showing at the edges, a soft
+   gutter down the spine. One piece per page, fitted to the page.
+   Arrows (and the page corners) turn the spread.
+   ============================================================ */
+:root {
+  --book-cover:   #3b2f26;
+  --book-ink:     #1c1612;
+  --book-page:    #f3ead6;
+  --book-page-2:  #ece1c9;
+  --book-width:   min(84vw, 1240px, 78vh * 1.45);
+}
+@media (min-width: 768px) {
+  .panel.theme-book {
+    inset: auto;
+    left: 50%;
+    top: 50%;
+    width: var(--book-width);
+    height: auto;
+    background: transparent;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: none;
+    overflow: visible;
+    transform: translate(-50%, 60vh);
+    transition: transform var(--panel-duration) var(--panel-ease), visibility 0s linear var(--panel-duration);
+  }
+  .panel.theme-book.is-open {
+    transform: translate(-50%, -50%);
+    transition: transform var(--panel-duration) var(--panel-ease), visibility 0s;
+  }
+  .panel.theme-book::before, .panel.theme-book::after { display: none; }
+  .panel.theme-book .panel-scroll { padding: 0; height: auto; overflow: visible; display: block; }
+  .panel.theme-book .panel-head { display: none; }
+  .panel.theme-book .panel-items { display: block; max-width: none; overflow: visible; }
+  .panel.theme-book .card { display: none; opacity: 1; transform: none; }
+
+  /* the cover and the two pages */
+  .book {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    padding: 1.1%;
+    background: var(--book-cover);
+    border: 3px solid var(--book-ink);
+    border-radius: 6px 10px 10px 6px;
+    box-shadow:
+      inset 0 0 0 2px rgba(241, 230, 208, 0.12),
+      8px 10px 0 rgba(28, 22, 18, 0.35),
+      0 30px 50px -28px rgba(28, 22, 18, 0.9);
+    aspect-ratio: 1.45;
+  }
+  .book-page {
+    position: relative;
+    display: grid;
+    grid-template-rows: 1fr auto;
+    gap: 0.5rem;
+    padding: 2.6% 2.8% 2.2%;
+    background: var(--book-page);
+    border: 2px solid var(--book-ink);
+    overflow: hidden;
+    min-height: 0;
+  }
+  .book-page.left  { border-right-width: 1px; border-radius: 3px 0 0 3px; }
+  .book-page.right { border-left-width: 1px;  border-radius: 0 3px 3px 0; background: var(--book-page-2); }
+  /* the gutter: a soft shadow into the spine on both pages */
+  .book-page.left::after, .book-page.right::after {
+    content: ""; position: absolute; top: 0; bottom: 0; width: 9%; pointer-events: none;
+  }
+  .book-page.left::after  { right: 0; background: linear-gradient(90deg, transparent, rgba(28, 22, 18, 0.16)); }
+  .book-page.right::after { left: 0;  background: linear-gradient(270deg, transparent, rgba(28, 22, 18, 0.14)); }
+  /* faint ruled edge, like a sketchbook page */
+  .book-page::before {
+    content: ""; position: absolute; inset: 1.6%; pointer-events: none;
+    border: 1px solid rgba(28, 22, 18, 0.12);
+  }
+
+  .book-art {
+    position: relative;
+    min-height: 0;
+    display: grid;
+    place-items: center;
+  }
+  .book-art img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    border: 2px solid var(--book-ink);
+    box-shadow: 4px 5px 0 rgba(28, 22, 18, 0.22);
+    cursor: zoom-in;
+    background: #fff;
+  }
+  .book-art.is-empty { opacity: 0; }
+  .book-caption {
+    display: flex; justify-content: space-between; align-items: baseline; gap: 1rem;
+    font-family: var(--font-hand);
+    font-size: 1.1rem;
+    color: var(--book-ink);
+    padding: 0 0.3rem;
+  }
+  .book-caption .book-title { font-weight: 600; }
+  .book-caption .book-meta { font-size: 0.95rem; opacity: 0.7; }
+  .book-caption .book-folio { font-family: var(--font-body); font-size: 0.72rem; letter-spacing: 0.14em; opacity: 0.55; }
+
+  /* page turn: the new spread rises in */
+  .book-page .book-art, .book-page .book-caption { transition: opacity 260ms ease-out, transform 320ms var(--panel-ease); }
+  .book.is-turning .book-art, .book.is-turning .book-caption { opacity: 0; transform: translateY(6px); }
+
+  /* arrows pinned to the outer page edges, and the close on the cover corner */
+  .book-nav {
+    position: absolute; top: 50%; width: 2.6rem; height: 2.6rem; margin-top: -1.3rem;
+    display: grid; place-items: center;
+    background: var(--cream); color: var(--book-ink);
+    border: 2px solid var(--book-ink); border-radius: 50%;
+    box-shadow: 3px 3px 0 var(--book-ink);
+    cursor: pointer; z-index: 3;
+    transition: transform 200ms var(--panel-ease), box-shadow 200ms;
+  }
+  .book-nav:hover, .book-nav:focus-visible { box-shadow: 1px 1px 0 var(--book-ink); transform: translate(2px, 2px); outline: none; }
+  .book-nav[disabled] { opacity: 0.35; cursor: default; box-shadow: 3px 3px 0 var(--book-ink); transform: none; }
+  .book-nav.prev { left: -1.4rem; }
+  .book-nav.next { right: -1.4rem; }
+  .book-count {
+    position: absolute; left: 50%; bottom: -2rem; transform: translateX(-50%);
+    font-family: var(--font-body); font-variant: small-caps; letter-spacing: 0.16em; font-size: 0.78rem;
+    color: var(--cream); opacity: 0.75;
+  }
+  .panel.theme-book .panel-close {
+    top: -1.1rem; right: -1.1rem;
+    width: 2.1rem; height: 2.1rem;
+    background: var(--cream); color: var(--book-ink);
+    border: 2px solid var(--book-ink); border-radius: 4px;
+    box-shadow: 3px 3px 0 var(--book-ink);
+    opacity: 1; z-index: 3;
+  }
+  .panel.theme-book .panel-close:hover { transform: none; box-shadow: 1px 1px 0 var(--book-ink); }
+}
+/* phones: the plain gallery list */
+@media (max-width: 767.98px) {
+  .book, .book-nav, .book-count { display: none; }
+  .panel.theme-book .card { display: block; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .panel.theme-book, .book-page .book-art, .book-page .book-caption { transition: none !important; }
+}
+
+.theme-book { background: var(--theme-gallery-bg); color: var(--theme-gallery-ink); }
+@media (max-width: 767.98px) {
+  .theme-book .card-figure { display: inline-block; margin: 0 0 1rem; padding: 0.6rem; background: var(--theme-gallery-mat); border: 1px solid rgba(107, 84, 64, 0.55); }
+  .theme-book .card { text-align: center; }
+  .theme-book .card-title { font-size: 1.1rem; font-weight: 500; }
+}

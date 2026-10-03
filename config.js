@@ -38,7 +38,7 @@ const PAINTING = {
                    "left" | "right" | "above" | "below". Pick empty shelf space.
    status        — Optional. "coming-soon" darkens the object in the room, shows
                    "Coming soon" on hover, and disables the click.
-   theme         — Panel styling: "paper" | "gallery" | "spread" | "reel" | "lab" | "shelf" | "screen" | "contact"
+   theme         — Panel styling: "paper" | "gallery" | "spread" | "reel" | "lab" | "shelf" | "screen" | "book" | "contact"
    intro         — One or two sentences shown under the heading, in italic.
    items         — The entries in this section. Fields:
        title        — Name of the piece / project.
@@ -82,17 +82,107 @@ const SECTIONS = [
     mask: "assets/mask-portfolio.png",   /* the glow follows this silhouette instead of the box */
     shape: "rect",
     labelPosition: "right",
-    theme: "gallery",
-    intro: "Paintings and drawings, mostly digital, some not.",
+    theme: "book",
+    intro: "Paintings and drawings.",
     items: [
       {
-        title: "Placeholder painting",
-        description: "A description of the piece: what it is, what it was for, what you were trying to do.",
-        image: "assets/example.jpg",
-        alt: "Describe the painting here.",
+        title: "Untitled I",
+        description: "",
+        image: "assets/portfolio-01.jpg",
+        alt: "A pair of hands bound at the wrists by white earphone cords, a phone charger dangling below, against black.",
         link: "",
         linkLabel: "",
-        meta: "2026"
+        meta: "Painting"
+      },
+      {
+        title: "Untitled II",
+        description: "",
+        image: "assets/portfolio-02.jpg",
+        alt: "A girl in a striped shirt studies a wall of printed social-media photos of other girls.",
+        link: "",
+        linkLabel: "",
+        meta: "Painting"
+      },
+      {
+        title: "Untitled III",
+        description: "",
+        image: "assets/portfolio-03.jpg",
+        alt: "A self-portrait painted on a wooden palette, one hand holding a brush across the face.",
+        link: "",
+        linkLabel: "",
+        meta: "Painting"
+      },
+      {
+        title: "Untitled IV",
+        description: "",
+        image: "assets/portfolio-04.jpg",
+        alt: "A plate of rice and chicken seen from above, ringed by a phone, a tape measure, and a tablet showing a photo.",
+        link: "",
+        linkLabel: "",
+        meta: "Painting"
+      },
+      {
+        title: "Untitled V",
+        description: "",
+        image: "assets/portfolio-05.jpg",
+        alt: "A girl in a hospital gown sits on a bed counting banknotes beside a wallet and loose coins.",
+        link: "",
+        linkLabel: "",
+        meta: "Painting"
+      },
+      {
+        title: "Untitled VI",
+        description: "",
+        image: "assets/portfolio-06.jpg",
+        alt: "A girl in a red dress holds a tumbler and an apple among a heap of branded cups, shoes, and boxes.",
+        link: "",
+        linkLabel: "",
+        meta: "Painting"
+      },
+      {
+        title: "Untitled VII",
+        description: "",
+        image: "assets/portfolio-07.jpg",
+        alt: "Two hands in lilac nitrile gloves cradle a bare hand.",
+        link: "",
+        linkLabel: "",
+        meta: "Painting"
+      },
+      {
+        title: "Untitled VIII",
+        description: "",
+        image: "assets/portfolio-08.jpg",
+        alt: "A still life of a crumpled silver bag with monarch butterflies, dolls, toy cars and plastic blocks.",
+        link: "",
+        linkLabel: "",
+        meta: "Painting"
+      },
+      {
+        title: "Untitled IX",
+        description: "",
+        image: "assets/portfolio-10.jpg",
+        alt: "Four students in a classroom bathed in violet light, two sharing a chair.",
+        link: "",
+        linkLabel: "",
+        meta: "Painting"
+      },
+      {
+        title: "Untitled X",
+        description: "",
+        image: "assets/portfolio-11.jpg",
+        alt: "A graphite drawing of a girl eating from a spoon with a banknote in her mouth, bowls of coins in front of her.",
+        link: "",
+        linkLabel: "",
+        meta: "Drawing"
+      },
+      {
+        title: "Untitled XI",
+        description: "",
+        image: "assets/portfolio-12.jpg",
+        alt: "A graphite drawing of a young man and a young woman side by side, looking out.",
+        link: "",
+        linkLabel: "",
+        meta: "Drawing"
       }
     ]
   },
