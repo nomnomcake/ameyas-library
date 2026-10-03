@@ -48,10 +48,10 @@ const SECTIONS = [
   {
     id: "about",
     label: "About me",
-    object: "the girl reading, left edge",
-    hotspot: { x: 2.5, y: 18, w: 28, h: 80 },
-    shape: "ellipse",
-    labelPosition: "below",
+    object: "the painted word LIBRARY on the wall (the girl reading stays inert)",
+    hotspot: { x: 67, y: 27, w: 30, h: 13 },
+    shape: "rect",
+    labelPosition: "above",
     theme: "paper",
     intro: "A short note on who is doing the reading.",
     items: [
