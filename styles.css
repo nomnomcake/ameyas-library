@@ -1664,3 +1664,6 @@ body[data-daylight="night"]   .daylight { background: rgba(58, 64, 92, 0.9);    
   .panel.is-about { width: min(64vw, 900px, 70vh * 1.25); }
   .panel.is-about .about-frame img { max-width: none; }     /* the paper theme caps card images; not here */
 }
+@media (min-width: 768px) {
+  .panel.is-about .panel-items { max-width: none; }         /* the paper theme narrows the column; not here */
+}
