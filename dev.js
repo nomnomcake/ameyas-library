@@ -257,7 +257,7 @@
   css.textContent =
     ".dev-mode .hotspot{background:rgba(227,196,138,.12)!important;outline:1px dashed rgba(241,230,208,.8);outline-offset:-1px;cursor:move;touch-action:none;filter:none!important;opacity:1!important}" +
     ".dev-mode .hotspot.dev-selected{outline:2px dashed #e3c48a;background:rgba(227,196,138,.22)!important}" +
-    ".dev-mode .hotspot::before,.dev-mode .hotspot::after,.dev-mode .hotspot-label{display:none!important}" +
+    ".dev-mode .hotspot::before,.dev-mode .hotspot::after,.dev-mode .hotspot-label,.dev-mode .glint{display:none!important}" +
     ".dev-tag{position:absolute;left:0;top:0;padding:1px 5px;font:11px/1.4 ui-monospace,monospace;background:rgba(31,36,51,.85);color:#f1e6d0;pointer-events:none;white-space:nowrap;border-radius:0 0 3px 0}" +
     ".dev-grip{position:absolute;right:-5px;bottom:-5px;width:12px;height:12px;background:#e3c48a;border:1px solid #1f2433;cursor:nwse-resize;border-radius:2px}" +
     ".dev-bar{position:fixed;left:0;right:0;bottom:0;z-index:1000;display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:8px 12px;background:rgba(31,36,51,.94);color:#f1e6d0;font:12px/1.4 ui-monospace,monospace}" +
