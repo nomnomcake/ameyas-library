@@ -107,7 +107,8 @@
       var soon = s.status === "coming-soon";
       if (soon) { btn.classList.add("is-coming-soon"); btn.setAttribute("aria-disabled", "true"); }
       btn.setAttribute("aria-label", soon ? (s.label || s.id) + ", coming soon" : "Open " + (s.label || s.id).toLowerCase());
-      btn.setAttribute("style", hotspotStyle(s.hotspot) + (s.mask ? "--mask:url(\"" + s.mask + "\");" : ""));
+      btn.setAttribute("style", hotspotStyle(s.hotspot));
+      if (s.mask) btn.style.setProperty("--mask", "url(\"" + s.mask + "\")");
       if (s.mask) btn.classList.add("has-mask");
       /* Step 3: the lit surface (sheen + lift) and the label beside the object. */
       var surface = document.createElement("span");

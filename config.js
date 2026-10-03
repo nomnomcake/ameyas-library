@@ -32,8 +32,8 @@ const PAINTING = {
                    null = no object on the painting; the section still appears
                    in the phone list and opens from its #hash.
    shape         — "rect" or "ellipse". Ellipse uses the same box as a bounding box.
-   mask          — Optional PNG whose alpha is the object's silhouette, sized to the
-                   hotspot box. The glow then follows the shape instead of the box.
+   mask          — Optional. A data-URI PNG from masks.js whose alpha is the object's
+                   silhouette, sized to the hotspot box. The glow follows the shape.
    labelPosition — Where the hover label sits relative to the object:
                    "left" | "right" | "above" | "below". Pick empty shelf space.
    status        — Optional. "coming-soon" darkens the object in the room, shows
@@ -79,7 +79,7 @@ const SECTIONS = [
     label: "Portfolio",
     object: "the portfolio book and jar of brushes standing on the second shelf",
     hotspot: { x: 30.94, y: 36.76, w: 9.66, h: 18.29 },
-    mask: "assets/mask-portfolio.png",   /* the glow follows this silhouette instead of the box */
+    mask: MASKS.portfolio,               /* the glow follows this silhouette instead of the box (see masks.js) */
     shape: "rect",
     labelPosition: "right",
     theme: "book",
@@ -199,7 +199,7 @@ const SECTIONS = [
       {
         title: "Placeholder poster",
         description: "What it was for and the idea behind it.",
-        image: "assets/example.jpg",
+        image: "",
         alt: "Describe the poster here.",
         link: "",
         linkLabel: "",
@@ -208,7 +208,7 @@ const SECTIONS = [
       {
         title: "Second placeholder",
         description: "Another short description.",
-        image: "assets/example.jpg",
+        image: "",
         alt: "Describe it here.",
         link: "",
         linkLabel: "",
@@ -230,7 +230,7 @@ const SECTIONS = [
       {
         title: "Placeholder reel",
         description: "A sentence about the piece.",
-        image: "assets/example.jpg",
+        image: "",
         alt: "A still from the animation.",
         link: "",
         linkLabel: "",
