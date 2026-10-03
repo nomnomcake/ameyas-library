@@ -198,7 +198,7 @@ const SECTIONS = [
       },
       {
         title: "Speak.exe",
-        description: "A speaking simulator. You get one unfamiliar idea, fifteen minutes to research it, and one minute to explain it from your notes, with streaks and an archive of topics you have done. Everything stays on your device. Built with Next.js and React, deployed on Vercel.",
+        description: "You get one unfamiliar idea, fifteen minutes to research it, and one minute to explain it using your notes, with streaks and an archive of topics you have done. Built with Next.js and React.",
         image: "assets/site-2.jpg",
         alt: "The Speak.exe home page: a retro window titled Learn it fast, say it clearly, with a Start Challenge button and a sealed card for today’s topic.",
         link: "https://speak-exe.vercel.app/",
