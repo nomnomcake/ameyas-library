@@ -834,18 +834,17 @@
         /* body with chin */
         '<rect x="22" y="20" width="956" height="540" rx="22" fill="#2c231d"/>' +
         '<rect x="40" y="38" width="920" height="504" rx="12" stroke="#4a3d33" stroke-width="3"/>' +
-        '<path d="M470 524 L500 508 L530 524 L500 540 Z" fill="#c9a66b" stroke="#1c1612" stroke-width="4"/>' +
         /* the screen: a light page, with the site content laid over it */
-        '<rect x="50" y="48" width="900" height="440" rx="9" fill="#f4ecdc"/>' +
+        '<rect x="50" y="48" width="900" height="484" rx="9" fill="#f4ecdc"/>' +
       '</g>' +
       /* a second, lighter stroke a few units off, like a pen going round twice */
       '<g transform="translate(5 4)" filter="url(#ink-wobble)" stroke="#1c1612" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" fill="none" opacity="0.55">' +
         '<path d="M340 650 C340 622 380 614 420 612 L580 612 C620 614 660 622 660 650 L660 662 L340 662 Z"/>' +
         '<path d="M452 556 L548 556 L560 614 L440 614 Z"/>' +
         '<rect x="22" y="20" width="956" height="540" rx="22"/>' +
-        '<rect x="50" y="48" width="900" height="440" rx="9"/>' +
+        '<rect x="50" y="48" width="900" height="484" rx="9"/>' +
       '</g>' +
-      '<rect x="52" y="50" width="896" height="436" rx="9" fill="url(#sheen)"/>' +
+      '<rect x="52" y="50" width="896" height="480" rx="9" fill="url(#sheen)"/>' +
     '</svg>';
 
   function show(i) {
