@@ -906,33 +906,15 @@
     cards = Array.prototype.slice.call(itemsEl.querySelectorAll(".card"));
     cards.forEach(function (c) { c.style.setProperty("--i", 0); dress(c); });
 
-    /* Desktop icons */
-    icons = document.createElement("nav");
-    icons.className = "os-icons";
-    icons.setAttribute("aria-label", "Sites");
-    cards.forEach(function (c, k) {
-      var b = document.createElement("button");
-      b.type = "button";
-      b.className = "os-icon";
-      var name = (section.items[k] && section.items[k].title) || "Site " + (k + 1);
-      b.innerHTML = folderIcon() + "<span></span>";
-      b.querySelector("span").textContent = name;
-      b.setAttribute("aria-label", "Open " + name);
-      b.addEventListener("click", function () { show(k); });
-      icons.appendChild(b);
-    });
-    scroll.appendChild(icons);
-
     /* Taskbar */
     nav = document.createElement("div");
     nav.className = "screen-nav";
     var start = document.createElement("span"); start.className = "os-start"; start.innerHTML = "<i></i>";
     start.appendChild(document.createTextNode(section.label || "Websites"));
-    var status = document.createElement("span"); status.className = "os-status"; status.textContent = section.intro || "";
     var count = document.createElement("span"); count.className = "screen-count";
     var prev = document.createElement("button"); prev.type = "button"; prev.innerHTML = chevron(-1); prev.setAttribute("aria-label", "Previous site");
     var next = document.createElement("button"); next.type = "button"; next.innerHTML = chevron(1);  next.setAttribute("aria-label", "Next site");
-    nav.appendChild(start); nav.appendChild(status); nav.appendChild(count); nav.appendChild(prev); nav.appendChild(next);
+    nav.appendChild(start); nav.appendChild(count); nav.appendChild(prev); nav.appendChild(next);
     scroll.appendChild(nav);
     prev.addEventListener("click", function () { show(index - 1); });
     next.addEventListener("click", function () { show(index + 1); });
