@@ -877,19 +877,53 @@
       '</svg>';
   }
 
-  /* Give a card the dialog-window chrome: title bar with dots, body below */
-  function dress(card) {
+  /* Window-control glyphs for the title bar's right side */
+  function controls() {
+    return '<span class="os-controls" aria-hidden="true">' +
+      '<i title="minimise"><svg viewBox="0 0 12 12"><path d="M2 9h8" stroke="currentColor" stroke-width="2"/></svg></i>' +
+      '<i title="maximise"><svg viewBox="0 0 12 12"><rect x="2" y="2" width="8" height="8" fill="none" stroke="currentColor" stroke-width="2"/></svg></i>' +
+      '</span>';
+  }
+
+  /* Give a card the dialog-window chrome. The title bar carries the section
+     name; the site's own name heads the text column. The screenshot is a link
+     to the site; there is no separate button. */
+  function dress(card, item, sectionLabel) {
     if (card.querySelector(".os-titlebar")) return;
-    var title = card.querySelector(".card-title");
     var bar = document.createElement("div");
     bar.className = "os-titlebar";
     var dots = document.createElement("span"); dots.className = "os-dots"; dots.innerHTML = "<i></i><i></i>";
-    bar.appendChild(dots);
-    if (title) bar.appendChild(title); else bar.appendChild(document.createElement("span"));
-    bar.appendChild(document.createElement("span"));
+    var name = document.createElement("span"); name.className = "os-window-name"; name.textContent = sectionLabel;
+    bar.appendChild(dots); bar.appendChild(name);
+    bar.insertAdjacentHTML("beforeend", controls());
+
+    var meta = card.querySelector(".card-meta"); if (meta) meta.remove();
+    var link = card.querySelector(".card-link"); if (link) link.remove();
+
+    var fig = card.querySelector(".card-figure");
+    if (fig && item && item.link && item.status !== "coming-soon") {
+      var img = fig.querySelector("img");
+      var fresh = img.cloneNode(true);                 // drops the lightbox listeners
+      fresh.classList.remove("is-viewable"); fresh.removeAttribute("role"); fresh.removeAttribute("tabindex"); fresh.removeAttribute("aria-label");
+      var go = document.createElement("a");
+      go.className = "os-shot-link";
+      go.href = item.link; go.target = "_blank"; go.rel = "noopener";
+      go.setAttribute("aria-label", "Open " + (item.title || "site") + " in a new tab");
+      go.appendChild(fresh);
+      img.replaceWith(go);
+    }
+
     var body = document.createElement("div");
     body.className = "os-body";
-    while (card.firstChild) body.appendChild(card.firstChild);
+    var figure = card.querySelector(".card-figure");
+    var text = document.createElement("div"); text.className = "os-text";
+    var ttl = card.querySelector(".card-title"); if (ttl) text.appendChild(ttl);
+    var dsc = card.querySelector(".card-desc"); if (dsc) text.appendChild(dsc);
+    var stamp = card.querySelector(".stamp");
+    if (figure) body.appendChild(figure);
+    body.appendChild(text);
+    while (card.firstChild) { var n = card.firstChild; if (n === stamp) { card.removeChild(n); continue; } body.appendChild(n); }
+    if (stamp) card.appendChild(stamp);
     card.appendChild(bar);
     card.appendChild(body);
   }
@@ -913,17 +947,24 @@
     }
 
     cards = Array.prototype.slice.call(itemsEl.querySelectorAll(".card"));
-    cards.forEach(function (c) { c.style.setProperty("--i", 0); dress(c); });
+    cards.forEach(function (c, k) { c.style.setProperty("--i", 0); dress(c, (section.items || [])[k], section.label || "Websites"); });
 
     /* Taskbar */
     nav = document.createElement("div");
     nav.className = "screen-nav";
-    var start = document.createElement("span"); start.className = "os-start"; start.innerHTML = "<i></i>";
-    start.appendChild(document.createTextNode(section.label || "Websites"));
+    var tray = document.createElement("span"); tray.className = "os-tray"; tray.setAttribute("aria-hidden", "true");
+    tray.innerHTML =
+      '<i><svg viewBox="0 0 16 16"><path d="M1.5 4h5l1.5 1.5h6.5v8h-13z" fill="#e8c9a0" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></i>' +
+      '<i><svg viewBox="0 0 16 16"><rect x="2" y="3" width="12" height="10" rx="1" fill="#f6efe0" stroke="currentColor" stroke-width="1.6"/><path d="M2 5l6 4 6-4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></i>' +
+      '<i><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" fill="#f6efe0" stroke="currentColor" stroke-width="1.6"/><path d="M8 4.5V8l2.5 1.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></i>' +
+      '<i><svg viewBox="0 0 16 16"><rect x="3" y="2" width="10" height="12" rx="1" fill="#f6efe0" stroke="currentColor" stroke-width="1.6"/><path d="M5.5 5.5h5M5.5 8h5M5.5 10.5h3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></i>';
+    var clock = document.createElement("span"); clock.className = "os-clock";
+    function tickClock() { var d = new Date(); clock.textContent = String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0"); }
+    tickClock(); setInterval(tickClock, 30000);
     var count = document.createElement("span"); count.className = "screen-count";
     var prev = document.createElement("button"); prev.type = "button"; prev.innerHTML = chevron(-1); prev.setAttribute("aria-label", "Previous site");
     var next = document.createElement("button"); next.type = "button"; next.innerHTML = chevron(1);  next.setAttribute("aria-label", "Next site");
-    nav.appendChild(start); nav.appendChild(count); nav.appendChild(prev); nav.appendChild(next);
+    nav.appendChild(tray); nav.appendChild(count); nav.appendChild(clock); nav.appendChild(prev); nav.appendChild(next);
     scroll.appendChild(nav);
     prev.addEventListener("click", function () { show(index - 1); });
     next.addEventListener("click", function () { show(index + 1); });
