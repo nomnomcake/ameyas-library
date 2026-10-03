@@ -1853,3 +1853,10 @@ body.panel-open .glint { animation-play-state: paused; opacity: 0; transition: o
   .os-text .card-title { font-size: 1.7rem; line-height: 1.1; letter-spacing: 0.04em; margin-bottom: 0.25rem; }
   .os-body .os-text { gap: 0.9rem; }
 }
+
+/* Coming-soon label sits in the middle of its box, whatever labelPosition says */
+.hotspot.is-coming-soon .hotspot-label {
+  left: 50% !important; top: 50% !important; right: auto !important; bottom: auto !important;
+  margin: 0 !important;
+  transform: translate(-50%, -50%) !important;
+}
