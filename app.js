@@ -104,7 +104,9 @@
       btn.className = "hotspot" + (s.shape === "ellipse" ? " is-ellipse" : " is-rect") +
                       " label-" + (s.labelPosition || "right");
       btn.dataset.id = s.id;
-      btn.setAttribute("aria-label", "Open " + (s.label || s.id).toLowerCase());
+      var soon = s.status === "coming-soon";
+      if (soon) { btn.classList.add("is-coming-soon"); btn.setAttribute("aria-disabled", "true"); }
+      btn.setAttribute("aria-label", soon ? (s.label || s.id) + ", coming soon" : "Open " + (s.label || s.id).toLowerCase());
       btn.setAttribute("style", hotspotStyle(s.hotspot));
       /* Step 3: the lit surface (sheen + lift) and the label beside the object. */
       var surface = document.createElement("span");
@@ -114,9 +116,9 @@
       var label = document.createElement("span");
       label.className = "hotspot-label";
       label.setAttribute("aria-hidden", "true");
-      label.textContent = s.label || s.id;
+      label.textContent = soon ? "Coming soon" : (s.label || s.id);
       btn.appendChild(label);
-      btn.addEventListener("click", function () { onHotspotClick(s, btn); });
+      btn.addEventListener("click", function () { if (!soon) onHotspotClick(s, btn); });
       hotspotsEl.appendChild(btn);
     });
   }
@@ -385,7 +387,8 @@
 
   function sectionFromHash() {
     var id = (location.hash || "").replace(/^#/, "");
-    return id && L.findSection(id) ? id : null;
+    var s = id && L.findSection(id);
+    return s && s.status !== "coming-soon" ? id : null;
   }
 
   window.addEventListener("popstate", function () {
@@ -730,16 +733,20 @@
       b.type = "button";
       b.className = "spine-link theme-" + (s.theme || "paper");
       b.dataset.id = s.id;
-      b.setAttribute("aria-label", "Open " + (s.label || s.id).toLowerCase());
+      var soon = s.status === "coming-soon";
+      if (soon) { b.classList.add("is-coming-soon"); b.setAttribute("aria-disabled", "true"); }
+      b.setAttribute("aria-label", soon ? (s.label || s.id) + ", coming soon" : "Open " + (s.label || s.id).toLowerCase());
       b.appendChild(document.createTextNode(s.label || s.id));
       var n = (s.items || []).length;
-      if (n && ["gallery", "spread", "reel", "lab", "screen"].indexOf(s.theme) !== -1) {
+      if (soon) {
+        var sm = document.createElement("span"); sm.className = "spine-meta"; sm.textContent = "coming soon"; b.appendChild(sm);
+      } else if (n && ["gallery", "spread", "reel", "lab", "screen"].indexOf(s.theme) !== -1) {
         var m = document.createElement("span");
         m.className = "spine-meta";
         m.textContent = n + (n === 1 ? " piece" : " pieces");
         b.appendChild(m);
       }
-      b.addEventListener("click", function () { L.openSection(s.id, b); });
+      b.addEventListener("click", function () { if (!soon) L.openSection(s.id, b); });
       spinesEl.appendChild(b);
     });
   }

@@ -1711,3 +1711,23 @@ body[data-daylight="night"]   .daylight { background: rgba(58, 64, 92, 0.9);    
   .panel.theme-screen .is-coming-soon .stamp { top: 3.4rem; left: 1.8rem; font-family: var(--os-font); font-variant: normal; font-size: 0.6rem; letter-spacing: 0.04em; border-width: 2px; }
   .panel.theme-screen .is-coming-soon .card-figure { background: var(--os-paper); min-height: 10rem; }
 }
+
+/* ============================================================
+   Coming-soon objects on the shelf
+   The object sits in shadow. Hover shows "Coming soon" and nothing
+   else: no lamp pool, no sheen, no click.
+   ============================================================ */
+:root { --soon-shade: rgba(16, 11, 8, 0.5); }
+.hotspot.is-coming-soon { cursor: default; }
+.hotspot.is-coming-soon .hotspot-surface {
+  opacity: 1;
+  background: var(--soon-shade);
+  transition: background 300ms ease-out;
+}
+.hotspot.is-coming-soon .hotspot-surface::after { display: none; }
+.hotspot.is-coming-soon::before { display: none; }
+.hotspot.is-coming-soon:hover .hotspot-surface,
+.hotspot.is-coming-soon:focus-visible .hotspot-surface { background: rgba(16, 11, 8, 0.38); }
+.hotspot.is-coming-soon .hotspot-label { color: var(--cream); text-shadow: 0 0 2px rgba(16, 11, 8, 0.9), 0 0 10px rgba(16, 11, 8, 0.8); }
+.hotspot.is-coming-soon:focus-visible { box-shadow: none; }
+.spine-link.is-coming-soon { opacity: 0.55; cursor: default; filter: saturate(0.6); }

@@ -34,6 +34,8 @@ const PAINTING = {
    shape         — "rect" or "ellipse". Ellipse uses the same box as a bounding box.
    labelPosition — Where the hover label sits relative to the object:
                    "left" | "right" | "above" | "below". Pick empty shelf space.
+   status        — Optional. "coming-soon" darkens the object in the room, shows
+                   "Coming soon" on hover, and disables the click.
    theme         — Panel styling: "paper" | "gallery" | "spread" | "reel" | "lab" | "shelf" | "screen" | "contact"
    intro         — One or two sentences shown under the heading, in italic.
    items         — The entries in this section. Fields:
@@ -128,6 +130,7 @@ const SECTIONS = [
     hotspot: { x: 31.5, y: 58, w: 50, h: 21 },
     shape: "rect",
     labelPosition: "above",
+    status: "coming-soon",
     theme: "reel",
     intro: "Moving pictures. Short loops and longer pieces.",
     items: [
@@ -171,6 +174,7 @@ const SECTIONS = [
     hotspot: { x: 31.5, y: 82, w: 50, h: 15 },
     shape: "rect",
     labelPosition: "above",
+    status: "coming-soon",
     theme: "shelf",
     intro: "The books on the bottom shelf. Things I like that aren't work.",
     items: [
