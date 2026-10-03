@@ -122,3 +122,13 @@
     els: { stage: stage, hotspots: hotspotsEl, layerBase: layerBase, layerSharp: layerSharp, painting: painting }
   };
 })();
+
+/* ---------- Dev mode loader (step 2) ----------
+   dev.js only loads when the URL ends in ?dev. Visitors never fetch it. */
+(function () {
+  if (/[?&]dev$/.test(location.search)) {
+    var s = document.createElement("script");
+    s.src = "dev.js";
+    document.body.appendChild(s);
+  }
+})();
