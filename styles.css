@@ -1595,3 +1595,68 @@ body[data-daylight="night"]   .daylight { background: rgba(58, 64, 92, 0.9);    
   .panel.is-about .panel-scroll { display: flex; flex-direction: column; justify-content: center; }
   .panel.is-about .about-scene { padding-top: 0; }
 }
+
+/* ============================================================
+   About me raises the frame itself
+   On desktop the panel is not a sheet: it is the photo frame,
+   centred in the room, with the note stuck to its corner.
+   ============================================================ */
+@media (min-width: 768px) {
+  .panel.is-about {
+    inset: auto;
+    left: 50%;
+    top: 50%;
+    width: min(60vw, 820px, 66vh * 1.2);
+    height: auto;
+    background: transparent;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: none;
+    overflow: visible;
+    transform: translate(-50%, 60vh);
+    transition: transform var(--panel-duration) var(--panel-ease), visibility 0s linear var(--panel-duration);
+  }
+  .panel.is-about.is-open {
+    transform: translate(-50%, -50%);
+    transition: transform var(--panel-duration) var(--panel-ease), visibility 0s;
+  }
+  .panel.is-about::before, .panel.is-about::after { display: none; }
+  .panel.is-about .panel-scroll { padding: 0; height: auto; overflow: visible; display: block; }
+  .panel.is-about .panel-items { overflow: visible; }
+  .panel.is-about .card { opacity: 1; transform: none; }
+
+  .panel.is-about .about-scene {
+    display: block;
+    position: relative;
+    padding: 0;
+  }
+  .panel.is-about .about-frame {
+    width: 100%;
+    margin: 0;
+    transform: rotate(-0.6deg);
+  }
+  /* The note is stuck over the frame's lower-right corner */
+  .panel.is-about .about-note {
+    position: absolute;
+    right: -11%;
+    bottom: -9%;
+    width: 46%;
+    margin: 0;
+    z-index: 2;
+    transform: rotate(2.4deg);
+    padding: 1.2rem 1.3rem 1.4rem;
+  }
+  .panel.is-about .about-note .card-title { font-size: 1.9rem; }
+  .panel.is-about .about-note .card-desc { font-size: 1.18rem; line-height: 1.28; }
+
+  /* Close: a drawn button pinned to the frame's top-right corner */
+  .panel.is-about .panel-close {
+    top: -1.1rem; right: -1.1rem;
+    width: 2.1rem; height: 2.1rem;
+    background: var(--cream); color: var(--about-ink);
+    border: 2px solid var(--about-ink); border-radius: 4px;
+    box-shadow: 3px 3px 0 var(--about-ink);
+    opacity: 1; z-index: 3;
+  }
+  .panel.is-about .panel-close:hover { transform: none; box-shadow: 1px 1px 0 var(--about-ink); }
+}
