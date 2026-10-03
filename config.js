@@ -189,5 +189,29 @@ const SECTIONS = [
         meta: ""
       }
     ]
+  },
+  {
+    id: "contact",
+    label: "Contact",
+    object: "the monitor on the right",
+    hotspot: { x: 84.5, y: 42, w: 15.5, h: 21 },
+    shape: "rect",
+    labelPosition: "below",
+    theme: "contact",
+    intro: "Say hello. The monitor is always on.",
+    items: []       /* Contact content comes from CONTACT below, not from items. */
   }
 ];
+
+
+/* ---------- Contact (step 8) ----------
+   Rendered by the "contact" theme as one small card.
+   The email is split so it never appears whole in the HTML; app.js joins
+   the two halves at click time. Light scraper protection, nothing more. */
+const CONTACT = {
+  emailUser: "ameyakohli0",        // the part before the @
+  emailDomain: "gmail.com",        // the part after the @
+  linkedin: "https://www.linkedin.com/in/REPLACE-ME",
+  instagram: "https://www.instagram.com/REPLACE-ME",
+  resume: "assets/resume.pdf"      // top-level resume: drop the PDF in assets/ and name it here. Leave "" for none.
+};

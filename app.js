@@ -626,3 +626,65 @@
     if (e.target && e.target.classList && e.target.classList.contains("artwork")) e.preventDefault();
   });
 })();
+
+/* ============================================================
+   Step 8: contact
+   One small card: email, LinkedIn, Instagram, resume.
+   ============================================================ */
+(function () {
+  "use strict";
+  var L = window.Library;
+  var C = window.CONTACT || {};
+
+  function row(label, text, href, opts) {
+    var li = document.createElement("li");
+    li.className = "contact-row";
+    var k = document.createElement("span"); k.className = "contact-key"; k.textContent = label;
+    var a = document.createElement("a"); a.className = "contact-link"; a.textContent = text;
+    if (href) a.href = href;
+    if (opts && opts.external) { a.target = "_blank"; a.rel = "noopener"; }
+    li.appendChild(k); li.appendChild(a);
+    return li;
+  }
+
+  var previous = L.decoratePanel;
+  L.decoratePanel = function (section, panel, itemsEl) {
+    if (previous) previous(section, panel, itemsEl);
+    if (section.theme !== "contact") return;
+
+    itemsEl.innerHTML = "";
+    var card = document.createElement("article");
+    card.className = "card contact-card";
+    var list = document.createElement("ul");
+    list.className = "contact-list";
+
+    if (C.emailUser && C.emailDomain) {
+      /* Assembled here, never printed whole in the HTML. */
+      var li = row("Email", C.emailUser + " [at] " + C.emailDomain, "#");
+      var a = li.querySelector("a");
+      a.addEventListener("click", function (e) {
+        e.preventDefault();
+        var addr = C.emailUser + "@" + C.emailDomain;
+        a.textContent = addr;
+        location.href = "mailto:" + addr;
+      });
+      a.addEventListener("focus", function () { a.textContent = C.emailUser + "@" + C.emailDomain; }, { once: true });
+      list.appendChild(li);
+    }
+    if (C.linkedin)  list.appendChild(row("LinkedIn",  C.linkedin.replace(/^https?:\/\/(www\.)?/, ""),  C.linkedin,  { external: true }));
+    if (C.instagram) list.appendChild(row("Instagram", C.instagram.replace(/^https?:\/\/(www\.)?/, ""), C.instagram, { external: true }));
+    if (C.resume)    list.appendChild(row("Resume", "PDF", C.resume, { external: true }));
+
+    card.appendChild(list);
+    itemsEl.appendChild(card);
+  };
+
+  if (C.resume) {
+    var probe = new XMLHttpRequest();
+    try {
+      probe.open("HEAD", C.resume, true);
+      probe.onload = function () { if (probe.status >= 400) console.warn("[Ameya's Library config] CONTACT.resume not found: " + C.resume); };
+      probe.send();
+    } catch (e) { /* file:// blocks HEAD; ignore */ }
+  }
+})();
