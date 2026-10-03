@@ -193,6 +193,7 @@ const SECTIONS = [
     hotspot: null,
     shape: "rect",
     labelPosition: "right",
+    status: "coming-soon",            /* placeholder items below; remove this line when the real work is in */
     theme: "spread",
     intro: "Posters, layouts, identities. Things meant to be printed.",
     items: [
@@ -321,7 +322,7 @@ const SECTIONS = [
 const CONTACT = {
   emailUser: "ameyakohli0",        // the part before the @
   emailDomain: "gmail.com",        // the part after the @
-  linkedin: "https://www.linkedin.com/in/REPLACE-ME",
-  instagram: "https://www.instagram.com/REPLACE-ME",
-  resume: "assets/resume.pdf"      // top-level resume: drop the PDF in assets/ and name it here. Leave "" for none.
+  linkedin: "",                    // e.g. "https://www.linkedin.com/in/your-handle". Leave "" to hide the row.
+  instagram: "",                   // e.g. "https://www.instagram.com/your-handle". Leave "" to hide the row.
+  resume: ""                       // top-level resume: drop the PDF in assets/ and set "assets/resume.pdf". Leave "" for none.
 };
