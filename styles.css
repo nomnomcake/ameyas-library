@@ -1193,34 +1193,38 @@ body[data-daylight="night"]   .daylight { background: rgba(58, 64, 92, 0.9);    
 
 /* ============================================================
    The monitor
-   The "screen" theme doesn't use the side panel. It raises a
-   monitor in the middle of the room: bezel, screen, stand.
+   The "screen" theme doesn't use the side panel. It raises the
+   monitor from the painting: a flat panel with a pencil outline,
+   a short neck and a flat foot, in the same browns as the drawing.
+   One site shows at a time; arrows flip between them.
    ============================================================ */
 :root {
-  --monitor-bezel:   #221d1a;
-  --monitor-edge:    #3a322c;
-  --monitor-screen:  #15120f;
-  --monitor-width:   min(82vw, 1180px);
-  --monitor-height:  min(74vh, 720px);
+  --monitor-line:    #1c1612;                  /* the pencil outline */
+  --monitor-bezel:   #3b2f26;                  /* the panel's frame, lit wood brown */
+  --monitor-bezel-2: #2c231d;                  /* its shadowed side */
+  --monitor-screen:  #1f1a16;                  /* the dark screen in the painting */
+  --monitor-width:   min(78vw, 1080px);
+  --monitor-height:  min(70vh, 660px);
 }
 @media (min-width: 768px) {
   .panel.theme-screen {
     inset: auto;
     left: 50%;
-    top: 50%;
+    top: 46%;
     width: var(--monitor-width);
     height: var(--monitor-height);
-    border: 16px solid var(--monitor-bezel);
-    border-bottom-width: 22px;
-    border-radius: 12px;
+    border: 12px solid var(--monitor-bezel);
+    border-right-color: var(--monitor-bezel-2);
+    border-bottom-color: var(--monitor-bezel-2);
+    border-radius: 3px;
+    outline: 2.5px solid var(--monitor-line);
+    outline-offset: 0;
     background: var(--monitor-screen);
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
     box-shadow:
-      0 0 0 1px var(--monitor-edge),
-      inset 0 0 0 1px rgba(0, 0, 0, 0.8),
-      0 40px 80px -30px rgba(0, 0, 0, 0.9),
-      0 0 60px -10px rgba(227, 196, 138, 0.25);
+      inset 0 0 0 2px var(--monitor-line),            /* inner pencil line where screen meets frame */
+      0 30px 60px -28px rgba(0, 0, 0, 0.85);
     overflow: visible;
     transform: translate(-50%, 60vh);
     transition: transform var(--panel-duration) var(--panel-ease), visibility 0s linear var(--panel-duration);
@@ -1229,62 +1233,96 @@ body[data-daylight="night"]   .daylight { background: rgba(58, 64, 92, 0.9);    
     transform: translate(-50%, -50%);
     transition: transform var(--panel-duration) var(--panel-ease), visibility 0s;
   }
-  .panel.theme-screen::before { display: none; }           /* no soft left edge */
-  .panel.theme-screen::after {                              /* faint screen grain, not paper */
-    opacity: 0.07;
-    mix-blend-mode: screen;
-    border-radius: 2px;
-  }
-  /* The stand: a neck and a foot below the bezel */
+  .panel.theme-screen::before { display: none; }
+  .panel.theme-screen::after  { opacity: 0.12; mix-blend-mode: multiply; }   /* keep the paper grain: it is a drawing */
+
+  /* Neck and foot, drawn the same way */
   .monitor-stand {
     position: absolute;
     left: 50%;
     top: 100%;
-    width: 11%;
-    height: 48px;
-    margin-left: -5.5%;
-    margin-top: 22px;
-    background: linear-gradient(90deg, #1a1613, var(--monitor-edge) 50%, #1a1613);
-    border-radius: 0 0 4px 4px;
+    width: 7%;
+    height: 42px;
+    margin-left: -3.5%;
+    margin-top: 12px;
+    background: linear-gradient(90deg, var(--monitor-bezel), var(--monitor-bezel-2));
+    outline: 2.5px solid var(--monitor-line);
     pointer-events: none;
   }
   .monitor-stand::after {
     content: "";
     position: absolute;
-    left: -110%;
-    right: -110%;
+    left: -160%;
+    right: -160%;
     top: 100%;
-    height: 14px;
-    background: linear-gradient(180deg, var(--monitor-edge), var(--monitor-bezel));
-    border-radius: 50% / 100%;
-    box-shadow: 0 10px 24px -8px rgba(0, 0, 0, 0.9);
-  }
-  .panel.theme-screen .panel-scroll {
-    padding: 1.6rem 2rem 2.4rem;
+    height: 12px;
+    margin-top: 2.5px;
+    background: linear-gradient(180deg, var(--monitor-bezel), var(--monitor-bezel-2));
+    outline: 2.5px solid var(--monitor-line);
     border-radius: 2px;
-    background:
-      radial-gradient(ellipse 90% 70% at 50% 0%, rgba(227, 196, 138, 0.07), transparent 70%),
-      var(--monitor-screen);
   }
-  /* The screen's header reads as a title bar */
+
+  .panel.theme-screen .panel-scroll {
+    padding: 1.4rem 1.8rem 1.6rem;
+    background: var(--monitor-screen);
+    display: flex;
+    flex-direction: column;
+  }
   .panel.theme-screen .panel-head {
     display: flex;
     align-items: baseline;
     gap: 1.2rem;
-    margin-bottom: 1.4rem;
-    padding-bottom: 0.8rem;
+    margin-bottom: 1.1rem;
+    padding-bottom: 0.7rem;
     border-bottom: 1px solid rgba(241, 230, 208, 0.12);
   }
-  .panel.theme-screen .panel-title { font-size: 1.6rem; margin: 0; }
-  .panel.theme-screen .panel-intro { font-size: 0.88rem; }
-  /* Three sites side by side on the screen */
-  .panel.theme-screen .panel-items { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.4rem; align-items: start; }
+  .panel.theme-screen .panel-title { font-size: 1.5rem; margin: 0; }
+  .panel.theme-screen .panel-intro { font-size: 0.86rem; }
+  .panel.theme-screen .panel-close { top: 0.3rem; right: 0.4rem; width: 2rem; height: 2rem; }
+
+  /* One site at a time: screenshot on the left, words on the right */
+  .panel.theme-screen .panel-items { display: block; flex: 1; min-height: 0; }
+  .panel.theme-screen .card { display: none; }
+  .panel.theme-screen .card.is-current {
+    display: grid;
+    grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+    gap: 1.6rem;
+    align-items: start;
+    opacity: 1; transform: none;
+  }
+  .panel.theme-screen .card-figure { grid-row: 1 / span 4; margin: 0; }
   .panel.theme-screen .card-figure img { aspect-ratio: 16 / 10; }
-  .panel.theme-screen .card-title { font-size: 1.15rem; }
-  .panel.theme-screen .card-desc { font-size: 0.84rem; line-height: 1.5; }
-  .panel.theme-screen .panel-close { top: 0.4rem; right: 0.5rem; width: 2rem; height: 2rem; }
+  .panel.theme-screen .card-title { font-size: 1.5rem; margin-top: 0.2rem; }
+  .panel.theme-screen .card-desc { font-size: 0.92rem; line-height: 1.6; }
+
+  /* Arrows and counter along the bottom of the screen */
+  .screen-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: auto;
+    padding-top: 0.9rem;
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.12em;
+    color: rgba(227, 196, 138, 0.8);
+  }
+  .screen-nav button {
+    width: 2.2rem; height: 2.2rem;
+    padding: 0; border: 1px solid rgba(227, 196, 138, 0.45); border-radius: 2px;
+    background: transparent; color: var(--cream); cursor: pointer;
+    display: grid; place-items: center;
+    transition: background 200ms ease-out, border-color 200ms ease-out;
+  }
+  .screen-nav button:hover, .screen-nav button:focus-visible { background: rgba(227, 196, 138, 0.14); border-color: var(--gold-bright); outline: none; }
+  .screen-nav .screen-dots { display: flex; gap: 0.45rem; margin: 0 0.4rem; }
+  .screen-nav .screen-dots i { width: 7px; height: 7px; background: rgba(227, 196, 138, 0.3); border-radius: 1px; }
+  .screen-nav .screen-dots i.is-on { background: var(--gold-bright); }
 }
-@media (min-width: 768px) and (max-width: 1100px) {
-  .panel.theme-screen .panel-items { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (max-width: 767.98px) {
+  /* Phones: the normal full-screen panel, all three stacked */
+  .panel.theme-screen .card { display: block; }
+  .screen-nav { display: none; }
 }
 @media (prefers-reduced-motion: reduce) { .panel.theme-screen { transition: none !important; } }

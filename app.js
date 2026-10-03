@@ -804,19 +804,62 @@
 
 
 /* ============================================================
-   The monitor stand, added under the panel for the screen theme.
+   The monitor: stand, one site at a time, arrows to flip.
    ============================================================ */
 (function () {
   "use strict";
   var L = window.Library;
   var previous = L.decoratePanel;
+  var cards = [], index = 0, nav = null, dots = null;
+
+  function show(i) {
+    if (!cards.length) return;
+    index = (i + cards.length) % cards.length;
+    cards.forEach(function (c, k) { c.classList.toggle("is-current", k === index); });
+    if (dots) Array.prototype.forEach.call(dots.children, function (d, k) { d.classList.toggle("is-on", k === index); });
+    if (nav) nav.querySelector(".screen-count").textContent = (index + 1) + " / " + cards.length;
+  }
+
+  function chevron(dir) {
+    return '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="' +
+      (dir < 0 ? "M15 4.5 7.5 12 15 19.5" : "M9 4.5 16.5 12 9 19.5") +
+      '" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  }
+
   L.decoratePanel = function (section, panel, itemsEl) {
     if (previous) previous(section, panel, itemsEl);
     var stand = panel.querySelector(".monitor-stand");
-    if (section.theme === "screen") {
-      if (!stand) { stand = document.createElement("div"); stand.className = "monitor-stand"; stand.setAttribute("aria-hidden", "true"); panel.appendChild(stand); }
-    } else if (stand) {
-      stand.remove();
-    }
+    var oldNav = panel.querySelector(".screen-nav");
+    if (oldNav) oldNav.remove();
+    cards = []; nav = null; dots = null;
+
+    if (section.theme !== "screen") { if (stand) stand.remove(); return; }
+
+    if (!stand) { stand = document.createElement("div"); stand.className = "monitor-stand"; stand.setAttribute("aria-hidden", "true"); panel.appendChild(stand); }
+
+    cards = Array.prototype.slice.call(itemsEl.querySelectorAll(".card"));
+    cards.forEach(function (c) { c.style.setProperty("--i", 0); });
+    if (cards.length < 2) { show(0); return; }
+
+    nav = document.createElement("div");
+    nav.className = "screen-nav";
+    var prev = document.createElement("button"); prev.type = "button"; prev.innerHTML = chevron(-1); prev.setAttribute("aria-label", "Previous site");
+    var next = document.createElement("button"); next.type = "button"; next.innerHTML = chevron(1);  next.setAttribute("aria-label", "Next site");
+    dots = document.createElement("span"); dots.className = "screen-dots"; dots.setAttribute("aria-hidden", "true");
+    cards.forEach(function () { dots.appendChild(document.createElement("i")); });
+    var count = document.createElement("span"); count.className = "screen-count";
+    nav.appendChild(prev); nav.appendChild(dots); nav.appendChild(count); nav.appendChild(next);
+    panel.querySelector(".panel-scroll").appendChild(nav);
+    prev.addEventListener("click", function () { show(index - 1); });
+    next.addEventListener("click", function () { show(index + 1); });
+    show(0);
   };
+
+  document.addEventListener("keydown", function (e) {
+    var open = L.currentSection && L.currentSection();
+    if (!open || open.theme !== "screen" || !nav) return;
+    if (L.escapeHandled && L.escapeHandled()) return;       // lightbox owns the arrows while it is open
+    if (e.key === "ArrowLeft")  { e.preventDefault(); show(index - 1); }
+    if (e.key === "ArrowRight") { e.preventDefault(); show(index + 1); }
+  });
 })();
