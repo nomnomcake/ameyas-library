@@ -956,3 +956,10 @@ body.panel-open .motes { opacity: 0; transition: opacity 400ms; }
 @media (hover: none) {
   .hotspot:active .hotspot-label, .hotspot:active::before, .hotspot:active .hotspot-surface { opacity: 1; }
 }
+
+/* ---- Desktop: one screen, no page scroll. The room is the viewport. ----
+   (Mobile keeps scrolling: the spine list lives below the painting.) */
+@media (min-width: 768px) {
+  html, body { height: 100%; overflow: hidden; }
+  .room { height: 100%; min-height: 0; }
+}
