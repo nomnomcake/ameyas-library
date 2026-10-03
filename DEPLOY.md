@@ -10,6 +10,24 @@ There is already a site on ameyakohli.com. Check these first.
 4. **Email.** If you have email at @ameyakohli.com, do **not** delete `MX` records or any `TXT` records (SPF, DKIM). Only change `A`, `AAAA`, and `CNAME` records for `@` and `www`.
 5. **Decide: replace or live alongside.** Replacing means pointing the root domain at the new site. Living alongside (for example `library.ameyakohli.com`) means adding one `CNAME` for the subdomain and leaving everything else alone. The steps below cover both; the subdomain route is the lower-risk one.
 
+## Option 0: Vercel (the quick route)
+
+The repo is already on GitHub at github.com/nomnomcake/ameyas-library. The site is plain static files, so Vercel needs no build step.
+
+1. Go to https://vercel.com/new and sign in with GitHub.
+2. Import `ameyas-library`. Leave **Framework Preset** as "Other", **Build Command** empty, **Output Directory** empty (the root is the site). Click Deploy.
+3. Vercel gives you a URL like `https://ameyas-library.vercel.app`. Open it and check a section opens, `#projects` works, and the console is clean.
+4. To use your domain: Project → Settings → Domains → add `ameyakohli.com`. Vercel shows the records to set at your registrar:
+
+   | Type | Host / Name | Value |
+   |---|---|---|
+   | `A` | `@` | `76.76.21.21` |
+   | `CNAME` | `www` | `cname.vercel-dns.com` |
+
+   For a subdomain only: `CNAME` `library` → `cname.vercel-dns.com`, and add `library.ameyakohli.com` in Vercel instead.
+
+5. Later updates: every `git push` to `main` deploys automatically in about a minute. Roll back from the Deployments tab by promoting an earlier deployment.
+
 ## Option A: Netlify
 
 ### Deploy by dragging the folder

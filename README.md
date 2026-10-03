@@ -11,6 +11,8 @@ A single painted illustration as a portfolio. Every object on the shelf opens on
 | `styles.css` | All styling. Tokens (colours, timings, themes) are at the top. |
 | `app.js` | Hotspots, panel, routing, themes, lightbox, contact, mobile list. |
 | `dev.js` | Hotspot alignment tool. Only loads with `?dev` on the URL. |
+| `masks.js` | Silhouette masks (data-URI PNGs) for objects whose glow follows their drawn shape. |
+| `library-base.png` | The untouched Procreate export. `library.png` is this plus the drawn objects composited on. |
 | `library.png` | The full-size painting, 3840×2160. Kept as the master. |
 | `library.webp`, `library-2400.webp`, `library-2400.png` | What the browser loads: lossless full-size WebP on desktop, 2400px WebP on phones, PNG fallback. |
 | `og.jpg`, `favicon.png` | Social card image and tab icon, both cut from the painting. |
@@ -40,7 +42,7 @@ Every field is commented in `config.js`. `video` on an item (YouTube or Vimeo UR
 ## Adding a whole section
 
 1. Add an object to `SECTIONS` in `config.js` with a new `id`, `label`, `theme`, `hotspot`, and `items`.
-2. Pick a theme: `paper`, `gallery`, `spread`, `reel`, `lab`, `shelf`, `screen`, or `contact`. To invent a new one, add its variables to the theme block at the top of `styles.css` and one `.theme-<name> { … }` block in the Step 6 section.
+2. Pick a theme: `paper`, `gallery`, `spread`, `reel`, `lab`, `shelf`, `screen`, `book`, or `contact`. `screen` raises the drawn computer, `book` raises the sketchbook, and the section with id `about` raises the photo frame. To invent a new one, add its variables to the theme block at the top of `styles.css` and one `.theme-<name> { … }` block in the Step 6 section.
 3. Position the hotspot in dev mode (below).
 4. Add a matching `<h2>` and `<p>` to the `<noscript>` block in `index.html` so the no-JavaScript fallback stays complete.
 
@@ -67,7 +69,7 @@ Export from Procreate as described in the build plan: flatten a copy, guides off
 
 ## Deployment
 
-See `DEPLOY.md` for Netlify, GitHub Pages, DNS for ameyakohli.com, rollback, and the update routine.
+See `DEPLOY.md`. Vercel is the quick route: import the GitHub repo, no build settings, done. It also covers Netlify, GitHub Pages, DNS for ameyakohli.com, rollback, and the update routine.
 
 ## Version control
 
