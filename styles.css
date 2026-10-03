@@ -836,8 +836,8 @@ body.scroll-locked { position: fixed; width: 100%; overflow: hidden; }
   position: absolute;
   width: 5px; height: 5px;
   border-radius: 50%;
-  background: rgba(248, 238, 214, 0.9);
-  box-shadow: 0 0 10px 3px rgba(232, 200, 140, 0.75);
+  background: rgba(222, 186, 122, 0.55);
+  box-shadow: 0 0 8px 2px rgba(212, 170, 100, 0.35);
   opacity: 0;
   animation: mote-drift var(--mote-dur, 28s) linear infinite;
   animation-delay: var(--mote-delay, 0s);
@@ -847,9 +847,9 @@ body.scroll-locked { position: fixed; width: 100%; overflow: hidden; }
 .motes i:nth-child(3) { left: 24%; top: 62%; --mote-dur: 37s; --mote-delay: -28s; }
 @keyframes mote-drift {
   0%   { transform: translate(0, 0); opacity: 0; }
-  10%  { opacity: 1; }
-  50%  { transform: translate(34px, -48px); opacity: 0.7; }
-  90%  { opacity: 0.9; }
+  10%  { opacity: 0.75; }
+  50%  { transform: translate(34px, -48px); opacity: 0.5; }
+  90%  { opacity: 0.65; }
   100% { transform: translate(-18px, -110px); opacity: 0; }
 }
 body.panel-open .motes { opacity: 0; transition: opacity 400ms; }
@@ -973,7 +973,7 @@ body.panel-open .motes { opacity: 0; transition: opacity 400ms; }
   --breath-color:    rgba(232, 200, 140, 0.9);   /* the lamp's warmth */
   --breath-max:      0.32;                       /* peak opacity of the breath */
   --breath-period:   8s;                        /* one slow in-and-out */
-  --vignette-color:  rgba(30, 23, 18, 0.72);     /* shadow at the screen edges */
+  --vignette-color:  rgba(30, 23, 18, 0.55);     /* shadow at the screen edges */
 }
 
 .atmosphere { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
@@ -999,7 +999,7 @@ body.panel-open .motes { opacity: 0; transition: opacity 400ms; }
 .vignette {
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse 72% 70% at 50% 48%, transparent 40%, var(--vignette-color) 100%);
+  background: radial-gradient(ellipse 88% 84% at 44% 44%, transparent 48%, var(--vignette-color) 100%);
 }
 
 /* More motes, all inside the beam, each on its own slow path */
