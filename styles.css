@@ -1101,11 +1101,11 @@ body.panel-open .cursor-lamp { opacity: 0; }
    sparks IIFE in app.js to remove.
    ============================================================ */
 :root {
-  /* A tear-drop flame: gold core, cream tip, soft dark halo for contrast. 24x24, hotspot at the base. */
-  --cursor-flame: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'><defs><radialGradient id='g' cx='50%25' cy='70%25' r='55%25'><stop offset='0' stop-color='%23fff2cf'/><stop offset='0.45' stop-color='%23e8c88c'/><stop offset='1' stop-color='%23c9a66b' stop-opacity='0'/></radialGradient></defs><circle cx='14' cy='16' r='11' fill='%232a211b' opacity='0.28'/><path d='M14 3 C18 9 21 12 21 17 A7 7 0 0 1 7 17 C7 12 10 9 14 3 Z' fill='url(%23g)'/><path d='M14 11 C16 14 17 15 17 18 A3 3 0 0 1 11 18 C11 15 12 14 14 11 Z' fill='%23fff6e0' opacity='0.85'/></svg>") 14 20, auto;
+  /* A pixel-art flame, 10x12 pixels drawn at 3x. Hotspot at the base of the wick. */
+  --cursor-flame: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='36' viewBox='0 0 10 12' shape-rendering='crispEdges'><rect x='4' y='0' width='1' height='1' fill='%233b2f26'/><rect x='3' y='1' width='1' height='1' fill='%233b2f26'/><rect x='4' y='1' width='1' height='1' fill='%23c9a66b'/><rect x='5' y='1' width='1' height='1' fill='%233b2f26'/><rect x='3' y='2' width='1' height='1' fill='%233b2f26'/><rect x='4' y='2' width='1' height='1' fill='%23c9a66b'/><rect x='5' y='2' width='1' height='1' fill='%233b2f26'/><rect x='2' y='3' width='1' height='1' fill='%233b2f26'/><rect x='3' y='3' width='1' height='1' fill='%23c9a66b'/><rect x='4' y='3' width='1' height='1' fill='%23e3c48a'/><rect x='5' y='3' width='1' height='1' fill='%23c9a66b'/><rect x='6' y='3' width='1' height='1' fill='%233b2f26'/><rect x='2' y='4' width='1' height='1' fill='%233b2f26'/><rect x='3' y='4' width='1' height='1' fill='%23c9a66b'/><rect x='4' y='4' width='1' height='1' fill='%23e3c48a'/><rect x='5' y='4' width='1' height='1' fill='%23c9a66b'/><rect x='6' y='4' width='1' height='1' fill='%233b2f26'/><rect x='1' y='5' width='1' height='1' fill='%233b2f26'/><rect x='2' y='5' width='1' height='1' fill='%23c9a66b'/><rect x='3' y='5' width='1' height='1' fill='%23e3c48a'/><rect x='4' y='5' width='1' height='1' fill='%23f1e6d0'/><rect x='5' y='5' width='1' height='1' fill='%23e3c48a'/><rect x='6' y='5' width='1' height='1' fill='%23c9a66b'/><rect x='7' y='5' width='1' height='1' fill='%233b2f26'/><rect x='1' y='6' width='1' height='1' fill='%233b2f26'/><rect x='2' y='6' width='1' height='1' fill='%23c9a66b'/><rect x='3' y='6' width='1' height='1' fill='%23e3c48a'/><rect x='4' y='6' width='1' height='1' fill='%23f1e6d0'/><rect x='5' y='6' width='1' height='1' fill='%23e3c48a'/><rect x='6' y='6' width='1' height='1' fill='%23c9a66b'/><rect x='7' y='6' width='1' height='1' fill='%233b2f26'/><rect x='1' y='7' width='1' height='1' fill='%233b2f26'/><rect x='2' y='7' width='1' height='1' fill='%23c9a66b'/><rect x='3' y='7' width='1' height='1' fill='%23e3c48a'/><rect x='4' y='7' width='1' height='1' fill='%23f1e6d0'/><rect x='5' y='7' width='1' height='1' fill='%23e3c48a'/><rect x='6' y='7' width='1' height='1' fill='%23c9a66b'/><rect x='7' y='7' width='1' height='1' fill='%233b2f26'/><rect x='1' y='8' width='1' height='1' fill='%233b2f26'/><rect x='2' y='8' width='1' height='1' fill='%23c9a66b'/><rect x='3' y='8' width='1' height='1' fill='%23e3c48a'/><rect x='4' y='8' width='1' height='1' fill='%23e3c48a'/><rect x='5' y='8' width='1' height='1' fill='%23e3c48a'/><rect x='6' y='8' width='1' height='1' fill='%23c9a66b'/><rect x='7' y='8' width='1' height='1' fill='%233b2f26'/><rect x='2' y='9' width='1' height='1' fill='%233b2f26'/><rect x='3' y='9' width='1' height='1' fill='%23c9a66b'/><rect x='4' y='9' width='1' height='1' fill='%23c9a66b'/><rect x='5' y='9' width='1' height='1' fill='%23c9a66b'/><rect x='6' y='9' width='1' height='1' fill='%233b2f26'/><rect x='3' y='10' width='1' height='1' fill='%233b2f26'/><rect x='4' y='10' width='1' height='1' fill='%233b2f26'/><rect x='5' y='10' width='1' height='1' fill='%233b2f26'/></svg>") 15 32, auto;
   --spark-duration: 760ms;
-  --spark-color-a: #ffe9b8;
-  --spark-color-b: #e3b56a;
+  --spark-color-a: #f1e6d0;   /* cream, from the palette */
+  --spark-color-b: #c9a66b;   /* gold */
 }
 .stage, .stage .hotspot, .scrim { cursor: var(--cursor-flame); }
 @media (hover: none), (max-width: 767.98px) { .stage, .stage .hotspot, .scrim { cursor: auto; } }
@@ -1116,17 +1116,17 @@ body.panel-open .cursor-lamp { opacity: 0; }
   left: 0; top: 0;
   width: var(--s, 4px);
   height: var(--s, 4px);
-  border-radius: 50%;
+  border-radius: 0;                       /* square pixels, no glow: matches the pixel flame */
   background: var(--c, var(--spark-color-a));
-  box-shadow: 0 0 6px 1px rgba(227, 196, 138, 0.6);
+  box-shadow: 0 0 0 1px rgba(59, 47, 38, 0.55);   /* one-pixel dark outline like the cursor */
   transform: translate(var(--x), var(--y));
-  animation: spark-fly var(--spark-duration) cubic-bezier(0.15, 0.7, 0.3, 1) forwards;
+  animation: spark-fly var(--spark-duration) steps(9, end) forwards;   /* stepped, so it moves in pixel hops */
   will-change: transform, opacity;
 }
 @keyframes spark-fly {
   0%   { transform: translate(var(--x), var(--y)) scale(1); opacity: 1; }
   70%  { opacity: 0.9; }
-  100% { transform: translate(calc(var(--x) + var(--dx)), calc(var(--y) + var(--dy) + 18px)) scale(0.2); opacity: 0; }
+  100% { transform: translate(calc(var(--x) + var(--dx)), calc(var(--y) + var(--dy) + 18px)) scale(1); opacity: 0; }
 }
 @media (prefers-reduced-motion: reduce) { .spark { display: none; } }
 

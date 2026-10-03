@@ -791,7 +791,7 @@
       s.style.setProperty("--y", y + "px");
       s.style.setProperty("--dx", Math.cos(angle) * dist + "px");
       s.style.setProperty("--dy", Math.sin(angle) * dist - 24 + "px");   // a little lift, then the +18px in CSS lets them fall
-      s.style.setProperty("--s", (2 + Math.random() * 3) + "px");
+      s.style.setProperty("--s", (Math.random() < 0.6 ? 3 : 5) + "px");   // two pixel sizes only
       s.style.setProperty("--c", Math.random() < 0.5 ? "var(--spark-color-a)" : "var(--spark-color-b)");
       s.style.animationDelay = (Math.random() * 60) + "ms";
       layer.appendChild(s);
