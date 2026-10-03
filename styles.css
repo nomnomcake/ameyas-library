@@ -1876,3 +1876,13 @@ body.panel-open .glint { animation-play-state: paused; opacity: 0; transition: o
 .hotspot.is-rect.is-coming-soon .hotspot-surface { background: var(--soon-shade); }
 .hotspot.is-rect.is-coming-soon:hover .hotspot-surface,
 .hotspot.is-rect.is-coming-soon:focus-visible .hotspot-surface { background: rgba(16, 11, 8, 0.38); }
+
+/* ---- The light inside a rectangular object reads as light, not a wash:
+   bright at the centre, falling off before the edges, blended with screen
+   so it brightens the painted wood rather than painting over it. ---- */
+.hotspot.is-rect .hotspot-surface {
+  background:
+    radial-gradient(ellipse 72% 70% at 50% 52%, rgba(255, 226, 170, 0.62) 0%, rgba(240, 206, 150, 0.36) 45%, rgba(227, 196, 138, 0.1) 80%, rgba(227, 196, 138, 0) 100%);
+  mix-blend-mode: screen;
+}
+.hotspot.is-rect.is-coming-soon .hotspot-surface { mix-blend-mode: normal; }
