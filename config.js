@@ -201,8 +201,8 @@ const SECTIONS = [
   {
     id: "projects",
     label: "Projects",
-    object: "the monitor screen on the right (not the stand)",
-    hotspot: { x: 84.6, y: 41.9, w: 15.4, h: 19.1 },
+    object: "the computer on the right: monitor and stand, down to the desk",
+    hotspot: { x: 84.6, y: 41.9, w: 15.4, h: 23.0 },
     shape: "rect",
     labelPosition: "below",
     theme: "screen",
