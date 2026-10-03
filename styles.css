@@ -1129,3 +1129,23 @@ body.panel-open .cursor-lamp { opacity: 0; }
   100% { transform: translate(calc(var(--x) + var(--dx)), calc(var(--y) + var(--dy) + 18px)) scale(0.2); opacity: 0; }
 }
 @media (prefers-reduced-motion: reduce) { .spark { display: none; } }
+
+/* ============================================================
+   Light stays in the light
+   The breathing glow and the cursor lamp are clipped to the beam
+   painted into the picture, so the shadows keep their shadow.
+   --lit-area is a polygon in percentages of the painting: trace
+   the edges of the beam. Edit it when the painting changes.
+   ============================================================ */
+:root {
+  --lit-area: polygon(28% 0%, 100% 26%, 100% 100%, 36% 100%, 0% 27%);
+}
+.lit-mask {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  clip-path: var(--lit-area);
+  -webkit-clip-path: var(--lit-area);
+}
+/* Inside the mask, the lamp sits in the same coordinate space as before */
+.lit-mask .cursor-lamp { position: absolute; }
