@@ -1092,7 +1092,9 @@
      label, caption and picture land on exactly the page's pixels. Measured
      with the label's tilt removed so the layout box is what gets copied. */
   function pinTo(face, page) {
-    var fr = face.getBoundingClientRect(), cl = face.clientLeft, ct = face.clientTop;
+    /* The face sits exactly on this page's box, but it may already be turned
+       edge-on, so measure against the page's box rather than the face's. */
+    var fr = page.getBoundingClientRect(), cl = face.clientLeft, ct = face.clientTop;
     ["book-label", "book-caption", "book-art"].forEach(function (cls) {
       var s = page.querySelector("." + cls), d = face.querySelector("." + cls);
       if (!s || !d) return;
