@@ -2501,3 +2501,17 @@ body.panel-open .glint { animation-play-state: paused; opacity: 0; transition: o
   @keyframes landing-shadow { 0%, 50% { opacity: 0; } 85% { opacity: 1; } 100% { opacity: 0; } }
 }
 @media (prefers-reduced-motion: reduce) { .book-leaf, .book-leaf-shadow, .leaf-inner::after { animation: none !important; display: none; } }
+
+/* The computer's glow spills well past the screen, like a monitor lighting the
+   wall and desk around it, instead of stopping at its own edge. */
+.hotspot[data-id="projects"]::before {
+  display: block;
+  inset: -34% -30%;
+  border-radius: 40%;
+  background: radial-gradient(ellipse 60% 60% at 50% 50%, rgba(232, 200, 140, 0.55), rgba(227, 196, 138, 0.22) 50%, rgba(227, 196, 138, 0.06) 78%, transparent 100%);
+  filter: blur(26px);
+}
+.hotspot[data-id="projects"]:hover::before, .hotspot[data-id="projects"]:focus-visible::before, .hotspot[data-id="projects"].is-active::before { opacity: 1; }
+.hotspot[data-id="projects"] .hotspot-surface {
+  background: radial-gradient(ellipse 85% 85% at 50% 50%, rgba(255, 228, 176, 0.5) 0%, rgba(240, 206, 150, 0.3) 50%, rgba(227, 196, 138, 0.12) 85%, rgba(227, 196, 138, 0.06) 100%);
+}
