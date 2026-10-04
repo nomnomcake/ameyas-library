@@ -2506,3 +2506,32 @@ body.panel-open .glint { animation-play-state: paused; opacity: 0; transition: o
   .book-leaf.backward .face.book-page.front { animation-name: up-from-right !important; }
   .book-leaf.backward .face.book-page.back  { animation-name: down-onto-right !important; }
 }
+
+/* ============================================================
+   Depth back on the turn: a shade that deepens as the page lifts
+   away from the light and clears as it lands, and the soft shadow
+   it throws on the page beneath. Each keyed to its own half.
+   ============================================================ */
+@media (min-width: 768px) {
+  .book-leaf .face.book-page::after {
+    display: block; content: ""; position: absolute; inset: 0; pointer-events: none; border: 0;
+    opacity: 0;
+    animation-duration: calc(var(--flip-duration) / 2); animation-iteration-count: 1; animation-fill-mode: both;
+  }
+  .book-leaf.forward  .face.book-page.front::after { background: linear-gradient(90deg,  rgba(28, 22, 18, 0.30), rgba(28, 22, 18, 0.06) 70%); animation-name: shade-in;  animation-timing-function: cubic-bezier(0.5, 0, 1, 1); }
+  .book-leaf.forward  .face.book-page.back::after  { background: linear-gradient(270deg, rgba(28, 22, 18, 0.30), rgba(28, 22, 18, 0.06) 70%); animation-name: shade-out; animation-timing-function: cubic-bezier(0, 0, 0.5, 1); animation-delay: calc(var(--flip-duration) / 2); }
+  .book-leaf.backward .face.book-page.front::after { background: linear-gradient(270deg, rgba(28, 22, 18, 0.30), rgba(28, 22, 18, 0.06) 70%); animation-name: shade-in;  animation-timing-function: cubic-bezier(0.5, 0, 1, 1); }
+  .book-leaf.backward .face.book-page.back::after  { background: linear-gradient(90deg,  rgba(28, 22, 18, 0.30), rgba(28, 22, 18, 0.06) 70%); animation-name: shade-out; animation-timing-function: cubic-bezier(0, 0, 0.5, 1); animation-delay: calc(var(--flip-duration) / 2); }
+  @keyframes shade-in  { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes shade-out { from { opacity: 1; } to { opacity: 0; } }
+
+  .book-leaf-shadow {
+    display: block; opacity: 0;
+    background: radial-gradient(ellipse 85% 95% at 0% 50%, rgba(28, 22, 18, 0.28), transparent 70%);
+    animation: landing-shadow var(--flip-duration) linear 1 forwards;
+  }
+  .book-leaf-shadow.forward  { left: var(--bk-pad-x); right: auto; transform: none; }
+  .book-leaf-shadow.backward { right: var(--bk-pad-x); left: auto; transform: scaleX(-1); }
+  @keyframes landing-shadow { 0%, 50% { opacity: 0; } 80% { opacity: 1; } 100% { opacity: 0; } }
+}
+@media (prefers-reduced-motion: reduce) { .book-leaf .face.book-page::after, .book-leaf-shadow { display: none; } }
