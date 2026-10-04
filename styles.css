@@ -2363,3 +2363,6 @@ body.panel-open .glint { animation-play-state: paused; opacity: 0; transition: o
 @media (min-width: 768px) {
   .book-page.left::after, .book-page.right::after, .book-leaf .face::before { display: none; }
 }
+
+/* No stitch rings at the spine */
+.book-rings { display: none; }
