@@ -1185,22 +1185,24 @@
       leaf.appendChild(face("back",  incoming, inIndex,  dir > 0 ? "left" : "right"));
       var shadow = document.createElement("div");
       shadow.className = "book-leaf-shadow " + (dir > 0 ? "forward" : "backward");
-      /* Pin the leaf to the exact painted rectangle of the page it lifts, in
-         pixels, so its contents compute from the same numbers as the page. */
+      /* Two half-turns, two elements, each always facing the viewer.
+         The front face sits on the page being lifted and swings up to edge-on.
+         The back face sits on the page being landed on, starts edge-on, and
+         swings down flat. Both are pinned to their page's painted pixels. */
       var liftPage = dir > 0 ? pages[1] : pages[0];
-      var bb = book.getBoundingClientRect(), pr = liftPage.getBoundingClientRect();
-      leaf.style.left = (pr.left - bb.left - book.clientLeft) + "px";
-      leaf.style.top = (pr.top - bb.top - book.clientTop) + "px";
-      leaf.style.width = pr.width + "px";
-      leaf.style.height = pr.height + "px";
-      leaf.style.right = "auto"; leaf.style.bottom = "auto";
-      book.appendChild(shadow); book.appendChild(leaf);
-      /* Front face: pinned to the page it lifts, which still shows the outgoing piece.
-         Back face: pinned to the page it will land on, measured with the incoming
-         piece laid out there for an instant (no paint happens in between). */
       var landPage = dir > 0 ? pages[0] : pages[1];
-      var backFace = leaf.querySelector(".face.back");
-      pinTo(leaf.querySelector(".face.front"), liftPage);
+      var bb = book.getBoundingClientRect();
+      function place(el, page) {
+        var pr = page.getBoundingClientRect();
+        el.style.left = (pr.left - bb.left - book.clientLeft) + "px";
+        el.style.top = (pr.top - bb.top - book.clientTop) + "px";
+        el.style.width = pr.width + "px"; el.style.height = pr.height + "px";
+        el.style.right = "auto"; el.style.bottom = "auto";
+      }
+      var frontFace = leaf.querySelector(".face.front"), backFace = leaf.querySelector(".face.back");
+      place(frontFace, liftPage); place(backFace, landPage);
+      book.appendChild(shadow); book.appendChild(leaf);
+      pinTo(frontFace, liftPage);
       measureAs(landPage, incoming, function () { pinTo(backFace, landPage); });
       var backPic = backFace.querySelector(".book-pic");
       if (backPic && !backPic.style.width) sizePic(backPic);
@@ -1219,9 +1221,10 @@
         flipping = false;
         finish();
       }
-      leaf.addEventListener("animationend", function (ev) { if (ev.target === leaf) land(); });
-      var dur = parseFloat(getComputedStyle(leaf).animationDuration) || 0.95;   // seconds; lands on time even if the event never fires
-      setTimeout(land, dur * 1000 + 40);
+      backFace.addEventListener("animationend", function (ev) { if (ev.target === backFace) land(); });
+      var dv = getComputedStyle(book).getPropertyValue("--flip-duration").trim();
+      var dur = dv.indexOf("ms") > 0 ? parseFloat(dv) / 1000 : (parseFloat(dv) || 0.95);
+      setTimeout(land, dur * 1000 + 40);              // lands on time even if the event never fires
     });
   }
 
