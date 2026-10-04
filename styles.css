@@ -2345,3 +2345,16 @@ body.panel-open .glint { animation-play-state: paused; opacity: 0; transition: o
   .book-leaf.forward .face.front .book-label, .book-leaf.backward .face.back .book-label { right: auto; left: 9%; transform: rotate(-1.4deg); }
   .book-leaf.forward .face.back .book-label,  .book-leaf.backward .face.front .book-label { left: auto; right: 7%; transform: rotate(1.6deg); }
 }
+
+/* No tell-tale shadows on the turn: no landing shadow, no moving shade band,
+   and the leaf carries the same spine gutter the pages have, on the side
+   matching the page it stands in for. */
+@media (min-width: 768px) {
+  .book-leaf-shadow { display: none; }
+  .book-leaf .face::after { display: none; }
+  .book-leaf .face::before {
+    display: block; content: ""; position: absolute; top: 0; bottom: 0; width: 7%; pointer-events: none; border: 0; inset: auto;
+  }
+  .book-leaf.forward .face.front::before, .book-leaf.backward .face.back::before  { left: 0;  background: linear-gradient(270deg, transparent, rgba(28, 22, 18, 0.16)); }
+  .book-leaf.forward .face.back::before,  .book-leaf.backward .face.front::before { right: 0; background: linear-gradient(90deg,  transparent, rgba(28, 22, 18, 0.18)); }
+}
