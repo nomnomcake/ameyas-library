@@ -1036,62 +1036,120 @@
   var items = [], spread = 0, book = null, pages = [], prevB, nextB, countEl;
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  var flipping = false;
+
+  function label(item) {
+    var l = document.createElement("div"); l.className = "book-label";
+    l.textContent = item && item.title ? item.title : "";
+    if (!item || !item.title) l.classList.add("is-empty");
+    return l;
+  }
+  function sub(item, index) {
+    var s = document.createElement("div"); s.className = "book-caption";
+    if (!item) return s;
+    var m = document.createElement("span"); m.className = "book-meta";  m.textContent = item.meta || "";
+    var f = document.createElement("span"); f.className = "book-folio"; f.textContent = String(index + 1);
+    s.appendChild(m); s.appendChild(f);
+    return s;
+  }
+  function picture(img) {
+    var p = document.createElement("span"); p.className = "book-pic";
+    p.appendChild(img); return p;
+  }
+  /* Size the taped picture to fit its page area, keeping its ratio, so the
+     tape corners sit on the picture itself. Re-run on load and resize. */
+  function sizePic(pic) {
+    if (!pic || !pic.parentNode) return;
+    var img = pic.querySelector("img"), box = pic.parentNode;
+    if (!img) return;
+    if (!img.naturalWidth) { img.addEventListener("load", function () { sizePic(pic); }, { once: true }); return; }
+    var r = img.naturalWidth / img.naturalHeight, bw = box.clientWidth, bh = box.clientHeight;
+    if (!bw || !bh) return;
+    var w = Math.min(bw, bh * r), h = w / r;
+    pic.style.width = Math.round(w) + "px"; pic.style.height = Math.round(h) + "px";
+  }
+  window.addEventListener("resize", function () {
+    if (book) Array.prototype.forEach.call(book.querySelectorAll(".book-pic"), sizePic);
+  });
+
+  /* Put a piece on a static page. The image element is kept on the item so
+     it can move between pages and back without being lost. */
   function fill(pageEl, item, index) {
     var art = pageEl.querySelector(".book-art");
-    var cap = pageEl.querySelector(".book-caption");
-    art.innerHTML = ""; cap.innerHTML = "";
-    if (!item) { art.classList.add("is-empty"); return; }
+    var oldCap = pageEl.querySelector(".book-caption"); var cap = sub(item, index);
+    if (oldCap) oldCap.replaceWith(cap); else pageEl.appendChild(cap);
+    var oldLab = pageEl.querySelector(".book-label"); var lab = label(item);
+    if (oldLab) oldLab.replaceWith(lab); else pageEl.appendChild(lab);
+    art.innerHTML = "";
+    if (!item || !item.img) { art.classList.add("is-empty"); return; }
     art.classList.remove("is-empty");
-    var img = item.card.querySelector(".card-figure img");
-    if (img) art.appendChild(img);                 // moved, listeners intact (lightbox)
-    var t = document.createElement("span"); t.className = "book-title"; t.textContent = item.title || "";
-    var m = document.createElement("span"); m.className = "book-meta"; m.textContent = item.meta || "";
-    var f = document.createElement("span"); f.className = "book-folio"; f.textContent = String(index + 1);
-    cap.appendChild(t); if (item.meta) cap.appendChild(m); cap.appendChild(f);
+    art.appendChild(picture(item.img));
+    sizePic(art.firstChild);
   }
 
-  /* The flying leaf: outgoing page on its front, incoming page on its back */
-  function flip(dir, outgoing, incoming) {
-    var leaf = document.createElement("div");
-    leaf.className = "book-leaf " + (dir > 0 ? "forward" : "backward");
-    var front = document.createElement("div"); front.className = "face front";
-    var back  = document.createElement("div"); back.className  = "face back";
-    function copy(item, face) {
-      if (!item) return;
-      var src = item.card.querySelector(".card-figure img") || book.querySelector("img[src=\"" + item.src + "\"]");
-      var img = document.createElement("img"); img.alt = ""; img.src = item.src; face.appendChild(img);
+  /* A face of the flying leaf: a fresh copy of the picture plus its caption */
+  function face(cls, item, index) {
+    var f = document.createElement("div"); f.className = "face " + cls;
+    if (item) {
+      var img = document.createElement("img"); img.alt = ""; img.src = item.src;
+      var art = document.createElement("div"); art.className = "book-art"; art.appendChild(picture(img)); f.appendChild(art);
+      f.appendChild(label(item)); f.appendChild(sub(item, index));
     }
-    copy(outgoing, front); copy(incoming, back);
-    leaf.appendChild(front); leaf.appendChild(back);
-    var shadow = document.createElement("div"); shadow.className = "book-leaf-shadow " + (dir > 0 ? "forward" : "backward");
-    book.appendChild(shadow); book.appendChild(leaf);
-    book.classList.add("is-flipping");
-    leaf.addEventListener("animationend", function () { leaf.remove(); shadow.remove(); book.classList.remove("is-flipping"); }, { once: true });
+    return f;
   }
 
   function show(n, animate) {
+    if (flipping) return;
     var total = Math.ceil(items.length / 2);
+    var target = Math.max(0, Math.min(total - 1, n));
     var from = spread;
-    spread = Math.max(0, Math.min(total - 1, n));
-    if (animate && !reduceMotion && spread !== from) {
-      var dir = spread > from ? 1 : -1;
-      /* forward: the right page (from*2+1) turns to reveal the new left page (spread*2)
-         backward: the left page (from*2) turns to reveal the new right page (spread*2+1) */
-      var outgoing = dir > 0 ? items[from * 2 + 1] : items[from * 2];
-      var incoming = dir > 0 ? items[spread * 2]   : items[spread * 2 + 1];
-      flip(dir, outgoing, incoming);
-      animate = false;          // the spread beneath changes at once; the leaf does the motion
-    }
-    function paint() {
-      fill(pages[0], items[spread * 2], spread * 2);
-      fill(pages[1], items[spread * 2 + 1], spread * 2 + 1);
+    spread = target;
+    function finish() {
       prevB.disabled = spread === 0;
       nextB.disabled = spread >= total - 1;
-      countEl.textContent = "pages " + (spread * 2 + 1) + (items[spread * 2 + 1] ? "\u2013" + (spread * 2 + 2) : "") + " of " + items.length;
-      book.classList.remove("is-turning");
+      var second = items[spread * 2 + 1];
+      countEl.textContent = "pages " + (spread * 2 + 1) + (second ? "–" + (spread * 2 + 2) : "") + " of " + items.length;
     }
-    if (animate && !reduceMotion) { book.classList.add("is-turning"); setTimeout(paint, 230); }
-    else paint();
+    if (!animate || reduceMotion || target === from) {
+      fill(pages[0], items[spread * 2], spread * 2);
+      fill(pages[1], items[spread * 2 + 1], spread * 2 + 1);
+      finish();
+      return;
+    }
+    /* Forward: the right page lifts, revealing the new right page under it,
+       and lands on the left carrying the new left page. Backward: the mirror.
+       The page being revealed changes at once; the page being landed on waits. */
+    var dir = target > from ? 1 : -1;
+    var outgoing = dir > 0 ? items[from * 2 + 1] : items[from * 2];
+    var outIndex = dir > 0 ? from * 2 + 1 : from * 2;
+    var incoming = dir > 0 ? items[spread * 2] : items[spread * 2 + 1];
+    var inIndex  = dir > 0 ? spread * 2 : spread * 2 + 1;
+    if (dir > 0) fill(pages[1], items[spread * 2 + 1], spread * 2 + 1);
+    else         fill(pages[0], items[spread * 2], spread * 2);
+
+    flipping = true;
+    var leaf = document.createElement("div");
+    leaf.className = "book-leaf " + (dir > 0 ? "forward" : "backward");
+    leaf.appendChild(face("front", outgoing, outIndex));
+    leaf.appendChild(face("back", incoming, inIndex));
+    var shadow = document.createElement("div");
+    shadow.className = "book-leaf-shadow " + (dir > 0 ? "forward" : "backward");
+    book.appendChild(shadow); book.appendChild(leaf);
+    Array.prototype.forEach.call(leaf.querySelectorAll(".book-pic"), sizePic);
+    book.classList.add("is-flipping");
+
+    var done = false;
+    function land() {
+      if (done) return; done = true;
+      if (dir > 0) fill(pages[0], items[spread * 2], spread * 2);
+      else         fill(pages[1], items[spread * 2 + 1], spread * 2 + 1);
+      leaf.remove(); shadow.remove();
+      book.classList.remove("is-flipping");
+      flipping = false;
+      finish();
+    }
+    leaf.addEventListener("animationend", function (ev) { if (ev.target === leaf) land(); });
+    setTimeout(land, 1400);                 // safety net if the event never fires
   }
 
   L.decoratePanel = function (section, panel, itemsEl) {
@@ -1101,19 +1159,25 @@
     if (section.theme !== "book" || !window.matchMedia("(min-width: 768px)").matches) return;
 
     var cards = Array.prototype.slice.call(itemsEl.querySelectorAll(".card"));
-    items = cards.map(function (card, k) { var it = section.items[k] || {}; return { card: card, title: it.title, meta: it.meta, src: it.image }; });
+    items = cards.map(function (card, k) { var it = section.items[k] || {}; return { card: card, img: card.querySelector(".card-figure img"), title: it.title, meta: it.meta, src: it.image }; });
 
     var wrap = document.createElement("div"); wrap.className = "book-wrap";
     book = document.createElement("div"); book.className = "book";
+    var stack = document.createElement("div"); stack.className = "book-stack"; stack.setAttribute("aria-hidden", "true");
+    for (var si = 0; si < 4; si++) { var sh = document.createElement("i"); sh.innerHTML = "<b></b><b></b>"; stack.appendChild(sh); }
+    book.appendChild(stack);
+    var rings = document.createElement("div"); rings.className = "book-rings"; rings.setAttribute("aria-hidden", "true");
+    rings.innerHTML = "<span></span><span></span>";
+    book.appendChild(rings);
     pages = ["left", "right"].map(function (side) {
       var p = document.createElement("div"); p.className = "book-page " + side;
       p.innerHTML = '<div class="book-art"></div><div class="book-caption"></div>';
       book.appendChild(p); return p;
     });
     prevB = document.createElement("button"); prevB.type = "button"; prevB.className = "book-nav prev"; prevB.setAttribute("aria-label", "Previous pages");
-    prevB.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M15 4.5 7.5 12 15 19.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    prevB.innerHTML = '<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M20 12H6M11 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
     nextB = prevB.cloneNode(true); nextB.className = "book-nav next"; nextB.setAttribute("aria-label", "Next pages");
-    nextB.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M9 4.5 16.5 12 9 19.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    nextB.innerHTML = '<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M4 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
     countEl = document.createElement("div"); countEl.className = "book-count";
     wrap.appendChild(book); wrap.appendChild(prevB); wrap.appendChild(nextB); wrap.appendChild(countEl);
     wrap.style.position = "relative";

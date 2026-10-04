@@ -2151,3 +2151,166 @@ body.panel-open .glint { animation-play-state: paused; opacity: 0; transition: o
   .book.is-flipping .book-art, .book.is-flipping .book-caption { transition: none; }
 }
 @media (prefers-reduced-motion: reduce) { .book-leaf, .book-leaf-shadow { display: none; } }
+
+/* Flip pass 2: the leaf carries a caption like the pages do, and the leaf
+   geometry matches a page exactly so the landing is seamless. */
+@media (min-width: 768px) {
+  .book-leaf .face { padding: 2.6% 2.8% 2.6rem; }
+  .book-leaf .face .book-caption { position: absolute; left: 2.8%; right: 2.8%; bottom: 0.55rem; }
+  .book-leaf .face::before {
+    content: ""; position: absolute; inset: 1.6%; pointer-events: none;
+    border: 1px solid rgba(28, 22, 18, 0.12);
+  }
+}
+
+/* ============================================================
+   The book, second look
+   A thick sketchbook: a stack of sheets with coloured tabs peeking
+   out, stitched rings at the spine, pictures taped to the page, the
+   title on a taped label, chunky arrow tabs, a red close tab.
+   ============================================================ */
+:root {
+  --bk-ink:     #1c1612;
+  --bk-cover:   #5a4030;              /* the cover, warm brown */
+  --bk-page:    #f1e6cf;
+  --bk-page-2:  #ebdfc5;
+  --bk-tan:     #d9c7a3;              /* the sheets in the stack */
+  --bk-gold:    #d2a65c;              /* arrow tabs, and a tab in the stack */
+  --bk-red:     #b4493d;              /* the close tab */
+  --bk-sage:    #9aa98a;              /* a quieter tab colour */
+  --bk-tape:    rgba(241, 230, 208, 0.72);
+}
+@media (min-width: 768px) {
+  .panel.theme-book { width: min(84vw, 1240px, 74vh * 1.5); }
+  .book {
+    padding: 1.6% 1.4%;
+    background: var(--bk-cover);
+    border: 3px solid var(--bk-ink);
+    border-radius: 10px 14px 14px 10px;
+    box-shadow: 8px 10px 0 rgba(28, 22, 18, 0.4), 0 30px 50px -28px rgba(28, 22, 18, 0.9);
+    aspect-ratio: 1.5;
+    isolation: isolate;
+  }
+  /* the stack of sheets behind the open spread */
+  .book-stack { position: absolute; inset: 1.6% 1.4%; z-index: 0; pointer-events: none; }
+  .book-stack i { position: absolute; inset: 0; background: var(--bk-tan); border: 2.5px solid var(--bk-ink); border-radius: 4px; }
+  .book-stack i:nth-child(1) { transform: translate(-1.2%, 1.4%) rotate(-0.8deg); }
+  .book-stack i:nth-child(2) { transform: translate(1.1%, 1.0%) rotate(0.6deg); background: var(--bk-page-2); }
+  .book-stack i:nth-child(3) { transform: translate(-0.6%, -1.1%) rotate(0.3deg); }
+  .book-stack i:nth-child(4) { transform: translate(0.8%, -1.6%) rotate(-0.4deg); background: var(--bk-page); }
+  /* tabs peeking out of the stack */
+  .book-stack b { position: absolute; width: 5.5%; height: 3.2%; border: 2.5px solid var(--bk-ink); border-radius: 3px; background: var(--bk-gold); }
+  .book-stack i:nth-child(1) b:first-child { left: 18%; top: -3.6%; }
+  .book-stack i:nth-child(1) b:last-child  { right: 22%; bottom: -3.6%; background: var(--bk-sage); }
+  .book-stack i:nth-child(2) b:first-child { left: 58%; top: -3.4%; background: var(--bk-red); }
+  .book-stack i:nth-child(2) b:last-child  { left: 8%; bottom: -3.4%; background: var(--bk-page); }
+  .book-stack i:nth-child(3) b:first-child { right: 6%; top: -3.2%; background: var(--bk-sage); width: 4%; }
+  .book-stack i:nth-child(3) b:last-child  { right: 40%; bottom: -3.2%; }
+  .book-stack i:nth-child(4) b:first-child { left: 36%; top: -3%; background: var(--bk-page-2); width: 4.5%; }
+  .book-stack i:nth-child(4) b:last-child  { left: 70%; bottom: -3%; background: var(--bk-red); width: 4%; }
+
+  .book-page {
+    position: relative; z-index: 2;
+    display: block;
+    background: var(--bk-page);
+    border: 2.5px solid var(--bk-ink);
+    border-radius: 4px 2px 2px 4px;
+  }
+  .book-page.right { background: var(--bk-page-2); border-radius: 2px 4px 4px 2px; }
+  .book-page::before { display: none; }
+  .book-page.left::after  { width: 7%; background: linear-gradient(90deg, transparent, rgba(28, 22, 18, 0.18)); }
+  .book-page.right::after { width: 7%; background: linear-gradient(270deg, transparent, rgba(28, 22, 18, 0.16)); }
+
+  /* stitched rings at the spine */
+  .book-rings { position: absolute; left: 50%; top: 1.6%; bottom: 1.6%; width: 0; z-index: 4; pointer-events: none; }
+  .book-rings span { position: absolute; left: 50%; width: 2.4rem; height: 0.9rem; transform: translateX(-50%); }
+  .book-rings span:first-child { top: 24%; }
+  .book-rings span:last-child  { top: 70%; }
+  .book-rings span::before, .book-rings span::after {
+    content: ""; position: absolute; left: 0; right: 0; height: 0.26rem;
+    background: var(--bk-page); border: 2px solid var(--bk-ink); border-radius: 3px;
+  }
+  .book-rings span::before { top: 0; }
+  .book-rings span::after  { bottom: 0; }
+
+  /* the picture, taped on */
+  .book-art { top: 10%; bottom: 2.6rem; left: 6%; right: 6%; }
+  .book-pic { position: relative; display: inline-grid; max-width: 100%; max-height: 100%; }
+  .book-pic img, .book-art img { border: 3px solid var(--bk-ink); box-shadow: 4px 5px 0 rgba(28, 22, 18, 0.25); border-radius: 2px; }
+  .book-pic::before, .book-pic::after {
+    content: ""; position: absolute; width: 3.6rem; height: 1.15rem; z-index: 2;
+    background: var(--bk-tape); border: 1px solid rgba(28, 22, 18, 0.35);
+    box-shadow: 0 1px 0 rgba(255, 250, 240, 0.4) inset;
+  }
+  .book-pic::before { left: -1.2rem; top: -0.5rem; transform: rotate(-38deg); }
+  .book-pic::after  { right: -1.2rem; bottom: -0.5rem; transform: rotate(-38deg); }
+
+  /* the title on a taped label */
+  .book-label {
+    position: absolute; z-index: 3;
+    top: 2.2%; right: 7%;
+    padding: 0.35rem 1.1rem;
+    font-family: var(--font-hand); font-weight: 600; font-size: 1.45rem; line-height: 1.1;
+    color: var(--bk-ink); background: var(--bk-page);
+    border: 2.5px solid var(--bk-ink); border-radius: 3px;
+    box-shadow: 3px 3px 0 var(--bk-ink);
+    transform: rotate(1.6deg);
+    max-width: 70%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .book-label::before {
+    content: ""; position: absolute; left: 50%; top: -0.7rem; width: 3rem; height: 1rem; margin-left: -1.5rem;
+    background: var(--bk-tape); border: 1px solid rgba(28, 22, 18, 0.35); transform: rotate(-2deg);
+  }
+  .book-label.is-empty { display: none; }
+  .book-page.right .book-label { right: auto; left: 9%; transform: rotate(-1.4deg); }
+  .book-caption { bottom: 0.6rem; left: 7%; right: 7%; justify-content: space-between; }
+  .book-caption .book-meta { font-family: var(--font-hand); font-size: 1.05rem; opacity: 0.7; }
+  .book-caption .book-folio { font-family: var(--font-hand); font-size: 1rem; opacity: 0.55; }
+
+  /* the leaf matches a page */
+  .book-leaf { top: 1.6%; bottom: 1.6%; width: calc(50% - 1.4%); }
+  .book-leaf.forward { left: 50%; } .book-leaf.backward { right: 50%; }
+  .book-leaf .face { background: var(--bk-page-2); border: 2.5px solid var(--bk-ink); padding: 0; display: block; }
+  .book-leaf.backward .face.front, .book-leaf .face.back { background: var(--bk-page); }
+  .book-leaf.backward .face.back { background: var(--bk-page-2); }
+  .book-leaf .face::before { display: none; }
+  .book-leaf .face .book-art { position: absolute; top: 10%; bottom: 2.6rem; left: 6%; right: 6%; display: grid; place-items: center; }
+  .book-leaf .face .book-label { right: 7%; }
+  .book-leaf .face.back .book-label { right: auto; left: 9%; transform: rotate(-1.4deg); }
+  .book-leaf-shadow { top: 1.6%; bottom: 1.6%; width: calc(50% - 1.4%); }
+
+  /* arrow tabs and the close tab, sticking out of the cover */
+  .book-nav {
+    top: auto; bottom: 14%; margin: 0;
+    width: 4.4rem; height: 3.1rem; border-radius: 6px;
+    background: var(--bk-gold); color: var(--bk-page);
+    border: 2.5px solid var(--bk-ink); box-shadow: 3px 3px 0 var(--bk-ink);
+    z-index: 1;
+  }
+  .book-nav.prev { left: -3.6rem; }
+  .book-nav.next { right: -3.6rem; }
+  .book-nav:hover, .book-nav:focus-visible { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--bk-ink); }
+  .book-nav[disabled] { opacity: 1; background: var(--bk-tan); color: rgba(28, 22, 18, 0.45); transform: none; box-shadow: 3px 3px 0 var(--bk-ink); }
+  .panel.theme-book .panel-close {
+    top: 9%; right: -2.7rem;
+    width: 3.4rem; height: 3.4rem; border-radius: 6px;
+    background: var(--bk-red); color: var(--bk-page);
+    border: 2.5px solid var(--bk-ink); box-shadow: 3px 3px 0 var(--bk-ink);
+    z-index: 1;
+  }
+  .panel.theme-book .panel-close svg { width: 1.5rem; height: 1.5rem; }
+  .panel.theme-book .panel-close svg path { stroke-width: 2.6; }
+  .book-count { bottom: -2.2rem; }
+}
+@media (min-width: 768px) {
+  /* a thicker cover showing around the sheets, like a real sketchbook */
+  .book { padding: 3.4% 2.8%; }
+  .book-stack { inset: 2.6% 2.1%; }
+  .book-rings { top: 3.4%; bottom: 3.4%; }
+  .book-leaf, .book-leaf-shadow { top: 3.4%; bottom: 3.4%; width: calc(50% - 2.8%); }
+}
+@media (min-width: 768px) {
+  /* the taped picture is sized by script to fit the page; the image fills it */
+  .book-pic { display: block; position: relative; max-width: none; max-height: none; }
+  .book-pic img { width: 100%; height: 100%; max-width: none; max-height: none; box-sizing: border-box; object-fit: cover; display: block; }
+}
