@@ -2575,3 +2575,8 @@ body.panel-open .glint { animation-play-state: paused; opacity: 0; transition: o
 /* The side fade only when the screen is clearly wider than the painting
    (there is dim room beside it to fade into). At 16:9 or narrower, none. */
 @media (max-aspect-ratio: 1.85) { .stage::after { display: none; } }
+
+/* No side treatment of any kind: the painting ends where it ends. */
+.stage::after { display: none !important; }
+.room::before { display: none !important; }
+@media (min-width: 768px) { .room { background: var(--room-shadow); } .stage { box-shadow: none; } }
