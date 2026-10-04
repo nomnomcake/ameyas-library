@@ -2409,3 +2409,12 @@ body.panel-open .glint { animation-play-state: paused; opacity: 0; transition: o
 @media (min-width: 768px) {
   .book-leaf .face.book-page .book-pic img { width: 100%; height: 100%; max-width: none; max-height: none; position: static; }
 }
+
+/* Only the leaf's faces hide their backs. Their contents must not, or the
+   back face's picture and text vanish while the leaf is turned over. */
+@media (min-width: 768px) {
+  .book-page .book-label, .book-page .book-caption, .book-page .book-art,
+  .book-leaf .book-label, .book-leaf .book-caption, .book-leaf .book-art, .book-leaf .book-pic, .book-leaf img {
+    backface-visibility: visible; -webkit-backface-visibility: visible;
+  }
+}
