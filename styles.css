@@ -2358,3 +2358,8 @@ body.panel-open .glint { animation-play-state: paused; opacity: 0; transition: o
   .book-leaf.forward .face.front::before, .book-leaf.backward .face.back::before  { left: 0;  background: linear-gradient(270deg, transparent, rgba(28, 22, 18, 0.16)); }
   .book-leaf.forward .face.back::before,  .book-leaf.backward .face.front::before { right: 0; background: linear-gradient(90deg,  transparent, rgba(28, 22, 18, 0.18)); }
 }
+
+/* No spine shading anywhere: nothing near the fold for the turn to mismatch */
+@media (min-width: 768px) {
+  .book-page.left::after, .book-page.right::after, .book-leaf .face::before { display: none; }
+}
