@@ -2326,3 +2326,22 @@ body.panel-open .glint { animation-play-state: paused; opacity: 0; transition: o
   .book-leaf .face::after { background: linear-gradient(90deg, rgba(28, 22, 18, 0.18), transparent 50%); }
   .book-leaf .face { box-shadow: 0 0 0 1px rgba(28, 22, 18, 0.1); }
 }
+
+/* Geometry in one unit. Percent padding resolves against width while percent
+   top/bottom resolve against height, so the leaf never matched the page it
+   covered. Everything now derives from the book's width. */
+@media (min-width: 768px) {
+  .panel.theme-book { --bk-w: min(84vw, 1240px, 74vh * 1.5); --bk-pad-y: calc(var(--bk-w) * 0.034); --bk-pad-x: calc(var(--bk-w) * 0.028); }
+  .book { padding: var(--bk-pad-y) var(--bk-pad-x); }
+  .book-stack { top: calc(var(--bk-pad-y) * 0.76); bottom: calc(var(--bk-pad-y) * 0.76); left: calc(var(--bk-pad-x) * 0.75); right: calc(var(--bk-pad-x) * 0.75); }
+  .book-rings { top: var(--bk-pad-y); bottom: var(--bk-pad-y); }
+  .book-leaf, .book-leaf-shadow { top: var(--bk-pad-y); bottom: var(--bk-pad-y); width: calc(50% - var(--bk-pad-x)); }
+  .book-leaf .face { box-shadow: none; }
+}
+@media (min-width: 768px) {
+  /* The leaf's faces copy the page they stand in for: turning forward, the
+     front is a right page (label left) and the back becomes a left page
+     (label right); turning back it is the mirror. */
+  .book-leaf.forward .face.front .book-label, .book-leaf.backward .face.back .book-label { right: auto; left: 9%; transform: rotate(-1.4deg); }
+  .book-leaf.forward .face.back .book-label,  .book-leaf.backward .face.front .book-label { left: auto; right: 7%; transform: rotate(1.6deg); }
+}
