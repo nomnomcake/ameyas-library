@@ -2384,3 +2384,9 @@ body.panel-open .glint { animation-play-state: paused; opacity: 0; transition: o
   .book-page .book-caption { transform: translateZ(0); }
   .book-label { white-space: normal; overflow: visible; text-overflow: clip; max-width: 68%; line-height: 1.05; }
 }
+
+/* The leaf's caption sits exactly where the page's does */
+@media (min-width: 768px) {
+  .book-leaf .face .book-caption { left: 7%; right: 7%; bottom: 0.6rem; }
+  .book-leaf .face .book-label { top: 2.2%; }
+}
