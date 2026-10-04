@@ -2515,3 +2515,22 @@ body.panel-open .glint { animation-play-state: paused; opacity: 0; transition: o
 .hotspot[data-id="projects"] .hotspot-surface {
   background: radial-gradient(ellipse 85% 85% at 50% 50%, rgba(255, 228, 176, 0.5) 0%, rgba(240, 206, 150, 0.3) 50%, rgba(227, 196, 138, 0.12) 85%, rgba(227, 196, 138, 0.06) 100%);
 }
+
+/* ============================================================
+   Wide screens: the room continues past the painting's edges as a
+   soft, dark blur of itself, so there is no hard stop at the sides.
+   Hidden behind the painting on screens that match its ratio.
+   ============================================================ */
+@media (min-width: 768px) {
+  .room {
+    background: var(--room-shadow) url("assets/ambient.jpg") center / cover no-repeat;
+  }
+  .room::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background:
+      linear-gradient(90deg, rgba(42, 33, 27, 0.55), transparent 22%, transparent 78%, rgba(42, 33, 27, 0.55)),
+      radial-gradient(ellipse 70% 80% at 50% 50%, transparent 55%, rgba(42, 33, 27, 0.5) 100%);
+  }
+  .room { position: relative; }
+  .stage { position: relative; z-index: 1; box-shadow: 0 0 80px 30px rgba(42, 33, 27, 0.55); }
+}
