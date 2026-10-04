@@ -1116,17 +1116,14 @@
       finish();
       return;
     }
-    /* Forward: the right page lifts, revealing the new right page under it,
-       and lands on the left carrying the new left page. Backward: the mirror.
-       The page being revealed changes at once; the page being landed on waits. */
+    /* 1 book  2 turn activated  3 a leaf spawns and flies over the spine
+       4 it reaches the other side  5 the spread swaps and the leaf despawns.
+       Nothing under the leaf changes until it has landed. */
     var dir = target > from ? 1 : -1;
     var outgoing = dir > 0 ? items[from * 2 + 1] : items[from * 2];
     var outIndex = dir > 0 ? from * 2 + 1 : from * 2;
     var incoming = dir > 0 ? items[spread * 2] : items[spread * 2 + 1];
     var inIndex  = dir > 0 ? spread * 2 : spread * 2 + 1;
-    if (dir > 0) fill(pages[1], items[spread * 2 + 1], spread * 2 + 1);
-    else         fill(pages[0], items[spread * 2], spread * 2);
-
     flipping = true;
     var leaf = document.createElement("div");
     leaf.className = "book-leaf " + (dir > 0 ? "forward" : "backward");
@@ -1141,8 +1138,8 @@
     var done = false;
     function land() {
       if (done) return; done = true;
-      if (dir > 0) fill(pages[0], items[spread * 2], spread * 2);
-      else         fill(pages[1], items[spread * 2 + 1], spread * 2 + 1);
+      fill(pages[0], items[spread * 2], spread * 2);
+      fill(pages[1], items[spread * 2 + 1], spread * 2 + 1);
       leaf.remove(); shadow.remove();
       book.classList.remove("is-flipping");
       flipping = false;
