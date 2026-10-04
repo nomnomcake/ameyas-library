@@ -1090,12 +1090,23 @@
   /* A face of the flying leaf: a fresh copy of the picture plus its caption */
   function face(cls, item, index) {
     var f = document.createElement("div"); f.className = "face " + cls;
-    if (item) {
-      var img = document.createElement("img"); img.alt = ""; img.src = item.src;
-      var art = document.createElement("div"); art.className = "book-art"; art.appendChild(picture(img)); f.appendChild(art);
+    if (item && item.img) {
+      var art = document.createElement("div"); art.className = "book-art"; art.appendChild(picture(item.img)); f.appendChild(art);
       f.appendChild(label(item)); f.appendChild(sub(item, index));
     }
     return f;
+  }
+
+  /* Make sure the pictures a turn will show are decoded before it starts,
+     so no face is ever blank mid-flight. Gives up after 400ms rather than stall. */
+  function ready(list) {
+    var waits = list.filter(Boolean).map(function (it) {
+      var img = it.img;
+      if (!img || (img.complete && img.naturalWidth)) return Promise.resolve();   // already there: no wait
+      img.loading = "eager";
+      return img.decode ? img.decode().catch(function () {}) : Promise.resolve();
+    });
+    return Promise.race([Promise.all(waits), new Promise(function (r) { setTimeout(r, 150); })]);
   }
 
   function show(n, animate) {
@@ -1116,37 +1127,47 @@
       finish();
       return;
     }
-    /* 1 book  2 turn activated  3 a leaf spawns and flies over the spine
-       4 it reaches the other side  5 the spread swaps and the leaf despawns.
-       Nothing under the leaf changes until it has landed. */
+    /* The page you turn lifts off the spread and folds over the spine. What it
+       uncovers is already the next page; what it lands on becomes the new page
+       only once the leaf covers it, so there is never a visible swap. */
     var dir = target > from ? 1 : -1;
     var outgoing = dir > 0 ? items[from * 2 + 1] : items[from * 2];
     var outIndex = dir > 0 ? from * 2 + 1 : from * 2;
     var incoming = dir > 0 ? items[spread * 2] : items[spread * 2 + 1];
     var inIndex  = dir > 0 ? spread * 2 : spread * 2 + 1;
+    var revealed = dir > 0 ? items[spread * 2 + 1] : items[spread * 2];
     flipping = true;
-    var leaf = document.createElement("div");
-    leaf.className = "book-leaf " + (dir > 0 ? "forward" : "backward");
-    leaf.appendChild(face("front", outgoing, outIndex));
-    leaf.appendChild(face("back", incoming, inIndex));
-    var shadow = document.createElement("div");
-    shadow.className = "book-leaf-shadow " + (dir > 0 ? "forward" : "backward");
-    book.appendChild(shadow); book.appendChild(leaf);
-    Array.prototype.forEach.call(leaf.querySelectorAll(".book-pic"), sizePic);
-    book.classList.add("is-flipping");
+    ready([outgoing, incoming, revealed]).then(function () {
+      /* The leaf carries the real page images: its front IS the page being
+         lifted, its back IS the page that will be left behind. So there is
+         nothing to swap when it spawns or lands. */
+      var leaf = document.createElement("div");
+      leaf.className = "book-leaf " + (dir > 0 ? "forward" : "backward");
+      leaf.appendChild(face("front", outgoing, outIndex));
+      leaf.appendChild(face("back", incoming, inIndex));
+      var shadow = document.createElement("div");
+      shadow.className = "book-leaf-shadow " + (dir > 0 ? "forward" : "backward");
+      book.appendChild(shadow); book.appendChild(leaf);
+      Array.prototype.forEach.call(leaf.querySelectorAll(".book-pic"), sizePic);
+      /* the page the leaf lifts off now shows what was underneath it */
+      if (dir > 0) fill(pages[1], revealed, spread * 2 + 1);
+      else         fill(pages[0], revealed, spread * 2);
+      book.classList.add("is-flipping");
 
-    var done = false;
-    function land() {
-      if (done) return; done = true;
-      fill(pages[0], items[spread * 2], spread * 2);
-      fill(pages[1], items[spread * 2 + 1], spread * 2 + 1);
-      leaf.remove(); shadow.remove();
-      book.classList.remove("is-flipping");
-      flipping = false;
-      finish();
-    }
-    leaf.addEventListener("animationend", function (ev) { if (ev.target === leaf) land(); });
-    setTimeout(land, 1400);                 // safety net if the event never fires
+      var done = false;
+      function land() {
+        if (done) return; done = true;
+        if (dir > 0) fill(pages[0], incoming, spread * 2);
+        else         fill(pages[1], incoming, spread * 2 + 1);
+        leaf.remove(); shadow.remove();
+        book.classList.remove("is-flipping");
+        flipping = false;
+        finish();
+      }
+      leaf.addEventListener("animationend", function (ev) { if (ev.target === leaf) land(); });
+      var dur = parseFloat(getComputedStyle(leaf).animationDuration) || 0.95;   // seconds; lands on time even if the event never fires
+      setTimeout(land, dur * 1000 + 40);
+    });
   }
 
   L.decoratePanel = function (section, panel, itemsEl) {
@@ -1157,6 +1178,7 @@
 
     var cards = Array.prototype.slice.call(itemsEl.querySelectorAll(".card"));
     items = cards.map(function (card, k) { var it = section.items[k] || {}; return { card: card, img: card.querySelector(".card-figure img"), title: it.title, meta: it.meta, src: it.image }; });
+    items.forEach(function (it) { if (it.img) { it.img.loading = "eager"; if (it.img.decode) it.img.decode().catch(function () {}); } });
 
     var wrap = document.createElement("div"); wrap.className = "book-wrap";
     book = document.createElement("div"); book.className = "book";

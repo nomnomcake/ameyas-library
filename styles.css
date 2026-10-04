@@ -2317,3 +2317,12 @@ body.panel-open .glint { animation-play-state: paused; opacity: 0; transition: o
 
 /* No tape: the pictures and labels sit on the page without strips */
 .book-pic::before, .book-pic::after, .book-label::before { display: none; }
+
+/* Flip, smoother: longer and gentler, less perspective swell, the shade softer */
+:root { --flip-duration: 950ms; }
+@media (min-width: 768px) {
+  .book { perspective: 4200px; }
+  .book-leaf.forward, .book-leaf.backward { animation-timing-function: cubic-bezier(0.42, 0, 0.22, 1); }
+  .book-leaf .face::after { background: linear-gradient(90deg, rgba(28, 22, 18, 0.18), transparent 50%); }
+  .book-leaf .face { box-shadow: 0 0 0 1px rgba(28, 22, 18, 0.1); }
+}
