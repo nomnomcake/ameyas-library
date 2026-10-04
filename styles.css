@@ -2366,3 +2366,21 @@ body.panel-open .glint { animation-play-state: paused; opacity: 0; transition: o
 
 /* No stitch rings at the spine */
 .book-rings { display: none; }
+
+/* ============================================================
+   Text on the pages renders the same whether a page is still or
+   turning. Text on the 3D leaf is drawn into a texture; the static
+   pages now draw theirs the same way, so weight and position match
+   at lift-off and landing. Long titles wrap instead of being cut.
+   ============================================================ */
+@media (min-width: 768px) {
+  .book-page .book-label, .book-page .book-caption, .book-page .book-art,
+  .book-leaf .book-label, .book-leaf .book-caption {
+    will-change: transform;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transition: none;
+  }
+  .book-page .book-caption { transform: translateZ(0); }
+  .book-label { white-space: normal; overflow: visible; text-overflow: clip; max-width: 68%; line-height: 1.05; }
+}

@@ -83,106 +83,133 @@ const SECTIONS = [
     shape: "rect",
     labelPosition: "right",
     theme: "book",
-    intro: "Paintings and drawings.",
+    intro: "Oil paintings, charcoal, and sketchbook pages.",
     items: [
       {
-        title: "Untitled I",
+        title: "Let Me Out",
         description: "",
         image: "assets/portfolio-01.jpg",
         alt: "A pair of hands bound at the wrists by white earphone cords, a phone charger dangling below, against black.",
         link: "",
         linkLabel: "",
-        meta: "Painting"
+        meta: "2023 · Oil on canvas"
       },
       {
-        title: "Untitled II",
+        title: "Virtual Reality",
         description: "",
         image: "assets/portfolio-02.jpg",
         alt: "A girl in a striped shirt studies a wall of printed social-media photos of other girls.",
         link: "",
         linkLabel: "",
-        meta: "Painting"
+        meta: "2024 · Oil on canvas"
       },
       {
-        title: "Untitled III",
+        title: "Behind the Brush",
         description: "",
         image: "assets/portfolio-03.jpg",
         alt: "A self-portrait painted on a wooden palette, one hand holding a brush across the face.",
         link: "",
         linkLabel: "",
-        meta: "Painting"
+        meta: "2024 · Oil on palette"
       },
       {
-        title: "Untitled IV",
+        title: "A Ruined Relationship with Food",
         description: "",
         image: "assets/portfolio-04.jpg",
         alt: "A plate of rice and chicken seen from above, ringed by a phone, a tape measure, and a tablet showing a photo.",
         link: "",
         linkLabel: "",
-        meta: "Painting"
+        meta: "2024 · Oil on canvas"
       },
       {
-        title: "Untitled V",
+        title: "cost of living",
         description: "",
         image: "assets/portfolio-05.jpg",
         alt: "A girl in a hospital gown sits on a bed counting banknotes beside a wallet and loose coins.",
         link: "",
         linkLabel: "",
-        meta: "Painting"
+        meta: "2025 · Oil on canvas"
       },
       {
-        title: "Untitled VI",
-        description: "",
-        image: "assets/portfolio-06.jpg",
-        alt: "A girl in a red dress holds a tumbler and an apple among a heap of branded cups, shoes, and boxes.",
-        link: "",
-        linkLabel: "",
-        meta: "Painting"
-      },
-      {
-        title: "Untitled VII",
+        title: "For You",
         description: "",
         image: "assets/portfolio-07.jpg",
         alt: "Two hands in lilac nitrile gloves cradle a bare hand.",
         link: "",
         linkLabel: "",
-        meta: "Painting"
+        meta: "2023 · Oil on panel"
       },
       {
-        title: "Untitled VIII",
+        title: "Childhood",
         description: "",
         image: "assets/portfolio-08.jpg",
         alt: "A still life of a crumpled silver bag with monarch butterflies, dolls, toy cars and plastic blocks.",
         link: "",
         linkLabel: "",
-        meta: "Painting"
+        meta: "2024 · Oil on canvas"
       },
       {
-        title: "Untitled IX",
+        title: "Overconsumption",
+        description: "",
+        image: "assets/portfolio-06.jpg",
+        alt: "A girl in a red dress holds a tumbler and an apple among a heap of branded cups, shoes, and boxes.",
+        link: "",
+        linkLabel: "",
+        meta: "2025 · Oil on canvas"
+      },
+      {
+        title: "The Duality of It All",
         description: "",
         image: "assets/portfolio-10.jpg",
         alt: "Four students in a classroom bathed in violet light, two sharing a chair.",
         link: "",
         linkLabel: "",
-        meta: "Painting"
+        meta: "2025 · Oil on canvas"
       },
       {
-        title: "Untitled X",
+        title: "Bread with some (chicken) tender",
         description: "",
         image: "assets/portfolio-11.jpg",
-        alt: "A graphite drawing of a girl eating from a spoon with a banknote in her mouth, bowls of coins in front of her.",
+        alt: "A charcoal drawing of a girl eating from a spoon with a banknote in her mouth, bowls of coins in front of her.",
         link: "",
         linkLabel: "",
-        meta: "Drawing"
+        meta: "2025 · Charcoal on paper"
       },
       {
-        title: "Untitled XI",
+        title: "wired connection",
         description: "",
         image: "assets/portfolio-12.jpg",
-        alt: "A graphite drawing of a young man and a young woman side by side, looking out.",
+        alt: "A charcoal drawing of a young man and a young woman side by side, looking out.",
         link: "",
         linkLabel: "",
-        meta: "Drawing"
+        meta: "2024 · Charcoal on paper"
+      },
+      {
+        title: "Sketchbook",
+        description: "",
+        image: "assets/portfolio-13.jpg",
+        alt: "A graphite portrait of a girl with glasses and braided hair.",
+        link: "",
+        linkLabel: "",
+        meta: "Graphite"
+      },
+      {
+        title: "Sketchbook",
+        description: "",
+        image: "assets/portfolio-14.jpg",
+        alt: "A sketchbook spread titled Material Greed: an illustrated survey of what twenty people think shows overconsumption.",
+        link: "",
+        linkLabel: "",
+        meta: "Illustrated survey"
+      },
+      {
+        title: "Sketchbook",
+        description: "",
+        image: "assets/portfolio-15.jpg",
+        alt: "A spiral sketchbook page of torso and pelvis anatomy studies with notes.",
+        link: "",
+        linkLabel: "",
+        meta: "Anatomy studies"
       }
     ]
   },
