@@ -2571,3 +2571,7 @@ body.panel-open .glint { animation-play-state: paused; opacity: 0; transition: o
     background: linear-gradient(90deg, var(--room-shadow) 0%, rgba(42, 33, 27, 0.6) 3%, transparent 11%, transparent 89%, rgba(42, 33, 27, 0.6) 97%, var(--room-shadow) 100%);
   }
 }
+
+/* The side fade only when the screen is clearly wider than the painting
+   (there is dim room beside it to fade into). At 16:9 or narrower, none. */
+@media (max-aspect-ratio: 1.85) { .stage::after { display: none; } }
