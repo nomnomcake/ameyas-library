@@ -1088,6 +1088,15 @@
   }
 
   /* A face of the flying leaf: a fresh copy of the picture plus its caption */
+  /* Time (0..1 of the duration) at which a cubic-bezier easing reaches a given progress */
+  function bezierTime(x1, y1, x2, y2, yTarget) {
+    function cy(t) { return 3 * (1 - t) * (1 - t) * t * y1 + 3 * (1 - t) * t * t * y2 + t * t * t; }
+    function cx(t) { return 3 * (1 - t) * (1 - t) * t * x1 + 3 * (1 - t) * t * t * x2 + t * t * t; }
+    var lo = 0, hi = 1, t = 0.5;
+    for (var i = 0; i < 40; i++) { t = (lo + hi) / 2; if (cy(t) < yTarget) lo = t; else hi = t; }
+    return cx(t);
+  }
+
   /* Copy a page's painted child boxes onto a face, in pixels, so the face's
      label, caption and picture land on exactly the page's pixels. Measured
      with the label's tilt removed so the layout box is what gets copied. */
@@ -1178,31 +1187,24 @@
     var revealed = dir > 0 ? items[spread * 2 + 1] : items[spread * 2];
     flipping = true;
     ready([outgoing, incoming, revealed]).then(function () {
-      /* The leaf carries the real page images: its front IS the page being
-         lifted, its back IS the page that will be left behind. So there is
-         nothing to swap when it spawns or lands. */
-      var leaf = document.createElement("div");
-      leaf.className = "book-leaf " + (dir > 0 ? "forward" : "backward");
-      leaf.appendChild(face("front", outgoing, outIndex, dir > 0 ? "right" : "left"));
-      leaf.appendChild(face("back",  incoming, inIndex,  dir > 0 ? "left" : "right"));
-      var shadow = document.createElement("div");
-      shadow.className = "book-leaf-shadow " + (dir > 0 ? "forward" : "backward");
-      /* Two half-turns, two elements, each always facing the viewer.
-         The front face sits on the page being lifted and swings up to edge-on.
-         The back face sits on the page being landed on, starts edge-on, and
-         swings down flat. Both are pinned to their page's painted pixels. */
+      /* One leaf, one continuous 180-degree turn about the spine. It carries
+         the lifted page on the way up; at the instant it is edge-on (nothing
+         visible) its content is swapped for the landing page and mirrored, so
+         it reads correctly for the rest of the turn. No hidden back face. */
       var liftPage = dir > 0 ? pages[1] : pages[0];
       var landPage = dir > 0 ? pages[0] : pages[1];
-      var bb = book.getBoundingClientRect();
-      function place(el, page) {
-        var pr = page.getBoundingClientRect();
-        el.style.left = (pr.left - bb.left - book.clientLeft) + "px";
-        el.style.top = (pr.top - bb.top - book.clientTop) + "px";
-        el.style.width = pr.width + "px"; el.style.height = pr.height + "px";
-        el.style.right = "auto"; el.style.bottom = "auto";
-      }
-      var frontFace = leaf.querySelector(".face.front"), backFace = leaf.querySelector(".face.back");
-      place(frontFace, liftPage); place(backFace, landPage);
+      var bb = book.getBoundingClientRect(), pr = liftPage.getBoundingClientRect();
+      var leaf = document.createElement("div");
+      leaf.className = "book-leaf " + (dir > 0 ? "forward" : "backward");
+      leaf.style.left = (pr.left - bb.left - book.clientLeft) + "px";
+      leaf.style.top = (pr.top - bb.top - book.clientTop) + "px";
+      leaf.style.width = pr.width + "px"; leaf.style.height = pr.height + "px";
+      var inner = document.createElement("div"); inner.className = "leaf-inner";
+      var frontFace = face("front", outgoing, outIndex, dir > 0 ? "right" : "left");
+      var backFace  = face("back",  incoming, inIndex,  dir > 0 ? "left" : "right");
+      inner.appendChild(frontFace); inner.appendChild(backFace); leaf.appendChild(inner);
+      var shadow = document.createElement("div");
+      shadow.className = "book-leaf-shadow " + (dir > 0 ? "forward" : "backward");
       book.appendChild(shadow); book.appendChild(leaf);
       pinTo(frontFace, liftPage);
       measureAs(landPage, incoming, function () { pinTo(backFace, landPage); });
@@ -1212,6 +1214,11 @@
       if (dir > 0) fill(pages[1], revealed, spread * 2 + 1);
       else         fill(pages[0], revealed, spread * 2);
       book.classList.add("is-flipping");
+
+      var dv = getComputedStyle(book).getPropertyValue("--flip-duration").trim();
+      var dur = dv.indexOf("ms") > 0 ? parseFloat(dv) / 1000 : (parseFloat(dv) || 0.95);
+      var mid = bezierTime(0.42, 0, 0.22, 1, 0.5) * dur * 1000;
+      setTimeout(function () { leaf.classList.add("flipped"); }, mid);
 
       var done = false;
       function land() {
@@ -1223,9 +1230,7 @@
         flipping = false;
         finish();
       }
-      backFace.addEventListener("animationend", function (ev) { if (ev.target === backFace) land(); });
-      var dv = getComputedStyle(book).getPropertyValue("--flip-duration").trim();
-      var dur = dv.indexOf("ms") > 0 ? parseFloat(dv) / 1000 : (parseFloat(dv) || 0.95);
+      leaf.addEventListener("animationend", function (ev) { if (ev.target === leaf) land(); });
       setTimeout(land, dur * 1000 + 40);              // lands on time even if the event never fires
     });
   }

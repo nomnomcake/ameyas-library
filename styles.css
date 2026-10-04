@@ -2442,96 +2442,62 @@ body.panel-open .glint { animation-play-state: paused; opacity: 0; transition: o
 @media (prefers-reduced-motion: reduce) { .book-leaf .face.book-page { animation: none; } }
 
 /* ============================================================
-   The turn as two half-turns
-   No 3D leaf, no backface, no preserve-3d. The front face lifts from
-   flat to edge-on over the page it leaves; the back face, already in
-   place over the destination page, comes down from edge-on to flat.
-   Each element only ever faces the viewer.
+   The turn: one leaf, one continuous 180-degree rotation
+   The leaf carries the lifted page up and over the spine. At the
+   edge-on instant its content swaps to the landing page, mirrored,
+   so there is never a hidden back face to lose. Shade and shadow
+   ride on the same easing.
    ============================================================ */
 @media (min-width: 768px) {
-  .book { perspective: 2200px; }
+  .book { perspective: 2600px; }
   .book-leaf {
-    inset: 0 !important; width: auto !important; height: auto !important;
-    transform: none !important; animation: none !important;
-    transform-style: flat; perspective: none;
+    position: absolute; z-index: 5; pointer-events: none;
+    inset: auto; width: auto; height: auto;
+    transform-style: flat; will-change: transform;
   }
+  .book-leaf.forward  { transform-origin: left center;  animation: leaf-turn-f var(--flip-duration) cubic-bezier(0.42, 0, 0.22, 1) 1 forwards !important; }
+  .book-leaf.backward { transform-origin: right center; animation: leaf-turn-b var(--flip-duration) cubic-bezier(0.42, 0, 0.22, 1) 1 forwards !important; }
+  @keyframes leaf-turn-f { from { transform: rotateY(0deg); } to { transform: rotateY(-180deg); } }
+  @keyframes leaf-turn-b { from { transform: rotateY(0deg); } to { transform: rotateY(180deg); } }
+
+  .leaf-inner { position: absolute; inset: 0; }
+  .book-leaf.flipped .leaf-inner { transform: scaleX(-1); }
+
   .book-leaf .face.book-page {
-    inset: auto; transform: none;
-    backface-visibility: visible; -webkit-backface-visibility: visible;
-    will-change: transform;
-    animation-duration: calc(var(--flip-duration) / 2);
-    animation-fill-mode: both;
-    animation-iteration-count: 1;
+    position: absolute !important; inset: 0 !important; transform: none !important; animation: none !important;
+    backface-visibility: visible !important; -webkit-backface-visibility: visible !important;
+    overflow: hidden; padding: 0; display: block; z-index: auto; box-shadow: none; opacity: 1;
   }
-  .book-leaf .face.book-page.front { animation-name: half-up;   animation-timing-function: cubic-bezier(0.5, 0, 1, 1); }
-  .book-leaf .face.book-page.back  { animation-name: half-down; animation-timing-function: cubic-bezier(0, 0, 0.5, 1); animation-delay: calc(var(--flip-duration) / 2); }
-  /* forward: the right page lifts about the spine (its left edge) and the new
-     left page comes down about the spine (its right edge). backward: mirror. */
-  .book-leaf.forward  .face.front { transform-origin: left center;  --from: 0deg;  --to: -90deg; }
-  .book-leaf.forward  .face.back  { transform-origin: right center; --from: 90deg; --to: 0deg; }
-  .book-leaf.backward .face.front { transform-origin: right center; --from: 0deg;  --to: 90deg; }
-  .book-leaf.backward .face.back  { transform-origin: left center;  --from: -90deg; --to: 0deg; }
-  @keyframes half-up   { from { transform: rotateY(var(--from)); } to { transform: rotateY(var(--to)); } }
-  @keyframes half-down { from { transform: rotateY(var(--from)); } to { transform: rotateY(var(--to)); } }
-  .book-leaf .face.book-page.back { visibility: visible; }
-}
+  .book-leaf .face.book-page.left  { background: var(--bk-page);   border-radius: 4px 2px 2px 4px; }
+  .book-leaf .face.book-page.right { background: var(--bk-page-2); border-radius: 2px 4px 4px 2px; }
+  .book-leaf .face.book-page.front { visibility: visible !important; }
+  .book-leaf .face.book-page.back  { visibility: hidden !important; }
+  .book-leaf.flipped .face.book-page.front { visibility: hidden !important; }
+  .book-leaf.flipped .face.book-page.back  { visibility: visible !important; }
+  .book-leaf .face.book-page .book-art { top: 10%; bottom: 2.6rem; left: 6%; right: 6%; }
+  .book-leaf .face.book-page .book-label { top: 2.2%; }
+  .book-leaf .face.book-page.right .book-label { right: auto; left: 9%; transform: rotate(-1.4deg); }
+  .book-leaf .face.book-page.left  .book-label { left: auto; right: 7%; transform: rotate(1.6deg); }
+  .book-leaf .face.book-page .book-pic img { width: 100%; height: 100%; max-width: none; max-height: none; position: static; }
+  .book-leaf .face.book-page::after, .book-leaf .face.book-page::before { display: none !important; }
 
-/* Explicit keyframes (custom properties inside keyframes are unreliable) */
-@media (min-width: 768px) {
-  .book-leaf.forward  .face.book-page.front { animation-name: up-from-left;    transform-origin: left center; }
-  .book-leaf.forward  .face.book-page.back  { animation-name: down-onto-left;  transform-origin: right center; }
-  .book-leaf.backward .face.book-page.front { animation-name: up-from-right;   transform-origin: right center; }
-  .book-leaf.backward .face.book-page.back  { animation-name: down-onto-right; transform-origin: left center; }
-  @keyframes up-from-left    { from { transform: rotateY(0deg); }   to { transform: rotateY(-90deg); } }
-  @keyframes down-onto-left  { from { transform: rotateY(90deg); }  to { transform: rotateY(0deg); } }
-  @keyframes up-from-right   { from { transform: rotateY(0deg); }   to { transform: rotateY(90deg); } }
-  @keyframes down-onto-right { from { transform: rotateY(-90deg); } to { transform: rotateY(0deg); } }
-}
-
-/* Every animation longhand restated at a specificity above the earlier
-   shorthands, so nothing from older flip versions leaks into the half-turns. */
-@media (min-width: 768px) {
-  .book-leaf .face.book-page.front, .book-leaf .face.book-page.back {
-    animation-duration: calc(var(--flip-duration) / 2) !important;
-    animation-iteration-count: 1 !important;
-    animation-fill-mode: both !important;
-    animation-direction: normal !important;
-    visibility: visible !important;
-    opacity: 1 !important;
+  /* light: deepens as the page lifts away from the lamp, clears as it lands */
+  .leaf-inner::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0;
+    background: linear-gradient(90deg, rgba(28, 22, 18, 0.30), rgba(28, 22, 18, 0.06) 70%);
+    animation: leaf-shade var(--flip-duration) cubic-bezier(0.42, 0, 0.22, 1) 1 forwards;
   }
-  .book-leaf .face.book-page.front { animation-delay: 0s !important; animation-timing-function: cubic-bezier(0.5, 0, 1, 1) !important; }
-  .book-leaf .face.book-page.back  { animation-delay: calc(var(--flip-duration) / 2) !important; animation-timing-function: cubic-bezier(0, 0, 0.5, 1) !important; }
-  .book-leaf.forward  .face.book-page.front { animation-name: up-from-left !important; }
-  .book-leaf.forward  .face.book-page.back  { animation-name: down-onto-left !important; }
-  .book-leaf.backward .face.book-page.front { animation-name: up-from-right !important; }
-  .book-leaf.backward .face.book-page.back  { animation-name: down-onto-right !important; }
-}
+  .book-leaf.backward .leaf-inner::after { background: linear-gradient(270deg, rgba(28, 22, 18, 0.30), rgba(28, 22, 18, 0.06) 70%); }
+  @keyframes leaf-shade { 0% { opacity: 0; } 50% { opacity: 1; } 100% { opacity: 0; } }
 
-/* ============================================================
-   Depth back on the turn: a shade that deepens as the page lifts
-   away from the light and clears as it lands, and the soft shadow
-   it throws on the page beneath. Each keyed to its own half.
-   ============================================================ */
-@media (min-width: 768px) {
-  .book-leaf .face.book-page::after {
-    display: block; content: ""; position: absolute; inset: 0; pointer-events: none; border: 0;
-    opacity: 0;
-    animation-duration: calc(var(--flip-duration) / 2); animation-iteration-count: 1; animation-fill-mode: both;
-  }
-  .book-leaf.forward  .face.book-page.front::after { background: linear-gradient(90deg,  rgba(28, 22, 18, 0.30), rgba(28, 22, 18, 0.06) 70%); animation-name: shade-in;  animation-timing-function: cubic-bezier(0.5, 0, 1, 1); }
-  .book-leaf.forward  .face.book-page.back::after  { background: linear-gradient(270deg, rgba(28, 22, 18, 0.30), rgba(28, 22, 18, 0.06) 70%); animation-name: shade-out; animation-timing-function: cubic-bezier(0, 0, 0.5, 1); animation-delay: calc(var(--flip-duration) / 2); }
-  .book-leaf.backward .face.book-page.front::after { background: linear-gradient(270deg, rgba(28, 22, 18, 0.30), rgba(28, 22, 18, 0.06) 70%); animation-name: shade-in;  animation-timing-function: cubic-bezier(0.5, 0, 1, 1); }
-  .book-leaf.backward .face.book-page.back::after  { background: linear-gradient(90deg,  rgba(28, 22, 18, 0.30), rgba(28, 22, 18, 0.06) 70%); animation-name: shade-out; animation-timing-function: cubic-bezier(0, 0, 0.5, 1); animation-delay: calc(var(--flip-duration) / 2); }
-  @keyframes shade-in  { from { opacity: 0; } to { opacity: 1; } }
-  @keyframes shade-out { from { opacity: 1; } to { opacity: 0; } }
-
+  /* the shadow the leaf throws on the page it lands on */
   .book-leaf-shadow {
     display: block; opacity: 0;
     background: radial-gradient(ellipse 85% 95% at 0% 50%, rgba(28, 22, 18, 0.28), transparent 70%);
-    animation: landing-shadow var(--flip-duration) linear 1 forwards;
+    animation: landing-shadow var(--flip-duration) cubic-bezier(0.42, 0, 0.22, 1) 1 forwards;
   }
   .book-leaf-shadow.forward  { left: var(--bk-pad-x); right: auto; transform: none; }
   .book-leaf-shadow.backward { right: var(--bk-pad-x); left: auto; transform: scaleX(-1); }
-  @keyframes landing-shadow { 0%, 50% { opacity: 0; } 80% { opacity: 1; } 100% { opacity: 0; } }
+  @keyframes landing-shadow { 0%, 50% { opacity: 0; } 85% { opacity: 1; } 100% { opacity: 0; } }
 }
-@media (prefers-reduced-motion: reduce) { .book-leaf .face.book-page::after, .book-leaf-shadow { display: none; } }
+@media (prefers-reduced-motion: reduce) { .book-leaf, .book-leaf-shadow, .leaf-inner::after { animation: none !important; display: none; } }
