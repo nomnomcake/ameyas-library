@@ -2534,3 +2534,14 @@ body.panel-open .glint { animation-play-state: paused; opacity: 0; transition: o
   .room { position: relative; }
   .stage { position: relative; z-index: 1; box-shadow: 0 0 80px 30px rgba(42, 33, 27, 0.55); }
 }
+
+/* The computer's glow has no box at all: only the soft elliptical pool,
+   larger and blurred, with nothing drawn inside the rectangle itself. */
+.hotspot[data-id="projects"] .hotspot-surface { background: transparent; }
+.hotspot[data-id="projects"]::before {
+  inset: -45% -40%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(240, 210, 150, 0.6), rgba(232, 200, 140, 0.3) 40%, rgba(227, 196, 138, 0.1) 70%, transparent 100%);
+  filter: blur(30px);
+  mix-blend-mode: screen;
+}
