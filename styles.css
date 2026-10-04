@@ -2545,20 +2545,3 @@ body.panel-open .glint { animation-play-state: paused; opacity: 0; transition: o
   filter: blur(30px);
   mix-blend-mode: screen;
 }
-
-/* ...plus a concentrated glow hugging the screen: the surface lights up
-   soft-edged to the box, and a tight bright halo sits just past its edge,
-   while the big pool keeps spilling further out. */
-.hotspot[data-id="projects"] .hotspot-surface {
-  background: radial-gradient(ellipse 75% 75% at 50% 50%, rgba(255, 232, 184, 0.55), rgba(240, 206, 150, 0.32) 55%, rgba(227, 196, 138, 0.08) 100%);
-  mix-blend-mode: screen;
-}
-.hotspot[data-id="projects"] .hotspot-label { z-index: 2; }
-.hotspot[data-id="projects"]::after {
-  content: ""; position: absolute; inset: -6% -5%; border-radius: 8px; pointer-events: none;
-  background: rgba(240, 210, 150, 0.55);
-  filter: blur(14px);
-  mix-blend-mode: screen;
-  opacity: 0; transition: opacity var(--pool-in) var(--pool-ease);
-}
-.hotspot[data-id="projects"]:hover::after, .hotspot[data-id="projects"]:focus-visible::after, .hotspot[data-id="projects"].is-active::after { opacity: 1; }
