@@ -1088,12 +1088,13 @@
   }
 
   /* A face of the flying leaf: a fresh copy of the picture plus its caption */
-  function face(cls, item, index) {
-    var f = document.createElement("div"); f.className = "face " + cls;
-    if (item && item.img) {
-      var art = document.createElement("div"); art.className = "book-art"; art.appendChild(picture(item.img)); f.appendChild(art);
-      f.appendChild(label(item)); f.appendChild(sub(item, index));
-    }
+  /* A face of the leaf is a clone of the real page it stands in for (same
+     classes, same rules, same rounding), filled by the same fill() the pages use. */
+  function face(cls, item, index, side) {
+    var f = document.createElement("div");
+    f.className = "book-page " + side + " face " + cls;
+    f.innerHTML = "<div class=\"book-art\"></div>";
+    fill(f, item, index);
     return f;
   }
 
@@ -1143,10 +1144,19 @@
          nothing to swap when it spawns or lands. */
       var leaf = document.createElement("div");
       leaf.className = "book-leaf " + (dir > 0 ? "forward" : "backward");
-      leaf.appendChild(face("front", outgoing, outIndex));
-      leaf.appendChild(face("back", incoming, inIndex));
+      leaf.appendChild(face("front", outgoing, outIndex, dir > 0 ? "right" : "left"));
+      leaf.appendChild(face("back",  incoming, inIndex,  dir > 0 ? "left" : "right"));
       var shadow = document.createElement("div");
       shadow.className = "book-leaf-shadow " + (dir > 0 ? "forward" : "backward");
+      /* Pin the leaf to the exact painted rectangle of the page it lifts, in
+         pixels, so its contents compute from the same numbers as the page. */
+      var liftPage = dir > 0 ? pages[1] : pages[0];
+      var bb = book.getBoundingClientRect(), pr = liftPage.getBoundingClientRect();
+      leaf.style.left = (pr.left - bb.left - book.clientLeft) + "px";
+      leaf.style.top = (pr.top - bb.top - book.clientTop) + "px";
+      leaf.style.width = pr.width + "px";
+      leaf.style.height = pr.height + "px";
+      leaf.style.right = "auto"; leaf.style.bottom = "auto";
       book.appendChild(shadow); book.appendChild(leaf);
       Array.prototype.forEach.call(leaf.querySelectorAll(".book-pic"), sizePic);
       /* the page the leaf lifts off now shows what was underneath it */

@@ -2390,3 +2390,17 @@ body.panel-open .glint { animation-play-state: paused; opacity: 0; transition: o
   .book-leaf .face .book-caption { left: 7%; right: 7%; bottom: 0.6rem; }
   .book-leaf .face .book-label { top: 2.2%; }
 }
+
+/* Leaf faces are page clones: let the page rules win, keep only what makes
+   them a face (absolute inside the leaf, back face turned, backface hidden). */
+@media (min-width: 768px) {
+  .book-leaf .face.book-page { position: absolute; inset: 0; z-index: auto; overflow: hidden; padding: 0; display: block;
+    backface-visibility: hidden; -webkit-backface-visibility: hidden; box-shadow: none; }
+  .book-leaf .face.book-page.left  { background: var(--bk-page);   border-radius: 4px 2px 2px 4px; }
+  .book-leaf .face.book-page.right { background: var(--bk-page-2); border-radius: 2px 4px 4px 2px; }
+  .book-leaf .face.book-page.back { transform: rotateY(180deg); }
+  .book-leaf .face.book-page .book-art { top: 10%; bottom: 2.6rem; left: 6%; right: 6%; }
+  .book-leaf .face.book-page .book-label { top: 2.2%; }
+  .book-leaf .face.book-page.right .book-label { right: auto; left: 9%; transform: rotate(-1.4deg); }
+  .book-leaf .face.book-page.left  .book-label { left: auto; right: 7%; transform: rotate(1.6deg); }
+}
