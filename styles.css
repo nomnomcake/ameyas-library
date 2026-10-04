@@ -2545,3 +2545,17 @@ body.panel-open .glint { animation-play-state: paused; opacity: 0; transition: o
   filter: blur(30px);
   mix-blend-mode: screen;
 }
+
+/* ============================================================
+   Wide screens: the painting extended from its own edges.
+   room-wide.jpg is the painting with its outermost strips drawn
+   outward on both sides, softened and darkened. Sized to the stage's
+   height and centred, so its middle is the painting itself and the
+   sides continue it exactly from the edge. Only used when the screen
+   is wider than the painting.
+   ============================================================ */
+@media (min-width: 768px) and (min-aspect-ratio: 16/9) {
+  .room { background: var(--room-shadow) url("assets/room-wide.jpg") center / auto 100% no-repeat; }
+  .room::before { background: none; }
+  .stage { box-shadow: none; }
+}
