@@ -2559,3 +2559,15 @@ body.panel-open .glint { animation-play-state: paused; opacity: 0; transition: o
   .room::before { background: none; }
   .stage { box-shadow: none; }
 }
+
+/* ============================================================
+   Wide screens, simpler: no extension. The painting's sides fade
+   into the room's shadow, so there is no hard edge and nothing made up.
+   ============================================================ */
+@media (min-width: 768px) and (min-aspect-ratio: 16/9) {
+  .room { background: var(--room-shadow); }
+  .stage::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 3;
+    background: linear-gradient(90deg, var(--room-shadow) 0%, rgba(42, 33, 27, 0.6) 3%, transparent 11%, transparent 89%, rgba(42, 33, 27, 0.6) 97%, var(--room-shadow) 100%);
+  }
+}
