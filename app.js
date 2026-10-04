@@ -1106,6 +1106,25 @@
     if (sp && dp) { dp.style.width = sp.style.width; dp.style.height = sp.style.height; }
   }
 
+  /* Lay a page out as if it held another piece, without touching its image:
+     only the label text and the picture box size change, the callback measures,
+     then everything is put back. Nothing is removed from the DOM, so nothing
+     has to be decoded or painted again. */
+  function measureAs(page, item, cb) {
+    var lab = page.querySelector(".book-label"), pic = page.querySelector(".book-pic"), art = page.querySelector(".book-art");
+    var savedText = lab ? lab.textContent : "", savedEmpty = !!(lab && lab.classList.contains("is-empty"));
+    var savedW = pic ? pic.style.width : "", savedH = pic ? pic.style.height : "";
+    if (lab) { lab.textContent = item && item.title ? item.title : ""; lab.classList.toggle("is-empty", !(item && item.title)); }
+    if (pic && art && item && item.img && item.img.naturalWidth) {
+      var r = item.img.naturalWidth / item.img.naturalHeight, bw = art.clientWidth, bh = art.clientHeight;
+      var w = Math.min(bw, bh * r), h = w / r;
+      pic.style.width = Math.round(w) + "px"; pic.style.height = Math.round(h) + "px";
+    }
+    cb();
+    if (lab) { lab.textContent = savedText; lab.classList.toggle("is-empty", savedEmpty); }
+    if (pic) { pic.style.width = savedW; pic.style.height = savedH; }
+  }
+
   /* A face of the leaf is a clone of the real page it stands in for (same
      classes, same rules, same rounding), filled by the same fill() the pages use. */
   function face(cls, item, index, side) {
@@ -1180,14 +1199,11 @@
          Back face: pinned to the page it will land on, measured with the incoming
          piece laid out there for an instant (no paint happens in between). */
       var landPage = dir > 0 ? pages[0] : pages[1];
-      var landIndex = dir > 0 ? from * 2 : from * 2 + 1;
-      var landOld = items[landIndex];
+      var backFace = leaf.querySelector(".face.back");
       pinTo(leaf.querySelector(".face.front"), liftPage);
-      fill(landPage, incoming, inIndex);
-      pinTo(leaf.querySelector(".face.back"), landPage);
-      fill(landPage, landOld, landIndex);
-      var backPic = leaf.querySelector(".face.back .book-pic");
-      if (backPic && incoming && incoming.img) backPic.appendChild(incoming.img);
+      measureAs(landPage, incoming, function () { pinTo(backFace, landPage); });
+      var backPic = backFace.querySelector(".book-pic");
+      if (backPic && !backPic.style.width) sizePic(backPic);
       /* the page the leaf lifts off now shows what was underneath it */
       if (dir > 0) fill(pages[1], revealed, spread * 2 + 1);
       else         fill(pages[0], revealed, spread * 2);
@@ -1217,7 +1233,7 @@
 
     var cards = Array.prototype.slice.call(itemsEl.querySelectorAll(".card"));
     items = cards.map(function (card, k) { var it = section.items[k] || {}; return { card: card, img: card.querySelector(".card-figure img"), title: it.title, meta: it.meta, src: it.image }; });
-    items.forEach(function (it) { if (it.img) { it.img.loading = "eager"; if (it.img.decode) it.img.decode().catch(function () {}); } });
+    items.forEach(function (it) { if (it.img) { it.img.loading = "eager"; it.img.decoding = "sync"; if (it.img.decode) it.img.decode().catch(function () {}); } });
 
     var wrap = document.createElement("div"); wrap.className = "book-wrap";
     book = document.createElement("div"); book.className = "book";
