@@ -1088,6 +1088,24 @@
   }
 
   /* A face of the flying leaf: a fresh copy of the picture plus its caption */
+  /* Copy a page's painted child boxes onto a face, in pixels, so the face's
+     label, caption and picture land on exactly the page's pixels. Measured
+     with the label's tilt removed so the layout box is what gets copied. */
+  function pinTo(face, page) {
+    var fr = face.getBoundingClientRect(), cl = face.clientLeft, ct = face.clientTop;
+    ["book-label", "book-caption", "book-art"].forEach(function (cls) {
+      var s = page.querySelector("." + cls), d = face.querySelector("." + cls);
+      if (!s || !d) return;
+      var saved = s.style.transform; s.style.transform = "none";
+      var r = s.getBoundingClientRect(); s.style.transform = saved;
+      d.style.left = (r.left - fr.left - cl) + "px"; d.style.top = (r.top - fr.top - ct) + "px";
+      d.style.width = r.width + "px"; d.style.height = r.height + "px";
+      d.style.right = "auto"; d.style.bottom = "auto"; d.style.maxWidth = "none";
+    });
+    var sp = page.querySelector(".book-pic"), dp = face.querySelector(".book-pic");
+    if (sp && dp) { dp.style.width = sp.style.width; dp.style.height = sp.style.height; }
+  }
+
   /* A face of the leaf is a clone of the real page it stands in for (same
      classes, same rules, same rounding), filled by the same fill() the pages use. */
   function face(cls, item, index, side) {
@@ -1158,7 +1176,18 @@
       leaf.style.height = pr.height + "px";
       leaf.style.right = "auto"; leaf.style.bottom = "auto";
       book.appendChild(shadow); book.appendChild(leaf);
-      Array.prototype.forEach.call(leaf.querySelectorAll(".book-pic"), sizePic);
+      /* Front face: pinned to the page it lifts, which still shows the outgoing piece.
+         Back face: pinned to the page it will land on, measured with the incoming
+         piece laid out there for an instant (no paint happens in between). */
+      var landPage = dir > 0 ? pages[0] : pages[1];
+      var landIndex = dir > 0 ? from * 2 : from * 2 + 1;
+      var landOld = items[landIndex];
+      pinTo(leaf.querySelector(".face.front"), liftPage);
+      fill(landPage, incoming, inIndex);
+      pinTo(leaf.querySelector(".face.back"), landPage);
+      fill(landPage, landOld, landIndex);
+      var backPic = leaf.querySelector(".face.back .book-pic");
+      if (backPic && incoming && incoming.img) backPic.appendChild(incoming.img);
       /* the page the leaf lifts off now shows what was underneath it */
       if (dir > 0) fill(pages[1], revealed, spread * 2 + 1);
       else         fill(pages[0], revealed, spread * 2);
